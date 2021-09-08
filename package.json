@@ -1,7 +1,7 @@
 {
-  "name": "npm-library-publish-test",
-  "version": "0.0.7",
-  "description": "Testing publishing libraries to npm",
+  "name": "cpaas-client-node-sdk",
+  "version": "0.0.1",
+  "description": "Node SDK for CPaaS Web Services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/pmontgomery3CI/npm-library-publish-test.git"
+    "url": "git+https://wwwin-github.cisco.com/cpaas-client-sdks/node-sdk.git"
   },
   "keywords": [
     "test",
@@ -23,7 +23,7 @@
   ],
   "author": "Philip Montgomery",
   "license": "MIT",
-  "homepage": "https://bitbucket.org/pmontgomery3CI/npm-library-publish-test#readme",
+  "homepage": "https://www.cisco.com/",
   "devDependencies": {
     "@microsoft/tsdoc": "^0.13.2",
     "@types/chai": "^4.2.21",
