@@ -5,7 +5,7 @@ const {SmsClient, SmsMessage, ContentType} = require('../dist/index');
 const smsClient = new SmsClient('bearer test: 1234');
 
 const smsMessage = new SmsMessage();
-smsMessage.from = 34343;
+smsMessage.from = "+14443332222";
 smsMessage.to = "+14443332222";
 smsMessage.content = "Hello World!";
 smsMessage.contentType = ContentType.TEXT;

@@ -1,5 +1,5 @@
 import {uuidv4} from "../../helpers/identifiers";
-import {isValidHttpUrl, isValidISO8601} from "../../helpers/validators";
+import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric} from "../../helpers/validators";
 import {ContentType} from "../contentType";
 import {SMS_CONTENT_MAXLEN} from "../../config/constants";
 
@@ -17,20 +17,34 @@ export class SmsMessage {
 
     private _idempotencyKey: string = "";
 
-    constructor() {
+    constructor(from: string, to: string) {
+        this.from = from;
+        this.to = to;
         this._idempotencyKey = uuidv4();
     }
 
     get from(): string {return this._from;}
-    set from(value: string) {this._from = value;}
+    set from(value: string) {
+        if(!isNumeric(value)) {
+            throw new Error("from must be a number or E.164 string");
+        }
+
+        this._from = value;
+    }
 
     get to(): string {return this._to;}
-    set to(value: string) {this._to = value;}
+    set to(value: string) {
+        if(!isValidE164(value)) {
+            throw Error("to must contain a valid E.164 value");
+        }
+
+        this._to = value;
+    }
 
     get content(): string {return this._content;}
     set content(value: string) {
         if(value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`Value must be no more than ${SMS_CONTENT_MAXLEN} characters`);
+            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
         } else {
             this._content = value;
         }
@@ -92,9 +106,9 @@ export class SmsMessage {
 
     get idempotencyKey(): string {return this._idempotencyKey;}
 
-    addSubstitution(name: string = "", value: string = "") {
+    addSubstitution(name: string, value: string) {
         if(name === "") {
-            throw Error("Name must be specified in substitution");
+            throw Error("name must be specified in substitution");
         }
 
         this._substitutions.push({[name]: value});

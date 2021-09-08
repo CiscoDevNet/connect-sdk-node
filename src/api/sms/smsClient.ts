@@ -4,16 +4,30 @@ import {uuidv4} from "../../helpers/identifiers";
 
 export class SmsClient extends CpaasClient {
     sendMessage(message: SmsMessage) {
-        const response = {
-            "acceptedTime": "2021-07-29T13:45:33.404Z",
-            "messageId": uuidv4(),
-            "correlationId": message.correlationId
+        if(!message.idempotencyKey || message.idempotencyKey === "") {
+            throw Error("Must provide a 'idempotencyKey' value for sending a message");
+        }
+
+        if(!message.from || message.from === "") {
+            throw Error("Must provide a 'from' value for sending a message");
+        }
+
+        if(!message.to || message.to === "") {
+            throw Error("Must provide a 'to' value for sending a message");
+        }
+
+        if(!message.content || message.content === "") {
+            throw Error("Must provide a 'content' value for sending a message");
         }
 
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                resolve(response);
-            }, 2000);
+                resolve({
+                    "acceptedTime": "2021-07-29T13:45:33.404Z",
+                    "messageId": uuidv4(),
+                    "correlationId": message.correlationId
+                });
+            }, 10);
         });
     }
 
@@ -36,7 +50,7 @@ export class SmsClient extends CpaasClient {
                         "message": "string"
                     }
                 });
-            }, 2000);
+            }, 10);
         })
     }
 }

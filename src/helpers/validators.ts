@@ -15,3 +15,16 @@ export function isValidISO8601(value: string) {
 
     return regEx.test(value);
 }
+
+export function isValidE164(value: string) {
+    const regEx: RegExp = new RegExp(/^\+[1-9]\d{10,14}$/);
+
+    return regEx.test(value);
+}
+
+export function isNumeric(value: any) {
+    if (typeof value != "string") {value = value.toString()};
+
+    return !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+        !isNaN(parseFloat(value)) // ...and ensure strings of whitespace fail
+}
