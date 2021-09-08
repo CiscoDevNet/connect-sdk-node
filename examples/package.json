@@ -1,0 +1,14 @@
+{
+  "name": "examples",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sms.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "npm-library-publish-test": "0.0.7"
+  }
+}

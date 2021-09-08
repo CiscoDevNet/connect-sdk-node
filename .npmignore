@@ -1,0 +1,6 @@
+src/
+examples/
+test/
+.idea/
+tsconfig.json
+.nyc_output/

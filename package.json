@@ -1,0 +1,43 @@
+{
+  "name": "npm-library-publish-test",
+  "version": "0.0.7",
+  "description": "Testing publishing libraries to npm",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepublish": "npm run build",
+    "test": "nyc mocha -r ts-node/register test/**/*.ts",
+    "start": "node ./src/index.ts",
+    "watch": "tsc -w",
+    "build": "npm run test && tsc",
+    "doc": "typedoc --out docs ./src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/pmontgomery3CI/npm-library-publish-test.git"
+  },
+  "keywords": [
+    "test",
+    "nodeJS",
+    "publishing"
+  ],
+  "author": "Philip Montgomery",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/pmontgomery3CI/npm-library-publish-test#readme",
+  "devDependencies": {
+    "@microsoft/tsdoc": "^0.13.2",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.7.10",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "chai-nock": "^1.3.0",
+    "mocha": "^9.1.1",
+    "nock": "^13.1.3",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.2.1",
+    "typedoc": "^0.21.9",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {}
+}
