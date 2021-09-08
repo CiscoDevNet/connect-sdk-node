@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "prepublish": "npm run build",
-    "test": "nyc --reporter=lcov mocha -r ts-node/register test/**/*.ts",
+    "test": "nyc mocha -r ts-node/register test/**/*.ts",
+    "test-report": "nyc --reporter=lcov mocha -r ts-node/register test/**/*.ts",
     "start": "node ./src/index.ts",
     "watch": "tsc -w",
     "build": "npm run test && tsc",
