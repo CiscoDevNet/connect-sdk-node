@@ -16,7 +16,7 @@ $ npm i --save cpaas-sdk-node
 
 ### Sending a SMS message and getting its status
 ```js
-const {SmsClient, SmsMessage} = require('npm-library-publish-test')
+const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
 
 const smsClient = new SmsClient('bearer test: 1234');
 

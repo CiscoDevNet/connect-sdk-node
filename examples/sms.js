@@ -1,6 +1,6 @@
 const {SmsClient, SmsMessage, ContentType} = require('../dist/index');
 
-//const {SmsClient, SmsMessage} = require('npm-library-publish-test')
+//const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
 
 const smsClient = new SmsClient('bearer test: 1234');
 
