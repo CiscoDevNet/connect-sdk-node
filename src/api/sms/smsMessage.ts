@@ -51,6 +51,29 @@ export class SmsMessage {
     }
 
     get contentType(): string {return this._contentType;}
+    set contentType(value: string) {
+        // @ts-ignore
+        if(Object.values(ContentType).indexOf(value) === -1) {
+            let contentTypes: string = "";
+            const contentTypeEnt = Object.entries(ContentType);
+
+            for(let i = 0; i < contentTypeEnt.length; i++ ) {
+                // @ts-ignore
+                const type = contentTypeEnt[i][1];
+
+                contentTypes += `${type}`;
+
+                if(i < contentTypeEnt.length - 1) {
+                    contentTypes += ', ';
+                }
+            }
+
+            throw Error(`contentType must be one of the following: '${contentTypes}'`);
+        } else {
+            this._contentType = value;
+        }
+
+    }
 
     get substitutions(): Array<object> | undefined {return this._substitutions;}
 
