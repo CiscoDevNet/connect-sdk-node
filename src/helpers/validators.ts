@@ -28,3 +28,22 @@ export function isNumeric(value: any) {
     return !isNaN(value) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
         !isNaN(parseFloat(value)) // ...and ensure strings of whitespace fail
 }
+
+export function isBinary(value: any) {
+    const regEx: RegExp = new RegExp(/\ufffd/);
+
+    return regEx.test(value);
+}
+
+export function isArrayBool(value: any) {
+    for (let i of value) {
+        if (i !== 0 && i !== 1) return false;
+    }
+    return true;
+}
+
+export function hasUnicode(value: any) {
+    const regEx: RegExp = new RegExp(/[^\u0000-\u00ff]/);
+
+    return regEx.test(value);
+}

@@ -20,8 +20,6 @@ describe("Request", () => {
             .get('/something')
             .reply(200, "Hello World");
 
-        console.log(scope);
-
         const response = await request(reqOptions);
 
         //expect(response).to.equal("Hello World");

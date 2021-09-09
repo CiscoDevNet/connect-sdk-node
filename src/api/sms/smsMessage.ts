@@ -1,5 +1,13 @@
 import {uuidv4} from "../../helpers/identifiers";
-import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric} from "../../helpers/validators";
+import {
+    isValidHttpUrl,
+    isValidISO8601,
+    isValidE164,
+    isNumeric,
+    isBinary,
+    hasUnicode,
+    isArrayBool
+} from "../../helpers/validators";
 import {ContentType} from "../contentType";
 import {SMS_CONTENT_MAXLEN} from "../../config/constants";
 
@@ -42,38 +50,33 @@ export class SmsMessage {
     }
 
     get content(): string {return this._content;}
-    set content(value: string) {
-        if(value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
-        } else {
-            this._content = value;
+    set content(value: any) {
+        this._contentType = ContentType.TEXT;
+
+        if(isBinary(value) || isArrayBool(value)) {
+            this._contentType = ContentType.BINARY;
+        } else if (hasUnicode(value)) {
+            this._contentType = ContentType.UNICODE;
         }
+
+        if(this._contentType === ContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
+            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
+        }
+
+        this._content = value;
+    }
+
+    set contentTemplateId(value: string) {
+        if(value === "") {
+            this._contentType = ContentType.TEXT;
+        } else {
+            this._contentType = ContentType.TEMPLATE;
+        }
+
+        this._content = value;
     }
 
     get contentType(): string {return this._contentType;}
-    set contentType(value: string) {
-        // @ts-ignore
-        if(Object.values(ContentType).indexOf(value) === -1) {
-            let contentTypes: string = "";
-            const contentTypeEnt = Object.entries(ContentType);
-
-            for(let i = 0; i < contentTypeEnt.length; i++ ) {
-                // @ts-ignore
-                const type = contentTypeEnt[i][1];
-
-                contentTypes += `${type}`;
-
-                if(i < contentTypeEnt.length - 1) {
-                    contentTypes += ', ';
-                }
-            }
-
-            throw Error(`contentType must be one of the following: '${contentTypes}'`);
-        } else {
-            this._contentType = value;
-        }
-
-    }
 
     get substitutions(): Array<object> | undefined {return this._substitutions;}
 

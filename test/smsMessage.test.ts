@@ -41,13 +41,6 @@ describe("SmsMessage", () => {
             smsMessage.content = "Hello World";
         }).to.not.throw();
 
-        expect(() => {
-            smsMessage.contentType = ContentType.TEXT + "invalid";
-        }).to.throw();
-        expect(() => {
-            smsMessage.contentType = ContentType.TEXT;
-        }).to.not.throw();
-
         expect(smsMessage.contentType).to.equal(ContentType.TEXT);
 
         expect(() => {
