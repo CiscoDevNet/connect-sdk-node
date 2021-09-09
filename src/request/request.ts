@@ -1,4 +1,4 @@
-import {request, RequestOptions} from 'https';
+import {request} from 'http';
 
 export default function _request(options: any) {
     const reqOptions = {

@@ -19,13 +19,13 @@ const response = smsClient.sendMessage(smsMessage);
 
 response
     .then(res => {
-        console.log(res);
+        console.log(JSON.parse(res));
 
-        const statusReq = smsClient.getStatus(res.messageId);
+        const statusReq = smsClient.getStatus(JSON.parse(res).messageId);
 
         statusReq
             .then(res => {
-                console.log(res);
+                console.log(JSON.parse(res));
             })
             .catch(err => {
                 console.error(err);
