@@ -8,12 +8,12 @@ export class SmsMessage {
     private _to: string = "";
     private _content: string = "";
     private _contentType: string = ContentType.TEXT;
-    private _substitutions: Array<object> = [];
-    private _correlationId: string = "";
-    private _dltTemplateId: string = "";
-    private _callbackUrl: string = "";
-    private _callbackData: string = "";
-    private _expireAt: string = "";
+    private _substitutions: Array<object> | undefined;
+    private _correlationId: string | undefined;
+    private _dltTemplateId: string | undefined;
+    private _callbackUrl: string | undefined;
+    private _callbackData: string | undefined;
+    private _expireAt: string | undefined;
 
     private _idempotencyKey: string = "";
 
@@ -75,29 +75,29 @@ export class SmsMessage {
 
     }
 
-    get substitutions(): Array<object> {return this._substitutions;}
+    get substitutions(): Array<object> | undefined {return this._substitutions;}
 
-    get correlationId(): string {return this._correlationId;}
-    set correlationId(value: string) {this._correlationId = value;}
+    get correlationId(): string | undefined {return this._correlationId;}
+    set correlationId(value: string | undefined) {this._correlationId = value;}
 
-    get dltTemplateId(): string {return this._dltTemplateId;}
-    set dltTemplateId(value: string) {this._dltTemplateId = value;}
+    get dltTemplateId(): string | undefined {return this._dltTemplateId;}
+    set dltTemplateId(value: string | undefined) {this._dltTemplateId = value;}
 
-    get callbackUrl(): string {return this._callbackUrl;}
-    set callbackUrl(value: string) {
-        if(!isValidHttpUrl(value)) {
+    get callbackUrl(): string | undefined {return this._callbackUrl;}
+    set callbackUrl(value: string | undefined) {
+        if(value && !isValidHttpUrl(value)) {
             throw Error("callbackUrl must be a valid URI");
         }
 
         this._callbackUrl = value;
     }
 
-    get callbackData(): string {return this._callbackData;}
-    set callbackData(value: string) {this._callbackData = value;}
+    get callbackData(): string | undefined {return this._callbackData;}
+    set callbackData(value: string | undefined) {this._callbackData = value;}
 
-    get expireAt(): string {return this._expireAt;}
-    set expireAt(value: string) {
-        if(!isValidISO8601(value)) {
+    get expireAt(): string | undefined {return this._expireAt;}
+    set expireAt(value: string | undefined) {
+        if(value && !isValidISO8601(value)) {
             throw Error("expireAt must be a valid ISO 8601 value");
         }
 
@@ -109,6 +109,11 @@ export class SmsMessage {
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
+        }
+
+        /* istanbul ignore next */
+        if(!this._substitutions) {
+            this._substitutions = [];
         }
 
         this._substitutions.push({[name]: value});

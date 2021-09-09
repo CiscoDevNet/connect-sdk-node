@@ -1,8 +1,19 @@
-const https = require('https');
+import {request, RequestOptions} from 'https';
 
 export default function _request(options: any) {
+    const reqOptions = {
+        hostname: options.hostname,
+        port: options.port,
+        path: options.path,
+        method: options.method,
+        headers: options.headers
+    }
+
+    const payload = JSON.stringify(options.payload) || undefined;
+
     return new Promise((resolve, reject) => {
-        const req = https.request(options, (res: any) => {
+        // @ts-ignore
+        const req = request(reqOptions, (res: any) => {
             let data = '';
 
             res.on('data', (chunk: string) => {
@@ -17,6 +28,10 @@ export default function _request(options: any) {
         req.on('error', (err: any) => {
             reject(err);
         });
+
+        if(payload !== undefined) {
+            req.write(payload);
+        }
 
         req.end();
     })

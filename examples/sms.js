@@ -4,9 +4,7 @@ const {SmsClient, SmsMessage, ContentType} = require('../dist/index');
 
 const smsClient = new SmsClient('bearer test: 1234');
 
-const smsMessage = new SmsMessage();
-smsMessage.from = "+14443332222";
-smsMessage.to = "+14443332222";
+const smsMessage = new SmsMessage("+14443332222", "+14443332222");
 smsMessage.content = "Hello World!";
 smsMessage.contentType = ContentType.TEXT;
 smsMessage.addSubstitution("name", "Tester");
@@ -17,9 +15,9 @@ smsMessage.callbackUrl = "https://my.website.com/callback";
 smsMessage.callbackData = "customerID123|1234|new_sale";
 smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
 
-const request = smsClient.sendMessage(smsMessage);
+const response = smsClient.sendMessage(smsMessage);
 
-request
+response
     .then(res => {
         console.log(res);
 
