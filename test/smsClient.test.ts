@@ -1,4 +1,4 @@
-import {SmsClient, SmsMessage, ContentType} from "../src";
+import {SmsClient, SmsMessage, SmsContentType} from "../src";
 import {assert, expect} from "chai";
 
 const chai = require('chai'),

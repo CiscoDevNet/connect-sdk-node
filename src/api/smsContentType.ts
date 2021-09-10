@@ -1,4 +1,4 @@
-export enum ContentType {
+export enum SmsContentType {
     TEXT = "TEXT",
     TEMPLATE = "TEMPLATE",
     UNICODE = "UNICODE",

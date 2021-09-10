@@ -1,4 +1,4 @@
-import {SmsMessage, ContentType} from "../src";
+import {SmsMessage, SmsContentType} from "../src";
 import {expect} from "chai";
 import {SMS_CONTENT_MAXLEN} from "../dist/config/constants";
 
@@ -41,7 +41,7 @@ describe("SmsMessage", () => {
             smsMessage.content = "Hello World";
         }).to.not.throw();
 
-        expect(smsMessage.contentType).to.equal(ContentType.TEXT);
+        expect(smsMessage.contentType).to.equal(SmsContentType.TEXT);
 
         expect(() => {
             smsMessage.callbackUrl = "http://invalidURL";

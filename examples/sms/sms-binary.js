@@ -1,7 +1,7 @@
 const {SmsClient, SmsMessage} = require('../../dist');
 const fs = require('fs');
 
-//const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
+//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
 
 const data = new Uint8Array(1024);
 

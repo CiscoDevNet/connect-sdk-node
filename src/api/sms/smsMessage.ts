@@ -8,14 +8,14 @@ import {
     hasUnicode,
     isArrayBool
 } from "../../helpers/validators";
-import {ContentType} from "../contentType";
+import {SmsContentType} from "../smsContentType";
 import {SMS_CONTENT_MAXLEN} from "../../config/constants";
 
 export class SmsMessage {
     private _from: string = "";
     private _to: string = "";
     private _content: string = "";
-    private _contentType: string = ContentType.TEXT;
+    private _contentType: string = SmsContentType.TEXT;
     private _substitutions: Array<object> | undefined;
     private _correlationId: string | undefined;
     private _dltTemplateId: string | undefined;
@@ -23,7 +23,7 @@ export class SmsMessage {
     private _callbackData: string | undefined;
     private _expireAt: string | undefined;
 
-    private _idempotencyKey: string = "";
+    _idempotencyKey: string = "";
 
     constructor(from: string, to: string) {
         this.from = from;
@@ -51,15 +51,15 @@ export class SmsMessage {
 
     get content(): string {return this._content;}
     set content(value: any) {
-        this._contentType = ContentType.TEXT;
+        this._contentType = SmsContentType.TEXT;
 
         if(isBinary(value) || isArrayBool(value)) {
-            this._contentType = ContentType.BINARY;
+            this._contentType = SmsContentType.BINARY;
         } else if (hasUnicode(value)) {
-            this._contentType = ContentType.UNICODE;
+            this._contentType = SmsContentType.UNICODE;
         }
 
-        if(this._contentType === ContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
+        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
             throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
         }
 
@@ -68,9 +68,9 @@ export class SmsMessage {
 
     set contentTemplateId(value: string) {
         if(value === "") {
-            this._contentType = ContentType.TEXT;
+            this._contentType = SmsContentType.TEXT;
         } else {
-            this._contentType = ContentType.TEMPLATE;
+            this._contentType = SmsContentType.TEMPLATE;
         }
 
         this._content = value;

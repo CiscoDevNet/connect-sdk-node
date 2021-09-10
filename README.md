@@ -15,16 +15,17 @@ $ npm i --save cpaas-sdk-node
 ## Example
 
 ### Sending a SMS message and getting its status
+
 ```js
-const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
+const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
 
-const smsClient = new SmsClient('bearer test: 1234');
+const smsClient = new WhatsappAudioClient('bearer test: 1234');
 
-const smsMessage = new SmsMessage();
+const smsMessage = new WhatsappAudioMessage();
 smsMessage.from = "+14443332222";
 smsMessage.to = "+14443332222";
 smsMessage.content = "Hello World!";
-smsMessage.contentType = ContentType.TEXT;
+smsMessage.contentType = SmsContentType.TEXT;
 smsMessage.addSubstitution("name", "Tester");
 smsMessage.addSubstitution("dept", "Testing");
 smsMessage.correlationId = "correlation1234";
