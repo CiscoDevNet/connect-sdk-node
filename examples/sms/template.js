@@ -1,11 +1,11 @@
 const {SmsClient, SmsMessage, ContentType} = require('../../dist');
 
-//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
+//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
 const smsClient = new SmsClient('bearer test: 1234');
 
 const smsMessage = new SmsMessage("+14443332222", "+14443332222");
-smsMessage.content = "Hello World!";
+smsMessage.contentTemplateId = "tmpl12345";
 smsMessage.addSubstitution("name", "Tester");
 smsMessage.addSubstitution("dept", "Testing");
 smsMessage.correlationId = "correlation1234";
@@ -13,8 +13,6 @@ smsMessage.dltTemplateId = "dlt444";
 smsMessage.callbackUrl = "https://my.website.com/callback";
 smsMessage.callbackData = "customerID123|1234|new_sale";
 smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
-
-console.log(smsMessage);
 
 const response = smsClient.sendMessage(smsMessage);
 

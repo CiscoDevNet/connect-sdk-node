@@ -4,7 +4,7 @@ import {
     isValidE164,
     isNumeric
 } from "../../../helpers/validators";
-import {WhatsappContentType} from "../../whatsappContentType";
+import {WhatsappContentType} from "../whatsappContentType";
 
 export class WhatsappAudioMessage {
     private _contentType: string = WhatsappContentType.AUDIO;

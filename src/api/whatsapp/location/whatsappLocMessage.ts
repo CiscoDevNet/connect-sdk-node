@@ -8,12 +8,15 @@ import {SmsContentType} from "../../sms/smsContentType";
 import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
-export class WhatsappTextMessage {
-    private _contentType: string = WhatsappContentType.TEXT;
-    private _content: string = "";
-    private _previewUrl: string | undefined = "";
+export class WhatsappLocMessage {
+    private _contentType: string = WhatsappContentType.LOCATION;
+    private _latitude: number | undefined;
+    private _longitude: number | undefined;
     private _from: string = "";
     private _to: string = "";
+
+    private _name: string | undefined;
+    private _address: string | undefined;
     private _callbackUrl: string | undefined;
     private _callbackData: string | undefined;
     private _correlationId: string | undefined;
@@ -21,31 +24,32 @@ export class WhatsappTextMessage {
 
     _idempotencyKey: string = "";
 
-    constructor(from: string, to: string, content: string) {
+    constructor(from: string, to: string, lat:number, long: number) {
+        this.latitude = lat;
+        this.longitude = long;
         this.from = from;
         this.to = to;
-        this.content = content;
         this._idempotencyKey = uuidv4();
     }
 
     get contentType(): string {return this._contentType;}
 
-    get content(): string {return this._content;}
-    set content(value: any) {
-        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
+    get latitude(): number | undefined {return this._latitude};
+    set latitude(value: number | undefined) {
+        if(value === undefined || !isNumeric(value)) {
+            throw Error("Latitude must be a number<double>");
         }
 
-        this._content = value;
+        this._latitude = value;
     }
 
-    get previewUrl(): string | undefined {return this._previewUrl}
-    set previewUrl(value: string | undefined) {
-        if(value && !isValidHttpUrl(value)) {
-            throw Error("previewUrl must be a valid URL");
+    get longitude(): number | undefined {return this._longitude};
+    set longitude(value: number | undefined) {
+        if(value === undefined || !isNumeric(value)) {
+            throw Error("Longitude must be a number<double>");
         }
 
-        this._callbackUrl = value;
+        this._longitude = value;
     }
 
     get from(): string {return this._from;}
@@ -65,6 +69,12 @@ export class WhatsappTextMessage {
 
         this._to = value;
     }
+
+    get name(): string | undefined {return this._name}
+    set name(value: string | undefined) {this._name = value}
+
+    get address(): string | undefined {return this._address}
+    set address(value: string | undefined) {this._address = value}
 
     get callbackUrl(): string | undefined {return this._callbackUrl;}
     set callbackUrl(value: string | undefined) {

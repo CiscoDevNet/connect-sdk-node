@@ -1,14 +1,11 @@
-const {SmsClient, SmsMessage} = require('../../dist');
-const fs = require('fs');
+const {SmsClient, SmsMessage, ContentType} = require('../../dist');
 
-//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
-
-const data = new Uint8Array(1024);
+//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
 const smsClient = new SmsClient('bearer test: 1234');
 
 const smsMessage = new SmsMessage("+14443332222", "+14443332222");
-smsMessage.content = data;
+smsMessage.content = "Hello World!";
 smsMessage.addSubstitution("name", "Tester");
 smsMessage.addSubstitution("dept", "Testing");
 smsMessage.correlationId = "correlation1234";

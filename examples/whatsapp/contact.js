@@ -1,10 +1,8 @@
-const {WhatsappTextClient, WhatsappTextMessage} = require('../../dist');
+const {WhatsappContactClient, WhatsappContactMessage} = require('../../dist');
 
-//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
+const whatsAppClient = new WhatsappContactClient('bearer test: 1234');
 
-const whatsAppClient = new WhatsappTextClient('bearer test: 1234');
-
-const whatsAppMessage = new WhatsappTextMessage("+14443332222", "+14443332222", "Hello World");
+const whatsAppMessage = new WhatsappContactMessage("+14443332222", "+14443332222");
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.previewUrl = "https://my.website.com/preview";

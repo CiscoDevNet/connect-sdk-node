@@ -1,6 +1,6 @@
 const {WhatsappAudioClient, WhatsappAudioMessage} = require('../../dist');
 
-//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
+//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
 const whatsAppClient = new WhatsappAudioClient('bearer test: 1234');
 

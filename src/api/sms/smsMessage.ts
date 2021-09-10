@@ -8,7 +8,7 @@ import {
     hasUnicode,
     isArrayBool
 } from "../../helpers/validators";
-import {SmsContentType} from "../smsContentType";
+import {SmsContentType} from "./smsContentType";
 import {SMS_CONTENT_MAXLEN} from "../../config/constants";
 
 export class SmsMessage {

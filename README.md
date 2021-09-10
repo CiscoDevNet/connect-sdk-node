@@ -17,11 +17,11 @@ $ npm i --save cpaas-sdk-node
 ### Sending a SMS message and getting its status
 
 ```js
-const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
+const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
-const smsClient = new WhatsappAudioClient('bearer test: 1234');
+const smsClient = new WhatsappDocClient('bearer test: 1234');
 
-const smsMessage = new WhatsappAudioMessage();
+const smsMessage = new WhatsappDocMessage();
 smsMessage.from = "+14443332222";
 smsMessage.to = "+14443332222";
 smsMessage.content = "Hello World!";

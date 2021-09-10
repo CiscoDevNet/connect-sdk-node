@@ -2,7 +2,7 @@
   "name": "examples",
   "version": "1.0.0",
   "description": "",
-  "main": "sms/sms-text.js",
+  "main": "sms/text.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

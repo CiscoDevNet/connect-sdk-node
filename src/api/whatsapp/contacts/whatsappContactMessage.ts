@@ -4,16 +4,15 @@ import {
     isValidE164,
     isNumeric
 } from "../../../helpers/validators";
-import {SmsContentType} from "../../sms/smsContentType";
-import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
+import {WhatsappContact} from "./whatsappContact";
 
-export class WhatsappTextMessage {
-    private _contentType: string = WhatsappContentType.TEXT;
-    private _content: string = "";
-    private _previewUrl: string | undefined = "";
+export class WhatsappContactMessage {
+    private _contentType: string = WhatsappContentType.CONTACTS;
+    private _contacts: Array<WhatsappContact> = [];
     private _from: string = "";
     private _to: string = "";
+
     private _callbackUrl: string | undefined;
     private _callbackData: string | undefined;
     private _correlationId: string | undefined;
@@ -21,32 +20,15 @@ export class WhatsappTextMessage {
 
     _idempotencyKey: string = "";
 
-    constructor(from: string, to: string, content: string) {
+    constructor(from: string, to: string) {
         this.from = from;
         this.to = to;
-        this.content = content;
         this._idempotencyKey = uuidv4();
     }
 
     get contentType(): string {return this._contentType;}
 
-    get content(): string {return this._content;}
-    set content(value: any) {
-        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
-        }
-
-        this._content = value;
-    }
-
-    get previewUrl(): string | undefined {return this._previewUrl}
-    set previewUrl(value: string | undefined) {
-        if(value && !isValidHttpUrl(value)) {
-            throw Error("previewUrl must be a valid URL");
-        }
-
-        this._callbackUrl = value;
-    }
+    get contacts(): Array<WhatsappContact> {return this._contacts}
 
     get from(): string {return this._from;}
     set from(value: string) {
@@ -96,5 +78,9 @@ export class WhatsappTextMessage {
         }
 
         this._substitutions.push({[name]: value});
+    }
+
+    addContact(contact: WhatsappContact) {
+        this._contacts.push(contact);
     }
 }

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/api/sms/whatsappAudioClient.ts</title>
+    <title>Code coverage report for src/api/sms/whatsappDocClient.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/api/sms</a> whatsappAudioClient.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/api/sms</a> whatsappDocClient.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -170,11 +170,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {CpaasClient} from "../cpaasClient";
-import {WhatsappAudioMessage} from "./smsMessage";
+import {WhatsappDocMessage} from "./smsMessage";
 import {uuidv4} from "../../helpers/identifiers";
 &nbsp;
-export class WhatsappAudioClient extends CpaasClient {
-    sendMessage(message: WhatsappAudioMessage) {
+export class WhatsappDocClient extends CpaasClient {
+    sendMessage(message: WhatsappDocMessage) {
         if(!message.idempotencyKey || message.idempotencyKey === "") {
             throw Error("Must provide a 'idempotencyKey' value for sending a message");
         }

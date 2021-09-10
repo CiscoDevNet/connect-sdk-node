@@ -1,6 +1,6 @@
 const {SmsClient, SmsMessage, ContentType} = require('../../dist');
 
-//const {WhatsappAudioClient, WhatsappAudioMessage} = require('cpaas-sdk-node')
+//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
 const smsClient = new SmsClient('bearer test: 1234');
 

@@ -4,16 +4,16 @@ import {
     isValidE164,
     isNumeric
 } from "../../../helpers/validators";
-import {SmsContentType} from "../../sms/smsContentType";
-import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
-export class WhatsappTextMessage {
-    private _contentType: string = WhatsappContentType.TEXT;
-    private _content: string = "";
-    private _previewUrl: string | undefined = "";
+export class WhatsappImageMessage {
+    private _contentType: string = WhatsappContentType.IMAGE;
+    private _url:string = "";
+    private _mimeType: string = "";
     private _from: string = "";
     private _to: string = "";
+
+    private _caption: string | undefined;
     private _callbackUrl: string | undefined;
     private _callbackData: string | undefined;
     private _correlationId: string | undefined;
@@ -21,31 +21,32 @@ export class WhatsappTextMessage {
 
     _idempotencyKey: string = "";
 
-    constructor(from: string, to: string, content: string) {
+    constructor(from: string, to: string, url: string, mimeType: string) {
         this.from = from;
         this.to = to;
-        this.content = content;
+        this.url = url;
+        this.mimeType = mimeType;
         this._idempotencyKey = uuidv4();
     }
 
     get contentType(): string {return this._contentType;}
 
-    get content(): string {return this._content;}
-    set content(value: any) {
-        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
-        }
-
-        this._content = value;
-    }
-
-    get previewUrl(): string | undefined {return this._previewUrl}
-    set previewUrl(value: string | undefined) {
+    get url(): string {return this._url}
+    set url(value: string) {
         if(value && !isValidHttpUrl(value)) {
             throw Error("previewUrl must be a valid URL");
         }
 
-        this._callbackUrl = value;
+        this._url = value;
+    }
+
+    get mimeType(): string {return this._mimeType};
+    set mimeType(value: string) {
+        if(value === "") {
+            throw new Error("mimeType must be defined");
+        }
+
+        this._mimeType = value;
     }
 
     get from(): string {return this._from;}
@@ -64,6 +65,11 @@ export class WhatsappTextMessage {
         }
 
         this._to = value;
+    }
+
+    get caption(): string | undefined {return this._caption}
+    set caption(value: string | undefined) {
+        this._caption = value;
     }
 
     get callbackUrl(): string | undefined {return this._callbackUrl;}
