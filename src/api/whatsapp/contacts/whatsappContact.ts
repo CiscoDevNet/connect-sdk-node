@@ -75,7 +75,7 @@ export class WhatsappContact {
     get phones() {return this._phones}
     addPhone(value: WhatsappContactPhone) {
         if(!value) {
-            throw Error("Must provide a valid phone object to add to contacts");
+            throw Error("Must provide a valid phone media to add to contacts");
         }
 
         // @ts-ignore
@@ -85,7 +85,7 @@ export class WhatsappContact {
     get addresses() {return this._addresses}
     addAddress(value: WhatsappContactAddr) {
         if(!value) {
-            throw Error("Must provide a valid address object to add to contacts");
+            throw Error("Must provide a valid address media to add to contacts");
         }
 
         // @ts-ignore
@@ -95,7 +95,7 @@ export class WhatsappContact {
     get emails() {return this._emails}
     addEmail(value: WhatsappContactEmail) {
         if(!value) {
-            throw Error("Must provide a valid email object to add to contacts");
+            throw Error("Must provide a valid email media to add to contacts");
         }
 
         // @ts-ignore
@@ -105,7 +105,7 @@ export class WhatsappContact {
     get urls() {return this._urls}
     addUrl(value: WhatsappContactUrl) {
         if(!value) {
-            throw Error("Must provide a valid url object to add to contacts");
+            throw Error("Must provide a valid url media to add to contacts");
         }
 
         // @ts-ignore

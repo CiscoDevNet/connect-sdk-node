@@ -46,7 +46,12 @@ export function isArrayBool(value: any) {
     for (let i of value) {
         if (i !== 0 && i !== 1) return false;
     }
+
     return true;
+}
+
+export function isBoolean(value: any) {
+    return 'boolean' === typeof value;
 }
 
 export function hasUnicode(value: any) {

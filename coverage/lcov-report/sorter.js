@@ -48,7 +48,7 @@ var addSorting = (function() {
         }
         return cols;
     }
-    // attaches a data attribute to every tr element with an object
+    // attaches a data attribute to every tr element with an media
     // of data values keyed by column name
     function loadRowData(tableRow) {
         var tableCols = tableRow.querySelectorAll('td'),
