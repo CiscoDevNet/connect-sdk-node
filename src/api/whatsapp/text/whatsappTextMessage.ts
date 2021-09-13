@@ -2,16 +2,16 @@ import {uuidv4} from "../../../helpers/identifiers";
 import {
     isValidHttpUrl,
     isValidE164,
-    isNumeric
+    isNumeric, isBoolean
 } from "../../../helpers/validators";
-import {SmsContentType} from "../../sms/smsContentType";
+import {SmsContentType} from "../../sms";
 import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
 export class WhatsappTextMessage {
     private _contentType: string = WhatsappContentType.TEXT;
     private _content: string = "";
-    private _previewUrl: string | undefined = "";
+    private _previewUrl: boolean | undefined = false;
     private _from: string = "";
     private _to: string = "";
     private _callbackUrl: string | undefined;
@@ -31,21 +31,21 @@ export class WhatsappTextMessage {
     get contentType(): string {return this._contentType;}
 
     get content(): string {return this._content;}
-    set content(value: any) {
+    set content(value: string) {
         if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
             throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
         }
 
-        this._content = value;
+        this._content = value.toString();
     }
 
-    get previewUrl(): string | undefined {return this._previewUrl}
-    set previewUrl(value: string | undefined) {
-        if(value && !isValidHttpUrl(value)) {
-            throw Error("previewUrl must be a valid URL");
+    get previewUrl(): boolean | undefined {return this._previewUrl}
+    set previewUrl(value: boolean | undefined) {
+        if(value && !isBoolean(value)) {
+            throw Error("previewUrl must be a boolean value");
         }
 
-        this._callbackUrl = value;
+        this._previewUrl = value;
     }
 
     get from(): string {return this._from;}

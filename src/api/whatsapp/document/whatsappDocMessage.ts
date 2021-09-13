@@ -38,7 +38,7 @@ export class WhatsappDocMessage {
     get url(): string {return this._url}
     set url(value: string) {
         if(value && !isValidHttpUrl(value)) {
-            throw Error("previewUrl must be a valid URL");
+            throw Error("value for 'url' must be a valid URL");
         }
 
         this._url = value;
