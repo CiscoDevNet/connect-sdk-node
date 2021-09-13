@@ -49,3 +49,5 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+docker-compose.yml
