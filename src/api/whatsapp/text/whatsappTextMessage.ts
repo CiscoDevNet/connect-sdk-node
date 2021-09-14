@@ -66,10 +66,6 @@ export class WhatsappTextMessage {
 
     get content(): string {return this._content;}
     set content(value: string) {
-        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
-        }
-
         this._content = value.toString();
     }
 

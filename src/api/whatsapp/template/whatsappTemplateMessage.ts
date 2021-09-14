@@ -49,9 +49,10 @@ export class WhatsappTemplateMessage {
      */
     _idempotencyKey: string = "";
 
-    constructor(from: string, to: string) {
+    constructor(from: string, to: string, templateId: string) {
         this.from = from;
         this.to = to;
+        this.templateId = templateId;
         this._idempotencyKey = uuidv4();
     }
 
