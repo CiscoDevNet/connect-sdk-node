@@ -11,7 +11,7 @@ export class WhatsappContactEmail {
     constructor() {
         for(const [key, value] of Object.entries(EmailType)) {
             // @ts-ignore
-            this.addrTypeArr.push(value);
+            this.emailTypeArr.push(value);
         }
 
         for(let i = 0; i < this.emailTypeArr.length; i++) {
@@ -27,7 +27,7 @@ export class WhatsappContactEmail {
     set type(value: string | undefined) {
         if(value) {
             // @ts-ignore
-            if(!this.addrTypeArr.includes(value)) {
+            if(!this.emailTypeArr.includes(value)) {
                 throw Error(`Contact email type must be of type [${this.emailTypeStrList}]`);
             }
 
@@ -42,5 +42,21 @@ export class WhatsappContactEmail {
         }
 
         this._address = value;
+    }
+
+    toJSON() {
+        const payload = {
+            type: this.type,
+            address: this.address
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
     }
 }

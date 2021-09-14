@@ -1,8 +1,8 @@
-const {WhatsappLocClient, WhatsappLocMessage} = require('../../dist');
+const {WhatsappClient, WhatsappLocMessage} = require('../../dist');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
-const whatsAppClient = new WhatsappLocClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappLocMessage("+14443332222", "+14443332222", 28.372395561985662, -81.50942795589746);
 whatsAppMessage.addSubstitution("name", "Tester");

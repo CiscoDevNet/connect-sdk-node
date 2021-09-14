@@ -68,4 +68,25 @@ export class WhatsappContactAddr {
     set countryCode(value: string | undefined) {
         this._countryCode = value;
     }
+
+    toJSON() {
+        const payload = {
+            type: this.type,
+            street: this.street,
+            city: this.city,
+            state: this.state,
+            zip: this.zip,
+            country: this.country,
+            countryCode: this.countryCode
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

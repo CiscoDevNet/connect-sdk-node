@@ -49,4 +49,21 @@ export class WhatsappContactPhone {
     set whatsAppId(value: string | undefined) {
         this._whatsAppId = value;
     }
+
+    toJSON() {
+        const payload = {
+            type: this.type,
+            number: this.number,
+            whatsAppId: this.whatsAppId
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

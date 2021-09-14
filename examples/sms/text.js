@@ -1,4 +1,4 @@
-const {SmsClient, SmsMessage, ContentType} = require('../../dist');
+const {SmsClient, SmsMessage} = require('../../dist');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
@@ -14,7 +14,7 @@ smsMessage.callbackUrl = "https://my.website.com/callback";
 smsMessage.callbackData = "customerID123|1234|new_sale";
 smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
 
-console.log(smsMessage);
+console.log(smsMessage.toJSON());
 
 const response = smsClient.sendMessage(smsMessage);
 

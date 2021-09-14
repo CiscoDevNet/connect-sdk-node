@@ -1,8 +1,8 @@
-const {WhatsappVideoClient, WhatsappVideoMessage} = require('../../dist');
+const {WhatsappClient, WhatsappVideoMessage} = require('../../dist');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
-const whatsAppClient = new WhatsappVideoClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappVideoMessage("+14443332222", "+14443332222", "http://my.website.com/video.mp4", "video/mp4");
 whatsAppMessage.caption = "My video";

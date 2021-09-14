@@ -1,8 +1,8 @@
-const {WhatsappAudioClient, WhatsappAudioMessage} = require('../../dist');
+const {WhatsappClient, WhatsappAudioMessage} = require('../../dist');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
-const whatsAppClient = new WhatsappAudioClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappAudioMessage("+14443332222", "+14443332222", "http://my.website.com/audio.wav", "audio/wav");
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";
@@ -11,7 +11,7 @@ whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 
-console.log(whatsAppMessage);
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 

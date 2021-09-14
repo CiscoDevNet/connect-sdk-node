@@ -3,7 +3,6 @@ import {StyleType} from "../types/styleType";
 import {GenderType} from "../types/genderType";
 import {TextFormatType} from "../types/textFormatType";
 import {isNumeric} from "../../../helpers/validators";
-import {EmailType} from "../../whatsapp/contacts/types";
 
 export class TtsVoiceAudio {
     private _text: string = "";

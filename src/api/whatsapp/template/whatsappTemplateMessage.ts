@@ -4,7 +4,6 @@ import {
     isValidE164,
     isNumeric
 } from "../../../helpers/validators";
-import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
 export class WhatsappTemplateMessage {
@@ -80,5 +79,27 @@ export class WhatsappTemplateMessage {
         }
 
         this._substitutions.push({[name]: value});
+    }
+
+    toJSON() {
+        const payload = {
+            from: this.from,
+            to: this.to,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            correlationId: this.correlationId,
+            substitutions: this.substitutions,
+            contentType: this.contentType,
+            templateId: this.templateId
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
     }
 }

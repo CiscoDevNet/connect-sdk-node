@@ -1,5 +1,4 @@
 const {SmsClient, SmsMessage} = require('../../dist');
-const fs = require('fs');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 

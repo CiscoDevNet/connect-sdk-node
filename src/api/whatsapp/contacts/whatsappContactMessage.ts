@@ -83,4 +83,26 @@ export class WhatsappContactMessage {
     addContact(contact: WhatsappContact) {
         this._contacts.push(contact);
     }
+
+    toJSON() {
+        const payload = {
+            contacts: this.contacts,
+            from: this.from,
+            to: this.to,
+            contentType: this.contentType,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            correlationId: this.correlationId,
+            substitutions: this.substitutions
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

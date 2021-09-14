@@ -58,4 +58,23 @@ export class TtsVoiceMessage {
     set correlationId(value: string | undefined) {this._correlationId = value;}
 
     get idempotencyKey(): string {return this._idempotencyKey;}
+
+    toJSON() {
+        const payload = {
+            callerId: this.callerId,
+            dialedNumber: this.dialedNumber,
+            audio: this.audio,
+            callbackUrl: this.callbackUrl,
+            correlationId: this.correlationId
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

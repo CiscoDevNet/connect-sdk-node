@@ -1,5 +1,5 @@
-import {uuidv4} from "../../../helpers/identifiers";
-import {isBoolean, isNumeric, isValidE164, isValidHttpUrl} from "../../../helpers/validators";
+import {uuidv4} from "../../helpers/identifiers";
+import {isBoolean, isNumeric, isValidE164, isValidHttpUrl} from "../../helpers/validators";
 
 export class TtsVoiceCall {
     private _callerId: string = "";
@@ -67,4 +67,24 @@ export class TtsVoiceCall {
     set correlationId(value: string | undefined) {this._correlationId = value;}
 
     get idempotencyKey(): string {return this._idempotencyKey;}
+
+    toJSON() {
+        const payload = {
+            callerId: this.callerId,
+            dialedNumber: this.dialedNumber,
+            callbackUrl: this.callbackUrl,
+            recordCallSeconds: this.recordCallSeconds,
+            detectVoiceMail: this.detectVoiceMail,
+            correlationId: this.correlationId
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

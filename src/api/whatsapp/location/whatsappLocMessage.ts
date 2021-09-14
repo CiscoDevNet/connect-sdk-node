@@ -107,4 +107,29 @@ export class WhatsappLocMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    toJSON() {
+        const payload = {
+            from: this.from,
+            to: this.to,
+            latitude: this.latitude,
+            longitude: this.longitude,
+            name: this.name,
+            address: this.address,
+            contentType: this.contentType,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            correlationId: this.correlationId,
+            substitutions: this.substitutions
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

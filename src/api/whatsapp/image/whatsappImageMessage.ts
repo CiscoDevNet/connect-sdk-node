@@ -103,4 +103,28 @@ export class WhatsappImageMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    toJSON() {
+        const payload = {
+            contentType: this.contentType,
+            url: this.url,
+            mimeType: this.mimeType,
+            from: this.from,
+            to: this.to,
+            caption: this.caption,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            correlationId: this.correlationId,
+            substitutions: this.substitutions
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

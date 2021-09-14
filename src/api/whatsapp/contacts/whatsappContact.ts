@@ -55,6 +55,8 @@ export class WhatsappContact {
         if(value && !isValidISO8601(value)) {
             throw Error("Contact birthday must be in a valid ISO8601 format");
         }
+
+        this._birthday = value;
     }
 
     get company() {return this._company}
@@ -78,6 +80,10 @@ export class WhatsappContact {
             throw Error("Must provide a valid phone media to add to contacts");
         }
 
+        if(!this._phones) {
+            this._phones = [];
+        }
+
         // @ts-ignore
         this._phones.push(value);
     }
@@ -86,6 +92,10 @@ export class WhatsappContact {
     addAddress(value: WhatsappContactAddr) {
         if(!value) {
             throw Error("Must provide a valid address media to add to contacts");
+        }
+
+        if(!this._addresses) {
+            this._addresses = [];
         }
 
         // @ts-ignore
@@ -98,6 +108,10 @@ export class WhatsappContact {
             throw Error("Must provide a valid email media to add to contacts");
         }
 
+        if(!this._emails) {
+            this._emails = [];
+        }
+
         // @ts-ignore
         this._emails.push(value);
     }
@@ -108,7 +122,39 @@ export class WhatsappContact {
             throw Error("Must provide a valid url media to add to contacts");
         }
 
+        if(!this._urls) {
+            this._urls = [];
+        }
+
         // @ts-ignore
         this._urls.push(value);
+    }
+
+    toJSON() {
+        const payload = {
+            formattedName: this.formattedName,
+            namePrefix: this.namePrefix,
+            firstName: this.firstName,
+            middleName: this.middleName,
+            lastName: this.lastName,
+            nameSuffix: this.nameSuffix,
+            birthday: this.birthday,
+            company: this.company,
+            department: this.department,
+            title: this.title,
+            phones: this.phones,
+            addresses: this.addresses,
+            emails: this.emails,
+            urls: this.urls
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
     }
 }

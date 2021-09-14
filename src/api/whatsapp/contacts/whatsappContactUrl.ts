@@ -11,7 +11,7 @@ export class WhatsappContactUrl {
     constructor() {
         for(const [key, value] of Object.entries(UrlType)) {
             // @ts-ignore
-            this.addrTypeArr.push(value);
+            this.urlTypeArr.push(value);
         }
 
         for(let i = 0; i < this.urlTypeArr.length; i++) {
@@ -27,7 +27,7 @@ export class WhatsappContactUrl {
     set type(value: string | undefined) {
         if(value) {
             // @ts-ignore
-            if(!this.addrTypeArr.includes(value)) {
+            if(!this.urlTypeArr.includes(value)) {
                 throw Error(`Contact URL type must be of type [${this.urlTypeStrList}]`);
             }
 
@@ -42,5 +42,21 @@ export class WhatsappContactUrl {
         }
 
         this._address = value;
+    }
+
+    toJSON() {
+        const payload = {
+            type: this.type,
+            address: this.address
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
     }
 }

@@ -121,4 +121,28 @@ export class SmsMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    toJSON() {
+        const payload = {
+            from: this.from,
+            to: this.to,
+            content: this.content,
+            contentType: this.contentType,
+            substitutions: this.substitutions,
+            correlationId: this.correlationId,
+            dltTemplateId: this.dltTemplateId,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            expireAt: this.expireAt
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

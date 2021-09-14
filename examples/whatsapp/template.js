@@ -1,30 +1,14 @@
-const {WhatsappContactClient, WhatsappContactMessage} = require('../../dist');
+const {WhatsappClient, WhatsappTemplateMessage} = require('../../dist');
 
-const {PhoneType} = require('../../dist/api/whatsapp/contacts/types/phone');
+const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
-const phoneTypeArr = [];
-
-const testVal = "CELL";
-
-for(const [key, value] of Object.entries(PhoneType)) {
-    phoneTypeArr.push(value);
-}
-
-console.log(phoneTypeArr.includes(testVal));
-
-
-/*
-const whatsAppClient = new WhatsappContactClient('bearer test: 1234');
-
-const whatsAppMessage = new WhatsappContactMessage("+14443332222", "+14443332222");
+const whatsAppMessage = new WhatsappTemplateMessage("+14443332222", "+14443332222");
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
-whatsAppMessage.previewUrl = "https://my.website.com/preview";
-whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";
 whatsAppMessage.callbackData = "customerID123|1234|new_sale";
-
-
+whatsAppMessage.correlationId = "correlation1234";
+whatsAppMessage.templateId = "tmpl4432";
 
 console.log(whatsAppMessage);
 
@@ -48,4 +32,3 @@ response
     .catch(err => {
         console.error(err);
     });
-*/

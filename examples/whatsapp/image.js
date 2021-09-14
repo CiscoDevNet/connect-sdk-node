@@ -1,8 +1,8 @@
-const {WhatsappImageClient, WhatsappImageMessage} = require('../../dist');
+const {WhatsappClient, WhatsappImageMessage} = require('../../dist');
 
 //const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
 
-const whatsAppClient = new WhatsappImageClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappImageMessage("+14443332222", "+14443332222", "http://my.website.com/image.png", "image/png");
 whatsAppMessage.caption = "My image";

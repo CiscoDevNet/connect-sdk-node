@@ -20,26 +20,6 @@ export class SmsClient extends CpaasClient {
             throw Error("Must provide a 'content' value for sending a message");
         }
 
-        const payload = {
-            from: message.from,
-            to: message.to,
-            content: message.content,
-            contentType: message.contentType,
-            substitutions: message.substitutions,
-            correlationId: message.correlationId,
-            dltTemplateId: message.dltTemplateId,
-            callbackUrl: message.callbackUrl,
-            callbackData: message.callbackData,
-            expireAt: message.expireAt
-        };
-
-        for(const [key, value] of Object.entries(payload)) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete payload[key];
-            }
-        }
-
         const options = {
             method: 'POST',
             path: '/v1/sms/messages',
@@ -48,7 +28,7 @@ export class SmsClient extends CpaasClient {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
             },
-            payload
+            payload: message.toJSON()
         };
 
         return request(options);

@@ -97,4 +97,27 @@ export class WhatsappTextMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    toJSON() {
+        const payload = {
+            from: this.from,
+            to: this.to,
+            content: this.content,
+            previewUrl: this.previewUrl,
+            contentType: this.contentType,
+            substitutions: this.substitutions,
+            correlationId: this.correlationId,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+        };
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
+    }
 }

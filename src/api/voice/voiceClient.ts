@@ -1,9 +1,9 @@
-import {CpaasClient} from "../../cpaasClient";
-import request from "../../../request";
-import {TtsVoiceMessage} from "./ttsVoiceMessage";
+import {TtsVoiceMessage} from "./tts/ttsVoiceMessage";
+import request from "../../request";
 import {TtsVoiceCall} from "./ttsVoiceCall";
+import {CpaasClient} from "../cpaasClient";
 
-export class TtsVoiceClient extends CpaasClient {
+export class VoiceClient extends CpaasClient {
     sendVoiceMessage(message: TtsVoiceMessage) {
         if(!message.idempotencyKey || message.idempotencyKey === "") {
             throw Error("Must provide a 'idempotencyKey' value for sending a voice message");
@@ -17,21 +17,6 @@ export class TtsVoiceClient extends CpaasClient {
             throw Error("Must provide at least one 'dialedNumber' for sending a voice message");
         }
 
-        const payload = {
-            callerId: message.callerId,
-            dialedNumber: message.dialedNumber,
-            audio: message.audio,
-            callbackUrl: message.callbackUrl,
-            correlationId: message.correlationId
-        };
-
-        for(const [key, value] of Object.entries(payload)) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete payload[key];
-            }
-        }
-
         const options = {
             method: 'POST',
             path: '/v1/voice/messages',
@@ -40,7 +25,7 @@ export class TtsVoiceClient extends CpaasClient {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
             },
-            payload
+            payload: message.toJSON()
         };
 
         return request(options);
@@ -59,22 +44,6 @@ export class TtsVoiceClient extends CpaasClient {
             throw Error("Must provide at least one 'dialedNumber' for sending a voice message");
         }
 
-        const payload = {
-            callerId: callData.callerId,
-            dialedNumber: callData.dialedNumber,
-            callbackUrl: callData.callbackUrl,
-            recordCallSeconds: callData.recordCallSeconds,
-            detectVoiceMail: callData.detectVoiceMail,
-            correlationId: callData.correlationId
-        };
-
-        for(const [key, value] of Object.entries(payload)) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete payload[key];
-            }
-        }
-
         const options = {
             method: 'POST',
             path: '/v1/voice/calls',
@@ -83,7 +52,7 @@ export class TtsVoiceClient extends CpaasClient {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
             },
-            payload
+            payload: callData.toJSON()
         };
 
         return request(options);
