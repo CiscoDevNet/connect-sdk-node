@@ -1,9 +1,22 @@
-import {PhoneType} from './types/phone';
+import {PhoneType} from './types';
 import {isValidE164} from "../../../helpers/validators";
 
+/**
+ * Phone class that gets passed into a WhatsappContact phones array
+ */
+
 export class WhatsappContactPhone {
+    /**
+     * @remark string value for type field
+     */
     private _type: string | undefined;
+    /**
+     * @remark string value for number field
+     */
     private _number: string | undefined;
+    /**
+     * @remark string value for whatsAppId
+     */
     private _whatsAppId: string | undefined;
 
     private phoneTypeArr = [];
@@ -49,6 +62,12 @@ export class WhatsappContactPhone {
     set whatsAppId(value: string | undefined) {
         this._whatsAppId = value;
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

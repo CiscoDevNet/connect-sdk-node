@@ -1,5 +1,13 @@
 import {request} from 'http';
 
+/**
+ * Function to send request to api
+ *
+ * @param options options for http request object
+ *
+ * @returns promise response object
+ */
+
 export default function _request(options: any) {
     const reqOptions = {
         hostname: options.hostname,

@@ -4,20 +4,65 @@ import {WhatsappContactAddr} from "./whatsappContactAddr";
 import {WhatsappContactEmail} from "./whatsappContactEmail";
 import {WhatsappContactUrl} from "./whatsappContactUrl";
 
+/**
+ * Contact class that gets passed into a WhatsappContactMessage
+ */
+
 export class WhatsappContact {
+    /**
+     * @remark string value for formattedName
+     */
     private _formattedName: string | undefined;
+    /**
+     * @remark string value for namePrefix
+     */
     private _namePrefix: string | undefined;
+    /**
+     * @remark string value for firstName
+     */
     private _firstName: string | undefined;
+    /**
+     * @remark string value for middleName
+     */
     private _middleName: string | undefined;
+    /**
+     * @remark string value for lastName
+     */
     private _lastName: string | undefined;
+    /**
+     * @remark string value for nameSuffix
+     */
     private _nameSuffix: string | undefined;
+    /**
+     * @remark ISO8601 string value for birthday
+     */
     private _birthday: string | undefined;
+    /**
+     * @remark string value for company
+     */
     private _company:string | undefined;
+    /**
+     * @remark string value for department
+     */
     private _department:string | undefined;
+    /**
+     * @remark string value for title
+     */
     private _title:string | undefined;
+    /**
+     * @remark Array of WhatsappContactPhone objects
+     */
     private _phones: Array<WhatsappContactPhone> | undefined;
-    private _addresses: Array<WhatsappContactAddr> | undefined;
+    /**
+     * @remark Array of WhatsappContactAddr objects
+     */
+    private _addresses: Array<WhatsappContactAddr> | undefined;/**
+     * @remark Array of WhatsappContactEmail objects
+     */
     private _emails: Array<WhatsappContactEmail> | undefined;
+    /**
+     * @remark Array of WhatsappContactUrl objects
+     */
     private _urls: Array<WhatsappContactUrl> | undefined;
 
     get formattedName() {return this._formattedName}
@@ -75,6 +120,13 @@ export class WhatsappContact {
     }
 
     get phones() {return this._phones}
+
+    /**
+     * Adds a phone object to the phones array
+     *
+     * @param value accepts a WhatsappContactPhone object
+     */
+
     addPhone(value: WhatsappContactPhone) {
         if(!value) {
             throw Error("Must provide a valid phone media to add to contacts");
@@ -89,6 +141,13 @@ export class WhatsappContact {
     }
 
     get addresses() {return this._addresses}
+
+    /**
+     * Adds a address object to the addresses array
+     *
+     * @param value accepts a WhatsappContactAddr object
+     */
+
     addAddress(value: WhatsappContactAddr) {
         if(!value) {
             throw Error("Must provide a valid address media to add to contacts");
@@ -103,6 +162,13 @@ export class WhatsappContact {
     }
 
     get emails() {return this._emails}
+
+    /**
+     * Adds a email object to the emails array
+     *
+     * @param value accepts a WhatsappContactEmail object
+     */
+
     addEmail(value: WhatsappContactEmail) {
         if(!value) {
             throw Error("Must provide a valid email media to add to contacts");
@@ -117,6 +183,13 @@ export class WhatsappContact {
     }
 
     get urls() {return this._urls}
+
+    /**
+     * Adds a url object to the urls array
+     *
+     * @param value accepts a WhatsappContactUrl object
+     */
+
     addUrl(value: WhatsappContactUrl) {
         if(!value) {
             throw Error("Must provide a valid url media to add to contacts");
@@ -129,6 +202,12 @@ export class WhatsappContact {
         // @ts-ignore
         this._urls.push(value);
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

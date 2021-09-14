@@ -1,8 +1,18 @@
 import {UrlType} from "./types";
 import {isValidHttpUrl} from "../../../helpers/validators";
 
+/**
+ * URL class that gets passed into a WhatsappContact urls array
+ */
+
 export class WhatsappContactUrl {
+    /**
+     * @remark string value for type field
+     */
     private _type: string | undefined;
+    /**
+     * @remark string value for address field
+     */
     private _address: string | undefined;
 
     private urlTypeArr = [];
@@ -43,6 +53,12 @@ export class WhatsappContactUrl {
 
         this._address = value;
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

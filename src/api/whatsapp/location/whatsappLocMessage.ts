@@ -4,24 +4,62 @@ import {
     isValidE164,
     isNumeric
 } from "../../../helpers/validators";
-import {SmsContentType} from "../../sms/smsContentType";
-import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
+/**
+ * Message class to construct a location object to send to a WhatsappClient
+ */
+
 export class WhatsappLocMessage {
+    /**
+     * @remark Identifies to Whatsapp that this is an audio message
+     */
     private _contentType: string = WhatsappContentType.LOCATION;
+    /**
+     * @remark Latitude of the location in decimal format
+     */
     private _latitude: number | undefined;
+    /**
+     * @remark Longitude of the location in decimal format
+     */
     private _longitude: number | undefined;
+    /**
+     * @remark Sender ID that message should be sent from
+     */
     private _from: string = "";
+    /**
+     * @remark A mobile device phone number in E.164 format that should receive the message
+     */
     private _to: string = "";
 
+    /**
+     * @remark Name of location
+     */
     private _name: string | undefined;
+    /**
+     * @remark Address of location. Only displayed if name is present.
+     */
     private _address: string | undefined;
+    /**
+     * @remark If provided, events related to the delivery of this message will be POSTed to this URL.
+     */
     private _callbackUrl: string | undefined;
+    /**
+     * @remark Additional data that will be echoed back in all callback requests made to callbackUrl
+     */
     private _callbackData: string | undefined;
+    /**
+     * @remark User defined ID that is assigned to an individual message
+     */
     private _correlationId: string | undefined;
+    /**
+     * @remark Members of this object are used to replace placeholders within the content or template specified.
+     */
     private _substitutions: Array<object> | undefined;
 
+    /**
+     * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
+     */
     _idempotencyKey: string = "";
 
     constructor(from: string, to: string, lat:number, long: number) {
@@ -95,6 +133,13 @@ export class WhatsappLocMessage {
 
     get idempotencyKey(): string {return this._idempotencyKey;}
 
+    /**
+     * Adds a substitution object to the substitution array
+     *
+     * @param name value indicating the name of the field for the substitution
+     * @param value sets the value of the field for the substitution
+     */
+
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
@@ -107,6 +152,12 @@ export class WhatsappLocMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

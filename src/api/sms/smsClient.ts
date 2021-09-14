@@ -2,7 +2,19 @@ import {CpaasClient} from "../cpaasClient";
 import {SmsMessage} from "./smsMessage";
 import request from "../../request/index";
 
+/**
+ * Client class for sending a SMS message
+ */
+
 export class SmsClient extends CpaasClient {
+
+    /**
+     * Sends an SMS message to a mobile device
+     *
+     * @param message SmsMessage object for sending the message to the API
+     * @returns request object sent back to the client as a promise
+     */
+
     sendMessage(message: SmsMessage) {
         if(!message.idempotencyKey || message.idempotencyKey === "") {
             throw Error("Must provide a 'idempotencyKey' value for sending a message");
@@ -33,6 +45,13 @@ export class SmsClient extends CpaasClient {
 
         return request(options);
     }
+
+    /**
+     * Retrieve status of an SMS message
+     *
+     * @param messageId String of the SMS message Id
+     * @returns request object sent back to the client as a promise
+     */
 
     getStatus(messageId: string) {
         const options = {

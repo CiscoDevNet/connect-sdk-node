@@ -1,12 +1,37 @@
 import {AddressType} from "./types";
 
+/**
+ * Address class that gets passed into a WhatsappContact address array
+ */
+
 export class WhatsappContactAddr {
+    /**
+     * @remark string value for type field
+     */
     private _type: string | undefined;
+    /**
+     * @remark string value for street field
+     */
     private _street: string | undefined;
+    /**
+     * @remark string value for city field
+     */
     private _city: string | undefined;
+    /**
+     * @remark string value for state field
+     */
     private _state: string | undefined;
+    /**
+     * @remark string value for zip field
+     */
     private _zip: string | undefined;
+    /**
+     * @remark string value for country field
+     */
     private _country: string | undefined;
+    /**
+     * @remark string value for countryCode field
+     */
     private _countryCode: string | undefined;
 
     private addrTypeArr = [];
@@ -68,6 +93,12 @@ export class WhatsappContactAddr {
     set countryCode(value: string | undefined) {
         this._countryCode = value;
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

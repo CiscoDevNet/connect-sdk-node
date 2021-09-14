@@ -1,8 +1,18 @@
 import {EmailType} from "./types";
 import {isValidEmail} from "../../../helpers/validators";
 
+/**
+ * Email class that gets passed into a WhatsappContact emails array
+ */
+
 export class WhatsappContactEmail {
+    /**
+     * @remark string value for type field
+     */
     private _type: string | undefined;
+    /**
+     * @remark string value for address field
+     */
     private _address: string | undefined;
 
     private emailTypeArr = [];
@@ -43,6 +53,12 @@ export class WhatsappContactEmail {
 
         this._address = value;
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

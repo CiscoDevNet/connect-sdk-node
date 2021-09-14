@@ -11,18 +11,55 @@ import {
 import {SmsContentType} from "./smsContentType";
 import {SMS_CONTENT_MAXLEN} from "../../config/constants";
 
+/**
+ * Message class to construct a message object to send to an SmsClient
+*/
+
 export class SmsMessage {
+    /**
+     * @remark Short or long code that the message should be sent from
+     */
     private _from: string = "";
+    /**
+     * @remark The mobile device phone number in E.164 format that should receive the message
+     */
     private _to: string = "";
+    /**
+     * @remark Denotes whether the content string is the actual text content to be sent or a reference to a template ID.
+     */
     private _content: string = "";
+    /**
+     * @remark Denotes whether the content string is the actual text content to be sent or a reference to a template ID.
+     */
     private _contentType: string = SmsContentType.TEXT;
+    /**
+     * @remark Members of this object are used to replace placeholders within the content or template specified.
+     */
     private _substitutions: Array<object> | undefined;
+    /**
+     * @remark User defined ID that is assigned to an individual message
+     */
     private _correlationId: string | undefined;
+    /**
+     * @remark Specifies the DLT template ID used for this message. This is only used in certain regions.
+     */
     private _dltTemplateId: string | undefined;
+    /**
+     * @remark If provided, events related to the delivery of this message will be POSTed to this URL.
+     */
     private _callbackUrl: string | undefined;
+    /**
+     * @remark Additional data that will be echoed back in all callback requests made to callbackUrl
+     */
     private _callbackData: string | undefined;
+    /**
+     * @remark If the message has not been sent by this date & time, it will be removed from the sending queue
+     */
     private _expireAt: string | undefined;
 
+    /**
+     * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
+     */
     _idempotencyKey: string = "";
 
     constructor(from: string, to: string) {
@@ -109,6 +146,13 @@ export class SmsMessage {
 
     get idempotencyKey(): string {return this._idempotencyKey;}
 
+    /**
+     * Adds a substitution object to the substitution array
+     *
+     * @param name value indicating the name of the field for the substitution
+     * @param value sets the value of the field for the substitution
+     */
+
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
@@ -121,6 +165,12 @@ export class SmsMessage {
 
         this._substitutions.push({[name]: value});
     }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {
