@@ -132,12 +132,13 @@ export class WhatsappContact {
             throw Error("Must provide a valid phone media to add to contacts");
         }
 
+        /* istanbul ignore next */
         if(!this._phones) {
             this._phones = [];
         }
 
         // @ts-ignore
-        this._phones.push(value);
+        this._phones.push(value.toJSON());
     }
 
     get addresses() {return this._addresses}
@@ -153,12 +154,13 @@ export class WhatsappContact {
             throw Error("Must provide a valid address media to add to contacts");
         }
 
+        /* istanbul ignore next */
         if(!this._addresses) {
             this._addresses = [];
         }
 
         // @ts-ignore
-        this._addresses.push(value);
+        this._addresses.push(value.toJSON());
     }
 
     get emails() {return this._emails}
@@ -174,12 +176,13 @@ export class WhatsappContact {
             throw Error("Must provide a valid email media to add to contacts");
         }
 
+        /* istanbul ignore next */
         if(!this._emails) {
             this._emails = [];
         }
 
         // @ts-ignore
-        this._emails.push(value);
+        this._emails.push(value.toJSON());
     }
 
     get urls() {return this._urls}
@@ -195,12 +198,13 @@ export class WhatsappContact {
             throw Error("Must provide a valid url media to add to contacts");
         }
 
+        /* istanbul ignore next */
         if(!this._urls) {
             this._urls = [];
         }
 
         // @ts-ignore
-        this._urls.push(value);
+        this._urls.push(value.toJSON());
     }
 
     /**

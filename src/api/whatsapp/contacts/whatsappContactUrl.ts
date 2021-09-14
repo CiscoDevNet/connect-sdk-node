@@ -27,6 +27,7 @@ export class WhatsappContactUrl {
         for(let i = 0; i < this.urlTypeArr.length; i++) {
             this.urlTypeStrList += this.urlTypeArr[i];
 
+            /* istanbul ignore next */
             if(i < this.urlTypeArr.length) {
                 this.urlTypeStrList += ", ";
             }
@@ -35,6 +36,7 @@ export class WhatsappContactUrl {
 
     get type() {return this._type}
     set type(value: string | undefined) {
+        /* istanbul ignore next */
         if(value) {
             // @ts-ignore
             if(!this.urlTypeArr.includes(value)) {

@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric} from '../src/helpers/validators';
+import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric, isArrayBool, isBinary, isBoolean, hasUnicode} from '../src/helpers/validators';
 
 describe("Validators", () => {
     it("isValidHttpUrl validates correctly", () => {
@@ -23,5 +23,27 @@ describe("Validators", () => {
         expect(isNumeric('abc')).to.be.false;
         expect(isNumeric(123)).to.be.true;
         expect(isNumeric('123')).to.be.true;
+    });
+
+    it("isBinary validates correctly", () => {
+        expect(isBinary('abc')).to.be.false;
+    });
+
+    it("isArrayBool validates correctly", () => {
+        expect(isArrayBool('123')).to.be.false;
+        expect(isArrayBool(['abc', 'def'])).to.be.false;
+        expect(isArrayBool([0, 1, 0, 0, 1])).to.be.true;
+    });
+
+    it("isBoolean validates correctly", () => {
+        expect(isBoolean('abc')).to.be.false;
+        expect(isBoolean(123)).to.be.false;
+        expect(isBoolean(true)).to.be.true;
+        expect(isBoolean(false)).to.be.true;
+    });
+
+    it("hasUnicode validates correctly", () => {
+        expect(hasUnicode('abc')).to.be.false;
+        expect(hasUnicode("Hello World 🗺️!")).to.be.true;
     });
 });

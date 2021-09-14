@@ -27,6 +27,7 @@ export class WhatsappContactEmail {
         for(let i = 0; i < this.emailTypeArr.length; i++) {
             this.emailTypeStrList += this.emailTypeArr[i];
 
+            /* istanbul ignore next */
             if(i < this.emailTypeArr.length) {
                 this.emailTypeStrList += ", ";
             }
@@ -35,6 +36,7 @@ export class WhatsappContactEmail {
 
     get type() {return this._type}
     set type(value: string | undefined) {
+        /* istanbul ignore next */
         if(value) {
             // @ts-ignore
             if(!this.emailTypeArr.includes(value)) {

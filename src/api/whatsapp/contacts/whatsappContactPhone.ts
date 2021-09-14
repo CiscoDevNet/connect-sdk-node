@@ -31,6 +31,7 @@ export class WhatsappContactPhone {
         for(let i = 0; i < this.phoneTypeArr.length; i++) {
             this.phoneTypeStrList += this.phoneTypeArr[i];
 
+            /* istanbul ignore next */
             if(i < this.phoneTypeArr.length) {
                 this.phoneTypeStrList += ", ";
             }
@@ -39,6 +40,7 @@ export class WhatsappContactPhone {
 
     get type() {return this._type}
     set type(value: string | undefined) {
+        /* istanbul ignore next */
         if(value) {
             // @ts-ignore
             if(!this.phoneTypeArr.includes(value)) {

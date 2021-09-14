@@ -1,5 +1,7 @@
-import {SmsClient, SmsMessage, SmsContentType} from "../src";
-import {assert, expect} from "chai";
+import {SmsClient, SmsMessage} from "../../src";
+import {expect} from "chai";
+import nock from "nock";
+import {API_URL, API_PORT} from "../../src/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -66,14 +68,30 @@ describe("SmsClient", () => {
         const smsMessage = new SmsMessage('12345', '+14443332222');
         smsMessage.content = "Hello World";
 
+        const scope = nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/sms/messages')
+            .reply(200, {
+                acceptedTime: '2021-08-01T14:24:33.000Z'
+            });
+
         const response = await smsClient.sendMessage(smsMessage);
 
         // @ts-ignore
-        expect(response.acceptedTime).to.not.be.null;
+        const respJSON = JSON.parse(response);
+
+        // @ts-ignore
+        expect(respJSON.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
     });
 
     it("returns proper values on getStatus", async () => {
         const smsClient = new SmsClient('bearer test: 1234');
+
+        const scope = nock(`${API_URL}:${API_PORT}`)
+            .get('/v1/sms/messages/1234')
+            .reply(200, {
+                messageId: '1234'
+            });
+
         const response = await smsClient.getStatus('1234');
 
         // @ts-ignore

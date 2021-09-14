@@ -46,6 +46,7 @@ export class WhatsappContactAddr {
         for(let i = 0; i < this.addrTypeArr.length; i++) {
             this.addrTypeStrList += this.addrTypeArr[i];
 
+            /* istanbul ignore next */
             if(i < this.addrTypeArr.length) {
                 this.addrTypeStrList += ", ";
             }
@@ -54,6 +55,7 @@ export class WhatsappContactAddr {
 
     get type() {return this._type}
     set type(value: string | undefined) {
+        /* istanbul ignore next */
         if(value) {
             // @ts-ignore
             if(!this.addrTypeArr.includes(value)) {

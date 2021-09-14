@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import request from '../src/request/index';
-import {API_URL} from "../src/config/constants";
+import {API_URL, API_PORT} from "../src/config/constants";
 
 const chaiHttp = require('chai-http'),
     nock = require('nock'),
@@ -16,13 +16,13 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(`${API_URL}:80`)
+        const scope = nock(`${API_URL}:${API_PORT}`)
             .get('/something')
             .reply(200, "Hello World");
 
         const response = await request(reqOptions);
 
-        //expect(response).to.equal("Hello World");
+        expect(response).to.equal("Hello World");
     });
 
     it("fails correctly", async () => {
@@ -31,7 +31,7 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(API_URL)
+        const scope = nock(`${API_URL}:${API_PORT}`)
             .get('/something')
             .replyWithError("Invalid Request");
 
