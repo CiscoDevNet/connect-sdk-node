@@ -22,7 +22,10 @@ describe("Request", () => {
 
         const response = await request(reqOptions);
 
-        expect(response).to.equal("Hello World");
+        // @ts-ignore
+        expect(response.statusCode).to.equal(200);
+        // @ts-ignore
+        expect(response.body).to.equal("Hello World");
     });
 
     it("fails correctly", async () => {
@@ -40,7 +43,7 @@ describe("Request", () => {
         try{
             response = await request(reqOptions);
         } catch(e:any) {
-            expect(e.message).to.equal("Invalid Request");
+            expect(e.error.message).to.equal("Invalid Request");
         }
     });
 })

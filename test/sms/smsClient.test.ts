@@ -70,17 +70,14 @@ describe("SmsClient", () => {
 
         const scope = nock(`${API_URL}:${API_PORT}`)
             .post('/v1/sms/messages')
-            .reply(200, {
+            .reply(202, {
                 acceptedTime: '2021-08-01T14:24:33.000Z'
             });
 
         const response = await smsClient.sendMessage(smsMessage);
 
         // @ts-ignore
-        const respJSON = JSON.parse(response);
-
-        // @ts-ignore
-        expect(respJSON.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
+        expect(response.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
     });
 
     it("returns proper values on getStatus", async () => {

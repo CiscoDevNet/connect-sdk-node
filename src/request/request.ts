@@ -17,6 +17,12 @@ export default function _request(options: any) {
         headers: options.headers
     }
 
+    const returnRes = {
+        statusCode: undefined,
+        body: undefined,
+        error: undefined
+    };
+
     const payload = JSON.stringify(options.payload) || undefined;
 
     return new Promise((resolve, reject) => {
@@ -29,12 +35,21 @@ export default function _request(options: any) {
             });
 
             res.on('end', () => {
-                resolve(data);
+                // @ts-ignore
+                returnRes.body = data;
+
+                resolve(returnRes);
             });
         });
 
+        req.on('response', res => {
+            // @ts-ignore
+            returnRes.statusCode = res.statusCode;
+        })
+
         req.on('error', (err: any) => {
-            reject(err);
+            returnRes.error = err;
+            reject(returnRes);
         });
 
         if(payload !== undefined) {

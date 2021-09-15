@@ -10,7 +10,7 @@ whatsAppMessage.callbackData = "customerID123|1234|new_sale";
 whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.templateId = "tmpl4432";
 
-console.log(whatsAppMessage);
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 

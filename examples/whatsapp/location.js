@@ -1,7 +1,5 @@
 const {WhatsappClient, WhatsappLocMessage} = require('../../dist');
 
-//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
-
 const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappLocMessage("+14443332222", "+14443332222", 28.372395561985662, -81.50942795589746);
@@ -13,7 +11,7 @@ whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";
 whatsAppMessage.callbackData = "customerID123|1234|new_sale";
 
-console.log(whatsAppMessage);
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 

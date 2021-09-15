@@ -58,19 +58,19 @@ contact.addUrl(url);
 
 whatsAppMessage.addContact(contact);
 
-console.log(whatsAppMessage.toJSON());
+//console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 
 response
     .then(res => {
-        console.log(JSON.parse(res));
+        console.log(res);
 
-        const statusReq = whatsAppClient.getStatus(JSON.parse(res).messageId);
+        const statusReq = whatsAppClient.getStatus(res.messageId);
 
         statusReq
             .then(res => {
-                console.log(JSON.parse(res));
+                console.log(res);
             })
             .catch(err => {
                 console.error(err);

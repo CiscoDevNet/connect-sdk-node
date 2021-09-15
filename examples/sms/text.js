@@ -1,7 +1,5 @@
 const {SmsClient, SmsMessage} = require('../../dist');
 
-//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
-
 const smsClient = new SmsClient('bearer test: 1234');
 
 const smsMessage = new SmsMessage("+14443332222", "+14443332222");
@@ -20,13 +18,13 @@ const response = smsClient.sendMessage(smsMessage);
 
 response
     .then(res => {
-        console.log(JSON.parse(res));
+        console.log(res);
 
-        const statusReq = smsClient.getStatus(JSON.parse(res).messageId);
+        const statusReq = smsClient.getStatus(res.messageId);
 
         statusReq
             .then(res => {
-                console.log(JSON.parse(res));
+                console.log(res);
             })
             .catch(err => {
                 console.error(err);

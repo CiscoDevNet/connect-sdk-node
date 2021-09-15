@@ -1,7 +1,5 @@
 const {WhatsappClient, WhatsappVideoMessage} = require('../../dist');
 
-//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
-
 const whatsAppClient = new WhatsappClient('bearer test: 1234');
 
 const whatsAppMessage = new WhatsappVideoMessage("+14443332222", "+14443332222", "http://my.website.com/video.mp4", "video/mp4");
@@ -12,7 +10,7 @@ whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 
-console.log(whatsAppMessage);
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 

@@ -43,7 +43,42 @@ export class SmsClient extends CpaasClient {
             payload: message.toJSON()
         };
 
-        return request(options);
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = JSON.parse(res.body);
+
+                    if(res.statusCode) {
+                        if(res.statusCode === 202) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                acceptedTime: body.acceptedTime,
+                                messageId: body.messageId,
+                                correlationId: body.correlationId
+                            }
+                        }
+
+                        if(res.statusCode === 400 || res.statusCode === 403 || res.statusCode === 500) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                code: body.code,
+                                message: body.message
+                            }
+                        }
+                    } else {
+                        payload = res;
+                    }
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    console.error(err);
+                    reject(err);
+                })
+        })
+
     }
 
     /**
@@ -63,6 +98,51 @@ export class SmsClient extends CpaasClient {
             }
         };
 
-        return request(options);
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = JSON.parse(res.body);
+
+                    if(res.statusCode) {
+                        if(res.statusCode === 200) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                correlationId: body.correlationId,
+                                content: body.content,
+                                contentType: body.contentType,
+                                dltTemplateId: body.dltTemplateId,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+
+                            if(body.error) {
+                                payload.error = body.error;
+                            }
+                        }
+
+                        if(res.statusCode === 500) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                code: body.code,
+                                message: body.message
+                            }
+                        }
+                    } else {
+                        payload = res;
+                    }
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    console.error(err);
+                    reject(err);
+                })
+        })
     }
 }
