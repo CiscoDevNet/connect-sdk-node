@@ -8,7 +8,5 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "npm-library-publish-test": "0.0.7"
-  }
+  "dependencies": {}
 }

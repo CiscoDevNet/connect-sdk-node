@@ -107,6 +107,7 @@ export class WhatsappClient extends CpaasClient {
                             if(body.contentType) {
                                 if(body.contentType === WhatsappContentType.TEXT) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "content": body.content,
                                         "previewUrl": body.previewUrl,
@@ -121,6 +122,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.AUDIO) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "url": body.url,
                                         "mimeType": body.mimeType,
@@ -135,6 +137,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.IMAGE) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "url": body.url,
                                         "mimeType": body.mimeType,
@@ -150,6 +153,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.VIDEO) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "url": body.url,
                                         "mimeType": body.mimeType,
@@ -165,6 +169,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.DOCUMENT) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "fileName": body.fileName,
                                         "url": body.url,
@@ -181,6 +186,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.STICKER) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "url": body.url,
                                         "mimeType": body.mimeType,
@@ -195,6 +201,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.LOCATION) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "latitude": body.latitude,
                                         "longitude": body.longitude,
@@ -211,6 +218,7 @@ export class WhatsappClient extends CpaasClient {
 
                                 if(body.contentType === WhatsappContentType.CONTACTS) {
                                     payload = {
+                                        "statusCode": res.statusCode,
                                         "contentType": body.contentType,
                                         "messageId": body.messageId,
                                         "acceptedTime": body.acceptedTime,

@@ -58,7 +58,7 @@ contact.addUrl(url);
 
 whatsAppMessage.addContact(contact);
 
-//console.log(whatsAppMessage.toJSON());
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 
