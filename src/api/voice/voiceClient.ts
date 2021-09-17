@@ -185,21 +185,17 @@ export class VoiceClient extends CpaasClient {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 200) {
-                            payload = {
-                                "statusCode": body.statusCode,
-                                "sessionId": body.sessionId,
-                                "callerId": body.callerId,
-                                "dialedNumber": body.dialedNumber,
-                                "status": body.status,
-                                "correlationId": body.correlationId,
-                                "durationSeconds": body.durationSeconds,
-                                "offeredTime": body.offeredTime,
-                                "answeredTime": body.answeredTime
-                            }
-                        } else {
-                            payload = res;
+                    if(res.statusCode === 200) {
+                        payload = {
+                            "statusCode": body.statusCode,
+                            "sessionId": body.sessionId,
+                            "callerId": body.callerId,
+                            "dialedNumber": body.dialedNumber,
+                            "status": body.status,
+                            "correlationId": body.correlationId,
+                            "durationSeconds": body.durationSeconds,
+                            "offeredTime": body.offeredTime,
+                            "answeredTime": body.answeredTime
                         }
                     } else {
                         payload = res;

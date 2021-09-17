@@ -105,36 +105,32 @@ export class SmsClient extends CpaasClient {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 200) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                messageId: body.messageId,
-                                acceptedTime: body.acceptedTime,
-                                from: body.from,
-                                to: body.to,
-                                correlationId: body.correlationId,
-                                content: body.content,
-                                contentType: body.contentType,
-                                dltTemplateId: body.dltTemplateId,
-                                status: body.status,
-                                statusTime: body.statusTime
-                            }
-
-                            if(body.error) {
-                                payload.error = body.error;
-                            }
+                    if(res.statusCode === 200) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            messageId: body.messageId,
+                            acceptedTime: body.acceptedTime,
+                            from: body.from,
+                            to: body.to,
+                            correlationId: body.correlationId,
+                            content: body.content,
+                            contentType: body.contentType,
+                            dltTemplateId: body.dltTemplateId,
+                            status: body.status,
+                            statusTime: body.statusTime
                         }
 
-                        if(res.statusCode === 500) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                code: body.code,
-                                message: body.message
-                            }
+                        if(body.error) {
+                            payload.error = body.error;
                         }
-                    } else {
-                        payload = res;
+                    }
+
+                    if(res.statusCode === 500) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            code: body.code,
+                            message: body.message
+                        }
                     }
 
                     resolve(payload);
