@@ -1,15 +1,44 @@
 import {uuidv4} from "../../helpers/identifiers";
 import {isBoolean, isNumeric, isValidE164, isValidHttpUrl} from "../../helpers/validators";
 
-export class TtsVoiceCall {
+/**
+ * VoiceCall is the data object used to send a voice call to the API
+ */
+
+export class VoiceCall {
+    /**
+     * @remark The calling party number to use when placing the call to the dialed number
+     */
     private _callerId: string = "";
+    /**
+     * @remark Array of numbers to dial and start call sessions with.
+     */
     private _dialedNumber: Array<string> = [];
 
+    /**
+     * @remark URL for event callbacks that will provide the next actions for the call
+     */
     private _callbackUrl: string | undefined;
+    /**
+     * @remark If present and a positive value, record the call for this many seconds. A value of 0 means to
+     * record until the end of the call.
+     */
     private _recordCallSeconds: number | undefined;
+    /**
+     * @remark if true, VoiceMailDetected event will be sent if call is answered by an Answering Machine.
+     * PlayAction is expected in repsonse of this event.
+     */
     private _detectVoiceMail: boolean | undefined = false;
+    /**
+     * @remark A user-provided arbitrary string value that will be stored with the call status and sent in
+     * all callback events.
+     */
     private _correlationId: string | undefined;
 
+    /**
+     * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value
+     * that has been used in the previous 1 hours will be rejected as a duplicate request.
+     */
     _idempotencyKey: string = "";
 
     constructor(callerId: string) {
@@ -27,6 +56,12 @@ export class TtsVoiceCall {
     }
 
     get dialedNumber(): Array<string> {return this._dialedNumber}
+
+    /**
+     * Adds a dialed number to the dialedNumber array
+     *
+     * @param number E.164 number to add to dialedNumber array
+     */
 
     addDialedNumber(number: string) {
         if(!isValidE164(number)) {
@@ -67,6 +102,12 @@ export class TtsVoiceCall {
     set correlationId(value: string | undefined) {this._correlationId = value;}
 
     get idempotencyKey(): string {return this._idempotencyKey;}
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
 
     toJSON() {
         const payload = {

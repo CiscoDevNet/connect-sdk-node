@@ -1,5 +1,8 @@
 {
     "extends": "@istanbuljs/nyc-config-typescript",
     "report-dir": "./coverage",
-    "exclude": "dist/**/*.*"
+    "exclude": [
+        "dist/**/*.*",
+        "test/**/*.*"
+    ]
 }

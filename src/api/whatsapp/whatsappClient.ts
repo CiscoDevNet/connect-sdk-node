@@ -1,6 +1,5 @@
 import {CpaasClient} from "../cpaasClient";
 import request from "../../request";
-import {WhatsappContactMessage} from "./contacts/whatsappContactMessage";
 import {WhatsappContentType} from "./whatsappContentType";
 
 /**
