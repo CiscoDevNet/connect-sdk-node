@@ -1,0 +1,243 @@
+import request from "../../request";
+import {CpaasClient} from "../cpaasClient";
+import {VideoSession} from "./videoSession";
+import {VideoToken} from "./videoToken";
+
+/**
+ * Client class for sending a video request
+ */
+export class VideoClient extends CpaasClient {
+
+    /**
+     * Creates a video session
+     *
+     * @param videoSession object for sending the session data to the API
+     * @returns request object sent back to the client as a promise
+     */
+
+    createSession(videoSession: VideoSession) {
+        if(!videoSession.idempotencyKey || videoSession.idempotencyKey === "") {
+            throw Error("Must provide a 'idempotencyKey' value for creating a video session");
+        }
+
+        if(!videoSession.appId || videoSession.appId === "") {
+            throw Error("Must provide an 'appId' value for creating a video session");
+        }
+
+        if(!videoSession.name || videoSession.name === "") {
+            throw Error("Must provide a 'name' value for creating a video session");
+        }
+
+        const options = {
+            method: 'POST',
+            path: '/v1/video/sessions',
+            headers: {
+                'Idempotency-Key': videoSession.idempotencyKey,
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.bearerToken}`
+            },
+            payload: videoSession.toJSON()
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = JSON.parse(res.body);
+
+                    if(res.statusCode === 201) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            appId: body.appId,
+                            name: body.name
+                        }
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            code: body.code,
+                            message: body.message
+                        }
+                    } else {
+                        /* istanbul ignore next */
+                        payload = res;
+                    }
+
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    /* istanbul ignore next */
+                    console.error(err);
+                    /* istanbul ignore next */
+                    reject(err);
+                });
+        });
+    }
+
+    /**
+     * Retrieves a video session information
+     *
+     * @param sessionId value for retrieving the session data from the API
+     * @returns request object sent back to the client as a promise
+     */
+
+    retrieveSession(sessionId: string) {
+        const options = {
+            method: 'GET',
+            path: `/v1/video/sessions/${sessionId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.bearerToken}`
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = JSON.parse(res.body);
+
+                    if(res.statusCode === 200) {
+                        payload = {
+                            "statusCode": res.statusCode,
+                            "appId": body.appId,
+                            "name": body.name,
+                            "sessionId": body.sessionId
+                        }
+                    } else if(res.statusCode >= 400 || res.statusCode <= 599) {
+                        payload = {
+                            "statusCode": res.statusCode,
+                            "code": body.code,
+                            "message": body.message
+                        }
+                    } else {
+                        /* istanbul ignore next */
+                        payload = res;
+                    }
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    /* istanbul ignore next */
+                    console.error(err);
+                    /* istanbul ignore next */
+                    reject(err);
+                });
+        });
+    }
+
+    /**
+     * Deletes a video session
+     *
+     * @param sessionId value to specify which session to delete
+     * @returns request object sent back to the client as a promise
+     */
+
+    deleteSession(sessionId: string) {
+        const options = {
+            method: 'DELETE',
+            path: `/v1/video/sessions/${sessionId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.bearerToken}`
+            }
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = (res.body) ? JSON.parse(res.body) : {};
+
+                    if(res.statusCode === 200) {
+                        payload = {
+                            "statusCode": res.statusCode
+                        }
+                    } else if(res.statusCode >= 400 || res.statusCode <= 599) {
+                        payload = {
+                            "statusCode": res.statusCode,
+                            "code": body.code,
+                            "message": body.message
+                        }
+                    } else {
+                        /* istanbul ignore next */
+                        payload = res;
+                    }
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    /* istanbul ignore next */
+                    console.error(err);
+                    /* istanbul ignore next */
+                    reject(err);
+                });
+        });
+    }
+
+    /**
+     * Creates a video token
+     *
+     * @param videoToken object for sending the token data to the API
+     * @returns request object sent back to the client as a promise
+     */
+
+    createToken(videoToken: VideoToken) {
+        if(!videoToken.idempotencyKey || videoToken.idempotencyKey === "") {
+            throw Error("Must provide a 'idempotencyKey' value for creating a video token");
+        }
+
+        if(!videoToken.sessionId || videoToken.sessionId === "") {
+            throw Error("Must provide an 'sessionId' value for creating a video token");
+        }
+
+        const options = {
+            method: 'POST',
+            path: `/v1/video/sessions/${videoToken.sessionId}/tokens`,
+            headers: {
+                'Idempotency-Key': videoToken.idempotencyKey,
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.bearerToken}`
+            },
+            payload: videoToken.toJSON()
+        };
+
+        return new Promise((resolve, reject) => {
+            request(options)
+                .then((res: any) => {
+                    let payload: any;
+                    // @ts-ignore
+                    const body: any = JSON.parse(res.body);
+
+                    if(res.statusCode === 200) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            token: body.token,
+                            expiresAt: body.expiresAt
+                        }
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        payload = {
+                            statusCode: res.statusCode,
+                            code: body.code,
+                            message: body.message
+                        }
+                    } else {
+                        /* istanbul ignore next */
+                        payload = res;
+                    }
+
+                    resolve(payload);
+                })
+                .catch(err => {
+                    /* istanbul ignore next */
+                    console.error(err);
+                    /* istanbul ignore next */
+                    reject(err);
+                });
+        });
+    }
+
+}
