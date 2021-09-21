@@ -1,6 +1,9 @@
 import {CpaasClient} from "../cpaasClient";
 import {SmsMessage} from "./smsMessage";
 import request from "../../request/index";
+import {SmsSendResponse} from "./models/smsSendResponse";
+import {SmsStatusResponse} from "./models/smsStatusResponse";
+import {API_VERSION} from "../../config/constants";
 
 /**
  * Client class for sending a SMS message
@@ -34,49 +37,40 @@ export class SmsClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: '/v1/sms/messages',
+            path: `/${API_VERSION}/sms/messages`,
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `${this.bearerToken}`
             },
             payload: message.toJSON()
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<SmsSendResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 202) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                acceptedTime: body.acceptedTime,
-                                messageId: body.messageId,
-                                correlationId: body.correlationId
-                            }
-                        }
-
-                        if(res.statusCode === 400 || res.statusCode === 403 || res.statusCode === 500) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                code: body.code,
-                                message: body.message
-                            }
-                        }
+                    if(res.statusCode === 202) {
+                        resolve({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            acceptedTime: body.acceptedTime,
+                            messageId: body.messageId,
+                            correlationId: body.correlationId
+                        })
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            code: body.code,
+                            message: body.message
+                        });
                     } else {
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
-                })
+                });
         })
 
     }
@@ -91,23 +85,23 @@ export class SmsClient extends CpaasClient {
     getStatus(messageId: string) {
         const options = {
             method: 'GET',
-            path: `/v1/sms/messages/${messageId}`,
+            path: `/${API_VERSION}/sms/messages/${messageId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `${this.bearerToken}`
             }
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<SmsStatusResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
-                        payload = {
+                        const payload: SmsStatusResponse = {
                             statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
                             messageId: body.messageId,
                             acceptedTime: body.acceptedTime,
                             from: body.from,
@@ -117,28 +111,27 @@ export class SmsClient extends CpaasClient {
                             contentType: body.contentType,
                             dltTemplateId: body.dltTemplateId,
                             status: body.status,
-                            statusTime: body.statusTime
+                            statusTime: body.statusTime,
+                            error: {}
                         }
 
+                        /* istanbul ignore next */
                         if(body.error) {
                             payload.error = body.error;
                         }
-                    }
 
-                    if(res.statusCode === 500) {
-                        payload = {
+                        resolve(payload);
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
                             statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
                             code: body.code,
                             message: body.message
-                        }
+                        })
+                    } else {
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
-                })
+                });
         })
     }
 }

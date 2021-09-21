@@ -1,5 +1,5 @@
 export enum SmsContentType {
-    TEXT = "TEXT",
+    TEXT = "text",
     TEMPLATE = "TEMPLATE",
     UNICODE = "UNICODE",
     FLASH = "FLASH",

@@ -2,6 +2,10 @@ import request from "../../request";
 import {CpaasClient} from "../cpaasClient";
 import {VideoSession} from "./videoSession";
 import {VideoToken} from "./videoToken";
+import {VideoCreateResponse} from "./models/videoCreateResponse";
+import {VideoRetrieveResponse} from "./models/videoRetrieveResponse";
+import {VideoDeleteResponse} from "./models/videoDeleteResponse";
+import {VideoTokenResponse} from "./models/videoTokenResponse";
 
 /**
  * Client class for sending a video request
@@ -39,38 +43,29 @@ export class VideoClient extends CpaasClient {
             payload: videoSession.toJSON()
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VideoCreateResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
                     if(res.statusCode === 201) {
-                        payload = {
+                        resolve({
                             statusCode: res.statusCode,
-                            appId: body.appId,
-                            name: body.name
-                        }
+                            requestId: res.headers['request-id'],
+                            location: res.headers['location'],
+                            sessionId: body.sessionId
+                        });
                     } else if(res.statusCode >= 400 && res.statusCode <= 599) {
-                        payload = {
+                        reject({
                             statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
                             code: body.code,
                             message: body.message
-                        }
+                        })
                     } else {
-                        /* istanbul ignore next */
-                        payload = res;
+                        reject(res);
                     }
-
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    /* istanbul ignore next */
-                    console.error(err);
-                    /* istanbul ignore next */
-                    reject(err);
                 });
         });
     }
@@ -92,7 +87,7 @@ export class VideoClient extends CpaasClient {
             }
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VideoRetrieveResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
                     let payload: any;
@@ -100,30 +95,23 @@ export class VideoClient extends CpaasClient {
                     const body: any = JSON.parse(res.body);
 
                     if(res.statusCode === 200) {
-                        payload = {
-                            "statusCode": res.statusCode,
-                            "appId": body.appId,
-                            "name": body.name,
-                            "sessionId": body.sessionId
-                        }
-                    } else if(res.statusCode >= 400 || res.statusCode <= 599) {
-                        payload = {
-                            "statusCode": res.statusCode,
-                            "code": body.code,
-                            "message": body.message
-                        }
+                        resolve({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            appId: body.appId,
+                            name: body.name,
+                            sessionId: body.sessionId
+                        })
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            code: body.code,
+                            message: body.message
+                        });
                     } else {
-                        /* istanbul ignore next */
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    /* istanbul ignore next */
-                    console.error(err);
-                    /* istanbul ignore next */
-                    reject(err);
                 });
         });
     }
@@ -145,7 +133,7 @@ export class VideoClient extends CpaasClient {
             }
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VideoDeleteResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
                     let payload: any;
@@ -153,27 +141,21 @@ export class VideoClient extends CpaasClient {
                     const body: any = (res.body) ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
-                        payload = {
-                            "statusCode": res.statusCode
-                        }
-                    } else if(res.statusCode >= 400 || res.statusCode <= 599) {
-                        payload = {
-                            "statusCode": res.statusCode,
-                            "code": body.code,
-                            "message": body.message
-                        }
+                        resolve({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id']
+                        });
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            code: body.code,
+                            message: body.message
+                        });
                     } else {
                         /* istanbul ignore next */
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    /* istanbul ignore next */
-                    console.error(err);
-                    /* istanbul ignore next */
-                    reject(err);
                 });
         });
     }
@@ -205,7 +187,7 @@ export class VideoClient extends CpaasClient {
             payload: videoToken.toJSON()
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VideoTokenResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
                     let payload: any;
@@ -213,29 +195,22 @@ export class VideoClient extends CpaasClient {
                     const body: any = JSON.parse(res.body);
 
                     if(res.statusCode === 200) {
-                        payload = {
+                        resolve({
                             statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
                             token: body.token,
                             expiresAt: body.expiresAt
-                        }
+                        });
                     } else if(res.statusCode >= 400 && res.statusCode <= 599) {
-                        payload = {
+                        reject({
                             statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
                             code: body.code,
                             message: body.message
-                        }
+                        });
                     } else {
-                        /* istanbul ignore next */
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    /* istanbul ignore next */
-                    console.error(err);
-                    /* istanbul ignore next */
-                    reject(err);
                 });
         });
     }

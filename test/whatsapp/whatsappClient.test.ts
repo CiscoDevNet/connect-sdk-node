@@ -73,10 +73,11 @@ describe("WhatsappClient", () => {
                 code: '1234'
             });
 
-        response = await client.sendMessage(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('1234');
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('1234');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/whatsapp/messages')
@@ -84,10 +85,11 @@ describe("WhatsappClient", () => {
                 code: '456'
             });
 
-        response = await client.sendMessage(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('456');
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('456');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/whatsapp/messages')
@@ -95,10 +97,28 @@ describe("WhatsappClient", () => {
                 code: '890'
             });
 
-        response = await client.sendMessage(message);
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('890');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('890');
+        nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/whatsapp/messages')
+            .reply(600, {
+                code: '890'
+            });
+
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
     it("returns proper values on getStatus", async () => {
@@ -122,10 +142,28 @@ describe("WhatsappClient", () => {
                 code: '445'
             });
 
-        response = await client.getStatus('1234');
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err.code).to.equal('445');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('445');
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/v1/whatsapp/messages/1234')
+            .reply(600, {
+                code: '890'
+            });
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            });
+        }
     });
 
 });

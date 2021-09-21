@@ -61,17 +61,15 @@ describe("VideoClient", () => {
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/video/sessions')
             .reply(201, {
-                "appId": "12345",
-                "name": "test session"
+                "sessionId": "12345"
+            }, {
+                'Location': 'http://mysession.com'
             });
 
         let response = await client.createSession(session);
 
-        // @ts-ignore
-        expect(response.appId).to.equal('12345');
-
-        // @ts-ignore
-        expect(response.name).to.equal("test session");
+        expect(response.sessionId).to.equal('12345');
+        expect(response.location).to.equal('http://mysession.com');
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/video/sessions')
@@ -80,13 +78,12 @@ describe("VideoClient", () => {
                 message: 'error msg'
             });
 
-        response = await client.createSession(session);
-
-        // @ts-ignore
-        expect(response.code).to.equal('1234');
-
-        // @ts-ignore
-        expect(response.message).to.equal('error msg');
+        try {
+            response = await client.createSession(session);
+        } catch(err: any) {
+            expect(err.code).to.equal('1234');
+            expect(err.message).to.equal('error msg');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/video/sessions')
@@ -95,13 +92,30 @@ describe("VideoClient", () => {
                 message: 'error msg'
             });
 
-        response = await client.createSession(session);
+        try {
+            response = await client.createSession(session);
+        } catch(err: any) {
+            expect(err.code).to.equal('890');
+            expect(err.message).to.equal('error msg');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('890');
+        nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/video/sessions')
+            .reply(600, {
+                code: '890',
+                message: 'error msg'
+            });
 
-        // @ts-ignore
-        expect(response.message).to.equal('error msg');
+        try {
+            response = await client.createSession(session);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890","message":"error msg"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
     it("throws error if required values are not proper for creating a video token", () => {
@@ -146,10 +160,7 @@ describe("VideoClient", () => {
 
         let response = await client.createToken(token);
 
-        // @ts-ignore
         expect(response.token).to.equal("14ced030-183b-4dfd-966d-c3c4a285f66a");
-
-        // @ts-ignore
         expect(response.expiresAt).to.equal("2021-08-01T13:03:00.000Z");
 
         nock.cleanAll();
@@ -161,13 +172,12 @@ describe("VideoClient", () => {
                 message: 'error msg'
             });
 
-        response = await client.createToken(token);
-
-        // @ts-ignore
-        expect(response.code).to.equal('1234');
-
-        // @ts-ignore
-        expect(response.message).to.equal('error msg');
+        try {
+            response = await client.createToken(token);
+        } catch(err: any) {
+            expect(err.code).to.equal('1234');
+            expect(err.message).to.equal('error msg');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/video/sessions/12345/tokens')
@@ -176,13 +186,30 @@ describe("VideoClient", () => {
                 message: 'error msg'
             });
 
-        response = await client.createToken(token);
+        try {
+            response = await client.createToken(token);
+        } catch(err: any) {
+            expect(err.code).to.equal('890');
+            expect(err.message).to.equal('error msg');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('890');
+        nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/video/sessions/12345/tokens')
+            .reply(600, {
+                code: '890',
+                message: 'error msg'
+            });
 
-        // @ts-ignore
-        expect(response.message).to.equal('error msg');
+        try {
+            response = await client.createToken(token);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890","message":"error msg"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
     it('retrieveSession responds properly', async () => {
@@ -214,13 +241,12 @@ describe("VideoClient", () => {
                 "message": "error msg"
             });
 
-        response = await client.retrieveSession('12345');
-
-        // @ts-ignore
-        expect(response.code).to.equal("807");
-
-        // @ts-ignore
-        expect(response.message).to.equal("error msg");
+        try {
+            response = await client.retrieveSession('12345');
+        } catch(err: any) {
+            expect(err.code).to.equal('807');
+            expect(err.message).to.equal('error msg');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .get('/v1/video/sessions/12345')
@@ -229,13 +255,30 @@ describe("VideoClient", () => {
                 "message": "error msg"
             });
 
-        response = await client.retrieveSession('12345');
+        try {
+            response = await client.retrieveSession('12345');
+        } catch(err: any) {
+            expect(err.code).to.equal('807');
+            expect(err.message).to.equal('error msg');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal("807");
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/v1/video/sessions/12345')
+            .reply(600, {
+                "code": "807",
+                "message": "error msg"
+            });
 
-        // @ts-ignore
-        expect(response.message).to.equal("error msg");
+        try {
+            response = await client.retrieveSession('12345');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"807","message":"error msg"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
 
     });
 
@@ -258,16 +301,13 @@ describe("VideoClient", () => {
                 "message": "error msg"
             });
 
-        response = await client.deleteSession('12345');
-
-        // @ts-ignore
-        expect(response.statusCode).to.equal(400);
-
-        // @ts-ignore
-        expect(response.code).to.equal("807");
-
-        // @ts-ignore
-        expect(response.message).to.equal("error msg");
+        try {
+            response = await client.deleteSession('12345');
+        } catch(err: any) {
+            expect(err.statusCode).to.equal(400);
+            expect(err.code).to.equal('807');
+            expect(err.message).to.equal('error msg');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .delete('/v1/video/sessions/12345')
@@ -276,16 +316,31 @@ describe("VideoClient", () => {
                 "message": "error msg"
             });
 
-        response = await client.deleteSession('12345');
+        try {
+            response = await client.deleteSession('12345');
+        } catch(err: any) {
+            expect(err.statusCode).to.equal(500);
+            expect(err.code).to.equal('807');
+            expect(err.message).to.equal('error msg');
+        }
 
-        // @ts-ignore
-        expect(response.statusCode).to.equal(500);
+        nock(`${API_URL}:${API_PORT}`)
+            .delete('/v1/video/sessions/12345')
+            .reply(600, {
+                "code": "807",
+                "message": "error msg"
+            });
 
-        // @ts-ignore
-        expect(response.code).to.equal("807");
-
-        // @ts-ignore
-        expect(response.message).to.equal("error msg");
+        try {
+            response = await client.deleteSession('12345');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"807","message":"error msg"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            });
+        }
     });
 
 });

@@ -209,10 +209,11 @@ describe("VoiceClient", () => {
                 code: '1234'
             });
 
-        response = await client.sendVoiceMessage(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('1234');
+        try {
+            response = await client.sendVoiceMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('1234');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/voice/messages')
@@ -220,10 +221,11 @@ describe("VoiceClient", () => {
                 code: '456'
             });
 
-        response = await client.sendVoiceMessage(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('456');
+        try {
+            response = await client.sendVoiceMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('456');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/voice/messages')
@@ -231,10 +233,28 @@ describe("VoiceClient", () => {
                 code: '890'
             });
 
-        response = await client.sendVoiceMessage(message);
+        try {
+            response = await client.sendVoiceMessage(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('890');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('890');
+        nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/voice/messages')
+            .reply(600, {
+                code: '890'
+            });
+
+        try {
+            response = await client.sendVoiceMessage(message);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
     it("returns proper values on placeCall", async () => {
@@ -253,10 +273,11 @@ describe("VoiceClient", () => {
                 code: '1234'
             });
 
-        response = await client.placeCall(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('1234');
+        try {
+            response = await client.placeCall(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('1234');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/voice/calls')
@@ -264,10 +285,11 @@ describe("VoiceClient", () => {
                 code: '456'
             });
 
-        response = await client.placeCall(message);
-
-        // @ts-ignore
-        expect(response.code).to.equal('456');
+        try {
+            response = await client.placeCall(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('456');
+        }
 
         nock(`${API_URL}:${API_PORT}`)
             .post('/v1/voice/calls')
@@ -275,10 +297,29 @@ describe("VoiceClient", () => {
                 code: '890'
             });
 
-        response = await client.placeCall(message);
+        try {
+            response = await client.placeCall(message);
+        } catch(err: any) {
+            expect(err.code).to.equal('890');
+        }
 
-        // @ts-ignore
-        expect(response.code).to.equal('890');
+        nock(`${API_URL}:${API_PORT}`)
+            .post('/v1/voice/calls')
+            .reply(600, {
+                code: '890'
+            });
+
+        try {
+            response = await client.placeCall(message);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"890"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
+
     });
 
     it("returns proper values on getStatus", async () => {
@@ -301,6 +342,21 @@ describe("VoiceClient", () => {
 
         // @ts-ignore
         expect(response.sessionId).to.equal("1da5e55c-52e4-4054-bec4-43256dd2eb91");
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/v1/voice/calls/1234')
+            .reply(400, {});
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 400,
+                body: '{}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
     it("returns proper values on getRecordings", async () => {
@@ -322,6 +378,21 @@ describe("VoiceClient", () => {
 
         // @ts-ignore
         expect(response.recordings[0].durationSeconds).to.equal(609);
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/v1/voice/calls/1234/recordings')
+            .reply(400, {});
+
+        try {
+            response = await client.getRecordings('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 400,
+                body: '{}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 
 });

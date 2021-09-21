@@ -1,4 +1,4 @@
-import {request} from 'http';
+import {request} from 'https';
 
 /**
  * Function to send request to api
@@ -20,12 +20,13 @@ export default function _request(options: any) {
     const returnRes = {
         statusCode: undefined,
         body: undefined,
-        error: undefined
+        error: undefined,
+        headers: {}
     };
 
     const payload = JSON.stringify(options.payload) || undefined;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<object>((resolve, reject) => {
         // @ts-ignore
         const req = request(reqOptions, (res: any) => {
             let data = '';
@@ -37,6 +38,9 @@ export default function _request(options: any) {
             res.on('end', () => {
                 // @ts-ignore
                 returnRes.body = data;
+
+                /* istanbul ignore next */
+                returnRes.headers = (res.headers) ? res.headers : {};
 
                 resolve(returnRes);
             });

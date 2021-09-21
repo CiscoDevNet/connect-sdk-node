@@ -2,6 +2,7 @@ import {SmsClient, SmsMessage} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
 import {API_URL, API_PORT} from "../../src/config/constants";
+import {API_VERSION} from "../../dist/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -68,30 +69,124 @@ describe("SmsClient", () => {
         const smsMessage = new SmsMessage('12345', '+14443332222');
         smsMessage.content = "Hello World";
 
-        const scope = nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/sms/messages')
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
             .reply(202, {
                 acceptedTime: '2021-08-01T14:24:33.000Z'
             });
 
-        const response = await smsClient.sendMessage(smsMessage);
+        let response = await smsClient.sendMessage(smsMessage);
 
         // @ts-ignore
         expect(response.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
+            .reply(400, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.sendMessage(smsMessage);
+        } catch(err: any) {
+            expect(err.code).to.equal('123');
+            expect(err.message).to.equal('456');
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
+            .reply(500, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.sendMessage(smsMessage);
+        } catch(err: any) {
+            expect(err.code).to.equal('123');
+            expect(err.message).to.equal('456');
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
+            .reply(600, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.sendMessage(smsMessage);
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"123","message":"456"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
+
+
     });
 
     it("returns proper values on getStatus", async () => {
         const smsClient = new SmsClient('bearer test: 1234');
 
-        const scope = nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/sms/messages/1234')
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(200, {
                 messageId: '1234'
             });
 
-        const response = await smsClient.getStatus('1234');
+        let response = await smsClient.getStatus('1234');
 
         // @ts-ignore
         expect(response.messageId).to.not.be.null;
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .reply(400, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.getStatus('1234');
+        } catch(err: any) {
+            expect(err.code).to.equal('123');
+            expect(err.message).to.equal('456');
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .reply(500, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.getStatus('1234');
+        } catch(err: any) {
+            expect(err.code).to.equal('123');
+            expect(err.message).to.equal('456');
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .reply(600, {
+                code: '123',
+                message: '456'
+            });
+
+        try {
+            response = await smsClient.getStatus('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '{"code":"123","message":"456"}',
+                error: undefined,
+                headers: { 'content-type': 'application/json' }
+            })
+        }
     });
 });

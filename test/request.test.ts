@@ -16,16 +16,29 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_URL}:${API_PORT}`)
             .get('/something')
-            .reply(200, "Hello World");
+            .reply(200, "Hello World", {'request-id': '12345'});
 
-        const response = await request(reqOptions);
+        let response = await request(reqOptions);
 
         // @ts-ignore
         expect(response.statusCode).to.equal(200);
         // @ts-ignore
         expect(response.body).to.equal("Hello World");
+        // @ts-ignore
+        expect(response.headers['request-id']).to.equal('12345');
+
+        nock.cleanAll();
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/something')
+            .reply(200, "Hello World");
+
+        response = await request(reqOptions);
+
+        // @ts-ignore
+        expect(response.headers).to.deep.equal({});
     });
 
     it("fails correctly", async () => {

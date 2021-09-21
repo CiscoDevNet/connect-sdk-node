@@ -1,6 +1,10 @@
 import request from "../../request";
 import {VoiceCall} from "./voiceCall";
 import {CpaasClient} from "../cpaasClient";
+import {VoiceMessageResponse} from "./models/voiceMessageResponse";
+import {VoiceCallResponse} from "./models/voiceCallResponse";
+import {VoiceStatusResponse} from "./models/voiceStatusResponse";
+import {RecordingResponse, VoiceRecordingResponse} from "./models/voiceRecordingResponse";
 
 /**
  * Client class for sending a voice message
@@ -39,47 +43,41 @@ export class VoiceClient extends CpaasClient {
             payload: message.toJSON()
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VoiceMessageResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 202) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                sessions: new Array<object>()
-                            }
+                    if(res.statusCode === 202) {
+                        let payload: any = {
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            sessions: new Array<object>()
+                        }
 
-                            if(body.sessions) {
-                                body.sessions.forEach((session: any) => {
-                                    payload.sessions.push({
-                                        "sessionId": session.sessionId,
-                                        "status": session.status,
-                                        "dialedNumber": session.dialedNumber
-                                    });
+                        /* istanbul ignore next */
+                        if(body.sessions) {
+                            body.sessions.forEach((session: any) => {
+                                payload.sessions.push({
+                                    sessionId: session.sessionId,
+                                    status: session.status,
+                                    dialedNumber: session.dialedNumber
                                 });
-                            }
+                            });
                         }
 
-                        if(res.statusCode >= 400 && res.statusCode <= 599) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                code: body.code,
-                                message: body.message
-                            }
-                        }
+                        resolve(payload);
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            code: body.code,
+                            message: body.message
+                        });
                     } else {
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
                 });
         });
     }
@@ -115,47 +113,41 @@ export class VoiceClient extends CpaasClient {
             payload: callData.toJSON()
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VoiceCallResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 202) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                sessions: new Array<object>()
-                            }
+                    if(res.statusCode === 202) {
+                        let payload: any = {
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            sessions: new Array<object>()
+                        }
 
-                            if(body.sessions) {
-                                body.sessions.forEach((session: any) => {
-                                    payload.sessions.push({
-                                        "sessionId": session.sessionId,
-                                        "status": session.status,
-                                        "dialedNumber": session.dialedNumber
-                                    });
+                        /* istanbul ignore next */
+                        if(body.sessions) {
+                            body.sessions.forEach((session: any) => {
+                                payload.sessions.push({
+                                    sessionId: session.sessionId,
+                                    status: session.status,
+                                    dialedNumber: session.dialedNumber
                                 });
-                            }
+                            });
                         }
 
-                        if(res.statusCode >= 400 && res.statusCode <= 599) {
-                            payload = {
-                                statusCode: res.statusCode,
-                                code: body.code,
-                                message: body.message
-                            }
-                        }
+                        resolve(payload);
+                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id'],
+                            code: body.code,
+                            message: body.message
+                        });
                     } else {
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
                 });
         });
     }
@@ -178,34 +170,28 @@ export class VoiceClient extends CpaasClient {
             }
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VoiceStatusResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
                     if(res.statusCode === 200) {
-                        payload = {
-                            "statusCode": body.statusCode,
-                            "sessionId": body.sessionId,
-                            "callerId": body.callerId,
-                            "dialedNumber": body.dialedNumber,
-                            "status": body.status,
-                            "correlationId": body.correlationId,
-                            "durationSeconds": body.durationSeconds,
-                            "offeredTime": body.offeredTime,
-                            "answeredTime": body.answeredTime
-                        }
+                        resolve({
+                            statusCode: body.statusCode,
+                            requestId: res.headers['request-id'],
+                            sessionId: body.sessionId,
+                            callerId: body.callerId,
+                            dialedNumber: body.dialedNumber,
+                            status: body.status,
+                            correlationId: body.correlationId,
+                            durationSeconds: body.durationSeconds,
+                            offeredTime: body.offeredTime,
+                            answeredTime: body.answeredTime
+                        })
                     } else {
-                        payload = res;
+                        reject(res);
                     }
-
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
                 });
         });
     }
@@ -227,41 +213,35 @@ export class VoiceClient extends CpaasClient {
             }
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise<VoiceRecordingResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    let payload: any;
+
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
 
-                    if(res.statusCode) {
-                        if(res.statusCode === 200) {
-                            payload = {
-                                statusCode: body.statusCode,
-                                sessionId: body.sessionId,
-                                recordings: new Array<object>()
-                            }
-
-                            if(body.recordings) {
-                                body.recordings.forEach((recording: any) => {
-                                    payload.recordings.push({
-                                        "durationSeconds": recording.durationSeconds,
-                                        "url": recording.url
-                                    });
-                                });
-                            }
-                        } else {
-                            payload = res;
+                    if(res.statusCode === 200) {
+                        let payload: any = {
+                            statusCode: body.statusCode,
+                            requestId: res.headers['request-id'],
+                            sessionId: body.sessionId,
+                            recordings: new Array<RecordingResponse>()
                         }
-                    } else {
-                        payload = res;
-                    }
 
-                    resolve(payload);
-                })
-                .catch(err => {
-                    console.error(err);
-                    reject(err);
+                        /* istanbul ignore next */
+                        if(body.recordings) {
+                            body.recordings.forEach((recording: any) => {
+                                payload.recordings.push({
+                                    durationSeconds: recording.durationSeconds,
+                                    url: recording.url
+                                });
+                            });
+                        }
+
+                        resolve(payload);
+                    } else {
+                        reject(res);
+                    }
                 });
         });
     }
