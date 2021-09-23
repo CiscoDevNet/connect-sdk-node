@@ -6,6 +6,7 @@ import {VideoCreateResponse} from "./models/videoCreateResponse";
 import {VideoRetrieveResponse} from "./models/videoRetrieveResponse";
 import {VideoDeleteResponse} from "./models/videoDeleteResponse";
 import {VideoTokenResponse} from "./models/videoTokenResponse";
+import {API_VERSION} from "../../config/constants";
 
 /**
  * Client class for sending a video request
@@ -34,7 +35,7 @@ export class VideoClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: '/v1/video/sessions',
+            path: `/${API_VERSION}/video/sessions`,
             headers: {
                 'Idempotency-Key': videoSession.idempotencyKey,
                 'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export class VideoClient extends CpaasClient {
     retrieveSession(sessionId: string) {
         const options = {
             method: 'GET',
-            path: `/v1/video/sessions/${sessionId}`,
+            path: `/${API_VERSION}/video/sessions/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
@@ -126,7 +127,7 @@ export class VideoClient extends CpaasClient {
     deleteSession(sessionId: string) {
         const options = {
             method: 'DELETE',
-            path: `/v1/video/sessions/${sessionId}`,
+            path: `/${API_VERSION}/video/sessions/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
@@ -178,7 +179,7 @@ export class VideoClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: `/v1/video/sessions/${videoToken.sessionId}/tokens`,
+            path: `/${API_VERSION}/video/sessions/${videoToken.sessionId}/tokens`,
             headers: {
                 'Idempotency-Key': videoToken.idempotencyKey,
                 'Content-Type': 'application/json',

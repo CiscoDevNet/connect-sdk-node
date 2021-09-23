@@ -186,6 +186,7 @@ export class TtsAudio {
 
     toJSON() {
         const payload = {
+            text: this.text,
             type: this.type,
             loop: this.loop,
             style: this.style,

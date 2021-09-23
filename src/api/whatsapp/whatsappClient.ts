@@ -8,6 +8,7 @@ import {WhatsappContactPhone} from "./contacts/whatsappContactPhone";
 import {WhatsappContactAddr} from "./contacts/whatsappContactAddr";
 import {WhatsappContactEmail} from "./contacts/whatsappContactEmail";
 import {WhatsappContactUrl} from "./contacts/whatsappContactUrl";
+import {API_VERSION} from "../../config/constants";
 
 /**
  * Client class for sending a Whatsapp message
@@ -38,7 +39,7 @@ export class WhatsappClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: '/v1/whatsapp/messages',
+            path: `/${API_VERSION}/whatsapp/messages`,
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
@@ -52,6 +53,7 @@ export class WhatsappClient extends CpaasClient {
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
+                    const rejectCodes = [400, 403, 500];
 
                     if(res.statusCode === 202) {
                         resolve({
@@ -61,7 +63,7 @@ export class WhatsappClient extends CpaasClient {
                             messageId: body.messageId,
                             correlationId: body.correlationId
                         });
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(rejectCodes.includes(res.statusCode)) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
@@ -85,7 +87,7 @@ export class WhatsappClient extends CpaasClient {
     getStatus(messageId: string) {
         const options = {
             method: 'GET',
-            path: `/v1/whatsapp/messages/${messageId}`,
+            path: `/${API_VERSION}/whatsapp/messages/${messageId}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
@@ -305,7 +307,12 @@ export class WhatsappClient extends CpaasClient {
                         }
 
                         resolve(payload);
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(res.statusCode === 404) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id']
+                        })
+                    } else if(res.statusCode === 500) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],

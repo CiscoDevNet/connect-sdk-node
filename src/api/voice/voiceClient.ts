@@ -5,6 +5,7 @@ import {VoiceMessageResponse} from "./models/voiceMessageResponse";
 import {VoiceCallResponse} from "./models/voiceCallResponse";
 import {VoiceStatusResponse} from "./models/voiceStatusResponse";
 import {RecordingResponse, VoiceRecordingResponse} from "./models/voiceRecordingResponse";
+import {API_VERSION} from "../../config/constants";
 
 /**
  * Client class for sending a voice message
@@ -34,7 +35,7 @@ export class VoiceClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: '/v1/voice/messages',
+            path: `/${API_VERSION}/voice/messages`,
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
@@ -47,13 +48,17 @@ export class VoiceClient extends CpaasClient {
             request(options)
                 .then((res: any) => {
                     // @ts-ignore
+
                     const body: any = JSON.parse(res.body);
+                    const rejectCodes = [400, 403, 404, 405, 409, 429];
 
                     if(res.statusCode === 202) {
                         let payload: any = {
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
-                            sessions: new Array<object>()
+                            sessions: new Array<object>(),
+                            sessionId: res.sessionId,
+                            status: res.status
                         }
 
                         /* istanbul ignore next */
@@ -68,7 +73,7 @@ export class VoiceClient extends CpaasClient {
                         }
 
                         resolve(payload);
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(rejectCodes.includes(res.statusCode) || (res.statusCode >= 500 && res.statusCode <= 599)) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
@@ -104,7 +109,7 @@ export class VoiceClient extends CpaasClient {
 
         const options = {
             method: 'POST',
-            path: '/v1/voice/calls',
+            path: `/${API_VERSION}/voice/calls`,
             headers: {
                 'Idempotency-Key': callData.idempotencyKey,
                 'Content-Type': 'application/json',
@@ -118,12 +123,15 @@ export class VoiceClient extends CpaasClient {
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
+                    const rejectCodes = [400, 401, 404, 405, 409, 429];
 
                     if(res.statusCode === 202) {
                         let payload: any = {
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
-                            sessions: new Array<object>()
+                            sessions: new Array<object>(),
+                            sessionId: res.sessionId,
+                            status: res.status
                         }
 
                         /* istanbul ignore next */
@@ -137,8 +145,10 @@ export class VoiceClient extends CpaasClient {
                             });
                         }
 
+                        if(body.session)
+
                         resolve(payload);
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(rejectCodes.includes(res.statusCode) || (res.statusCode >= 500 && res.statusCode <= 599)) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
@@ -163,7 +173,7 @@ export class VoiceClient extends CpaasClient {
     getStatus(sessionId: string) {
         const options = {
             method: 'GET',
-            path: `/v1/voice/calls/${sessionId}`,
+            path: `/${API_VERSION}/voice/calls/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
@@ -178,16 +188,21 @@ export class VoiceClient extends CpaasClient {
 
                     if(res.statusCode === 200) {
                         resolve({
-                            statusCode: body.statusCode,
+                            statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             sessionId: body.sessionId,
                             callerId: body.callerId,
                             dialedNumber: body.dialedNumber,
-                            status: body.status,
+                            status: res.status,
                             correlationId: body.correlationId,
                             durationSeconds: body.durationSeconds,
                             offeredTime: body.offeredTime,
                             answeredTime: body.answeredTime
+                        })
+                    } else if (res.statusCode === 404) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id']
                         })
                     } else {
                         reject(res);
@@ -206,7 +221,7 @@ export class VoiceClient extends CpaasClient {
     getRecordings(sessionId: string) {
         const options = {
             method: 'GET',
-            path: `/v1/voice/calls/${sessionId}/recordings`,
+            path: `/${API_VERSION}/voice/calls/${sessionId}/recordings`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.bearerToken}`
@@ -222,14 +237,14 @@ export class VoiceClient extends CpaasClient {
 
                     if(res.statusCode === 200) {
                         let payload: any = {
-                            statusCode: body.statusCode,
+                            statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             sessionId: body.sessionId,
                             recordings: new Array<RecordingResponse>()
                         }
 
                         /* istanbul ignore next */
-                        if(body.recordings) {
+                        if (body.recordings) {
                             body.recordings.forEach((recording: any) => {
                                 payload.recordings.push({
                                     durationSeconds: recording.durationSeconds,
@@ -239,6 +254,11 @@ export class VoiceClient extends CpaasClient {
                         }
 
                         resolve(payload);
+                    } else if (res.statusCode === 404) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.headers['request-id']
+                        })
                     } else {
                         reject(res);
                     }

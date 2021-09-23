@@ -47,6 +47,8 @@ export class SmsClient extends CpaasClient {
         };
 
         return new Promise<SmsSendResponse>((resolve, reject) => {
+            const rejectCodes = [400, 403, 500];
+
             request(options)
                 .then((res: any) => {
                     // @ts-ignore
@@ -60,7 +62,7 @@ export class SmsClient extends CpaasClient {
                             messageId: body.messageId,
                             correlationId: body.correlationId
                         })
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(rejectCodes.includes(res.statusCode)) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
@@ -121,12 +123,17 @@ export class SmsClient extends CpaasClient {
                         }
 
                         resolve(payload);
-                    } else if(res.statusCode >= 400 && res.statusCode <= 599) {
+                    } else if(res.statusCode === 500) {
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             code: body.code,
                             message: body.message
+                        })
+                    }else if (res.statusCode === 404) {
+                        reject({
+                            statusCode: res.statusCode,
+                            requestId: res.header['request-id']
                         })
                     } else {
                         reject(res);
