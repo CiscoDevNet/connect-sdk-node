@@ -2,10 +2,8 @@ import {uuidv4} from "../../../helpers/identifiers";
 import {
     isValidHttpUrl,
     isValidE164,
-    isNumeric, isBoolean
+    isBoolean
 } from "../../../helpers/validators";
-import {SmsContentType} from "../../sms";
-import {SMS_CONTENT_MAXLEN} from "../../../config/constants";
 import {WhatsappContentType} from "../whatsappContentType";
 
 /**
@@ -80,10 +78,6 @@ export class WhatsappTextMessage {
 
     get from(): string {return this._from;}
     set from(value: string) {
-        if(!isNumeric(value)) {
-            throw new Error("from must be a number or E.164 string");
-        }
-
         this._from = value;
     }
 

@@ -1,5 +1,5 @@
 import {VoiceContentType} from "../types/voiceContentType";
-import {isNumeric} from "../../../helpers/validators";
+import {isFloat, isNumeric} from "../../../helpers/validators";
 
 /**
  * MediaAudio object for sending with voice message call to API
@@ -37,7 +37,7 @@ export class MediaAudio {
 
     get loop(): number | undefined {return this._loop}
     set loop(value: number | undefined) {
-        if(value && !isNumeric(value)) {
+        if(value && (!isNumeric(value) || isFloat(value)) ) {
             throw Error("Loop value provided is not an integer");
         }
 

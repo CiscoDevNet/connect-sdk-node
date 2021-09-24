@@ -1,6 +1,6 @@
 import {WhatsappContactAddr} from '../../src/api/whatsapp/contacts/whatsappContactAddr'
 import {expect} from "chai";
-import {AddressType, WhatsappAudioMessage} from "../../src";
+import {AddressType} from "../../src";
 
 describe("WhatsappContactAddr", () => {
 

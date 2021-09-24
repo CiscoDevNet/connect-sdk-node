@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric, isArrayBool, isBinary, isBoolean, hasUnicode} from '../src/helpers/validators';
+import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric, isFloat, isArrayBool, isBinary, isBoolean, hasUnicode} from '../src/helpers/validators';
 
 describe("Validators", () => {
     it("isValidHttpUrl validates correctly", () => {
@@ -24,6 +24,14 @@ describe("Validators", () => {
         expect(isNumeric(123)).to.be.true;
         expect(isNumeric('123')).to.be.true;
     });
+
+    it('isFloat validates correctly', () => {
+        expect(isFloat('abc')).to.be.false;
+        expect(isFloat('1')).to.be.false;
+        expect(isFloat('1.2')).to.be.false;
+        expect(isFloat(1)).to.be.false;
+        expect(isFloat(1.2)).to.be.true;
+    })
 
     it("isBinary validates correctly", () => {
         expect(isBinary('abc')).to.be.false;

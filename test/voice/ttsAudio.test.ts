@@ -84,6 +84,7 @@ describe("TtsAudio", () => {
             "gender": "FEMALE",
             "language": "EN_US",
             "style": "STANDARD",
+            "text": "hello world",
             "textFormat": "TEXT",
             "type": "TTS",
             "voice": "Aria"

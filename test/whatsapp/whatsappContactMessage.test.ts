@@ -2,7 +2,7 @@ import {WhatsappContactMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 import {WhatsappContact} from "../../src";
 
-describe("WhatsappAudioMessage", () => {
+describe("WhatsappContactMessage", () => {
     it("sets constructor values properly", () => {
         const message = new WhatsappContactMessage('12345', '+14443332222');
 
@@ -13,13 +13,6 @@ describe("WhatsappAudioMessage", () => {
 
     it("throws validation errors correctly", () => {
         const message = new WhatsappContactMessage('12345', '+14443332222');
-
-        expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
 
         expect(() => {
             message.to = "abc";

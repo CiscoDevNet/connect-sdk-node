@@ -1,5 +1,5 @@
 import {uuidv4} from "../../helpers/identifiers";
-import {isBoolean, isNumeric, isValidE164, isValidHttpUrl} from "../../helpers/validators";
+import {isBoolean, isFloat, isNumeric, isValidE164, isValidHttpUrl} from "../../helpers/validators";
 
 /**
  * VoiceCall is the data object used to send a voice call to the API
@@ -82,7 +82,7 @@ export class VoiceCall {
 
     get recordCallSeconds(): number | undefined {return this._recordCallSeconds}
     set recordCallSeconds(value: number | undefined) {
-        if(value && !isNumeric(value)) {
+        if(value && (!isNumeric(value) || isFloat(value))) {
             throw Error("Value for recordCallSeconds must be an integer");
         }
 

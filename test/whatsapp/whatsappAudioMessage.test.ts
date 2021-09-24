@@ -16,13 +16,6 @@ describe("WhatsappAudioMessage", () => {
         const message = new WhatsappAudioMessage('12345', '+14443332222', 'http://www.site.com/test.wav', 'audio/wav');
 
         expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
-
-        expect(() => {
             message.to = "abc";
         }).to.throw();
         expect(() => {

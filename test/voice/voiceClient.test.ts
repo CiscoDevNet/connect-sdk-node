@@ -2,6 +2,7 @@ import {VoiceClient, VoiceMessage, VoiceCall} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
 import {API_URL, API_PORT} from "../../src/config/constants";
+import {API_VERSION} from "../../dist/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -30,7 +31,7 @@ describe("VoiceClient", () => {
         message.addDialedNumber('+13334440000');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(202, {
                 "sessions": [
                     {
@@ -60,7 +61,7 @@ describe("VoiceClient", () => {
         message.addDialedNumber('+13334440000');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(202, {
                 "sessions": [
                     {
@@ -95,7 +96,7 @@ describe("VoiceClient", () => {
         const message = new VoiceCall('+14443332222');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(202, {
                 "sessions": [
                     {
@@ -121,7 +122,7 @@ describe("VoiceClient", () => {
         message.addDialedNumber('+13334440000');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(202, {
                 "sessions": [
                     {
@@ -151,7 +152,7 @@ describe("VoiceClient", () => {
         message.addDialedNumber('+13334440000');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(202, {
                 "sessions": [
                     {
@@ -187,7 +188,7 @@ describe("VoiceClient", () => {
         message.addDialedNumber('+13334440000');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(202, {
                 "sessions": [
                     {
@@ -204,7 +205,7 @@ describe("VoiceClient", () => {
         expect(response.sessions[0].sessionId).to.equal('0e36bb32-5f5d-46c9-b132-85e010a80c2a');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(400, {
                 code: '1234'
             });
@@ -216,7 +217,7 @@ describe("VoiceClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(403, {
                 code: '456'
             });
@@ -228,7 +229,7 @@ describe("VoiceClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(500, {
                 code: '890'
             });
@@ -240,7 +241,7 @@ describe("VoiceClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/messages')
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(600, {
                 code: '890'
             });
@@ -262,13 +263,25 @@ describe("VoiceClient", () => {
         const message = new VoiceCall('+14443332222');
         message.addDialedNumber('+13334440000');
 
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/voice/calls`)
+            .reply(202, {
+                "sessions": [
+                    {
+                        "sessionId": "0e36bb32-5f5d-46c9-b132-85e010a80c2b",
+                        "status": "QUEUED",
+                        "dialedNumber": "string"
+                    }
+                ]
+            });
+
         let response = await client.placeCall(message);
 
         // @ts-ignore
         expect(response.sessions[0].sessionId).to.equal('0e36bb32-5f5d-46c9-b132-85e010a80c2a');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(400, {
                 code: '1234'
             });
@@ -279,9 +292,11 @@ describe("VoiceClient", () => {
             expect(err.code).to.equal('1234');
         }
 
+        nock.cleanAll();
+
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
-            .reply(403, {
+            .post(`/${API_VERSION}/voice/calls`)
+            .reply(404, {
                 code: '456'
             });
 
@@ -292,7 +307,7 @@ describe("VoiceClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(500, {
                 code: '890'
             });
@@ -304,7 +319,7 @@ describe("VoiceClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/voice/calls')
+            .post(`/${API_VERSION}/voice/calls`)
             .reply(600, {
                 code: '890'
             });
@@ -326,7 +341,7 @@ describe("VoiceClient", () => {
         const client = new VoiceClient('bearer test: 1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/voice/calls/1234')
+            .get(`/${API_VERSION}/voice/calls/1234`)
             .reply(200, {
                 "sessionId": "1da5e55c-52e4-4054-bec4-43256dd2eb91",
                 "callerId": "+15615551212",
@@ -344,7 +359,22 @@ describe("VoiceClient", () => {
         expect(response.sessionId).to.equal("1da5e55c-52e4-4054-bec4-43256dd2eb91");
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/voice/calls/1234')
+            .get(`/${API_VERSION}/voice/calls/1234`)
+            .reply(404, {}, {
+                'request-id': '1234'
+            });
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                "requestId": "1234",
+                "statusCode": 404
+            })
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/voice/calls/1234`)
             .reply(400, {});
 
         try {
@@ -363,7 +393,7 @@ describe("VoiceClient", () => {
         const client = new VoiceClient('bearer test: 1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/voice/calls/1234/recordings')
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
             .reply(200, {
                 "sessionId": "1da5e55c-52e4-4054-bec4-43256dd2eb91",
                 "recordings": [
@@ -380,7 +410,22 @@ describe("VoiceClient", () => {
         expect(response.recordings[0].durationSeconds).to.equal(609);
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/voice/calls/1234/recordings')
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
+            .reply(404, {}, {
+                'request-id': '1234'
+            });
+
+        try {
+            response = await client.getRecordings('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                "requestId": "1234",
+                "statusCode": 404
+            })
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
             .reply(400, {});
 
         try {

@@ -145,8 +145,6 @@ export class VoiceClient extends CpaasClient {
                             });
                         }
 
-                        if(body.session)
-
                         resolve(payload);
                     } else if(rejectCodes.includes(res.statusCode) || (res.statusCode >= 500 && res.statusCode <= 599)) {
                         reject({
@@ -200,6 +198,7 @@ export class VoiceClient extends CpaasClient {
                             answeredTime: body.answeredTime
                         })
                     } else if (res.statusCode === 404) {
+                        console.log('reject 404');
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id']

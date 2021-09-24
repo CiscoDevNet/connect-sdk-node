@@ -15,13 +15,6 @@ describe("WhatsappTemplateMessage", () => {
         const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
 
         expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
-
-        expect(() => {
             message.to = "abc";
         }).to.throw();
         expect(() => {

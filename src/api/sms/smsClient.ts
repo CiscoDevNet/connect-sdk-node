@@ -98,6 +98,7 @@ export class SmsClient extends CpaasClient {
             request(options)
                 .then((res: any) => {
                     // @ts-ignore
+                    /* istanbul ignore next */
                     const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
@@ -133,7 +134,7 @@ export class SmsClient extends CpaasClient {
                     }else if (res.statusCode === 404) {
                         reject({
                             statusCode: res.statusCode,
-                            requestId: res.header['request-id']
+                            requestId: res.headers['request-id']
                         })
                     } else {
                         reject(res);

@@ -145,16 +145,15 @@ describe("SmsClient", () => {
 
         nock(`${API_URL}:${API_PORT}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
-            .reply(400, {
-                code: '123',
-                message: '456'
+            .reply(404, {}, {
+                'request-id': '1234'
             });
 
         try {
             response = await smsClient.getStatus('1234');
         } catch(err: any) {
-            expect(err.code).to.equal('123');
-            expect(err.message).to.equal('456');
+            expect(err.statusCode).to.equal(404);
+            expect(err.requestId).to.equal('1234');
         }
 
         nock(`${API_URL}:${API_PORT}`)

@@ -66,6 +66,16 @@ export function isNumeric(value: any) {
 }
 
 /**
+ * Validates that a passed string is a float
+ *
+ * @returns boolean true/false if passed value is a float
+ */
+
+export function isFloat(value: any) {
+    return Number(value) === value && value % 1 !== 0;
+}
+
+/**
  * Validates that a passed string is binary
  *
  * @returns boolean true/false if passed value is binary

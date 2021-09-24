@@ -1,7 +1,7 @@
 import {WhatsappLocMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 
-describe("WhatsappImageMessage", () => {
+describe("WhatsappLocMessage", () => {
     it("sets constructor values properly", () => {
         const message = new WhatsappLocMessage('12345', '+14443332222', 26.1, -26.1);
 
@@ -14,13 +14,6 @@ describe("WhatsappImageMessage", () => {
 
     it("throws validation errors correctly", () => {
         const message = new WhatsappLocMessage('12345', '+14443332222', 26.1, -26.1);
-
-        expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
 
         expect(() => {
             message.to = "abc";

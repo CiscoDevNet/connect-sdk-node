@@ -3,6 +3,7 @@ import {expect} from "chai";
 import nock from "nock";
 import {API_URL} from "../../src/config/constants";
 import {API_PORT} from "../../src/config/constants";
+import {API_VERSION} from "../../dist/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -57,7 +58,7 @@ describe("WhatsappClient", () => {
         message.content = "Hello World";
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/whatsapp/messages')
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(202, {
                 acceptedTime: '2021-08-01T14:24:33.000Z'
             });
@@ -68,7 +69,7 @@ describe("WhatsappClient", () => {
         expect(response.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/whatsapp/messages')
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(400, {
                 code: '1234'
             });
@@ -80,7 +81,7 @@ describe("WhatsappClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/whatsapp/messages')
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(403, {
                 code: '456'
             });
@@ -92,7 +93,7 @@ describe("WhatsappClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/whatsapp/messages')
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(500, {
                 code: '890'
             });
@@ -104,7 +105,7 @@ describe("WhatsappClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/whatsapp/messages')
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(600, {
                 code: '890'
             });
@@ -125,7 +126,7 @@ describe("WhatsappClient", () => {
         const client = new WhatsappClient('bearer test: 1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/whatsapp/messages/1234')
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 messageId: '1234',
                 contentType: 'TEXT'
@@ -137,7 +138,7 @@ describe("WhatsappClient", () => {
         expect(response.messageId).to.equal('1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/whatsapp/messages/1234')
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(500, {
                 code: '445'
             });
@@ -149,7 +150,7 @@ describe("WhatsappClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/whatsapp/messages/1234')
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(600, {
                 code: '890'
             });

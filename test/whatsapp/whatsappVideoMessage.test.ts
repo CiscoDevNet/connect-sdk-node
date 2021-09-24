@@ -1,7 +1,7 @@
 import {WhatsappVideoMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 
-describe("WhatsappImageMessage", () => {
+describe("WhatsappVideoMessage", () => {
     it("sets constructor values properly", () => {
         const message = new WhatsappVideoMessage('12345', '+14443332222', 'http://www.site.com/sticker.png', 'image/png');
 
@@ -14,13 +14,6 @@ describe("WhatsappImageMessage", () => {
 
     it("throws validation errors correctly", () => {
         const message = new WhatsappVideoMessage('12345', '+14443332222', 'http://www.site.com/sticker.png', 'image/png');
-
-        expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
 
         expect(() => {
             message.to = "abc";

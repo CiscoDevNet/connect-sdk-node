@@ -1,8 +1,7 @@
 import {uuidv4} from "../../../helpers/identifiers";
 import {
     isValidHttpUrl,
-    isValidE164,
-    isNumeric
+    isValidE164
 } from "../../../helpers/validators";
 import {WhatsappContentType} from "../whatsappContentType";
 
@@ -84,10 +83,6 @@ export class WhatsappAudioMessage {
 
     get from(): string {return this._from;}
     set from(value: string) {
-        if(!isNumeric(value)) {
-            throw new Error("from must be a number or E.164 string");
-        }
-
         this._from = value;
     }
 

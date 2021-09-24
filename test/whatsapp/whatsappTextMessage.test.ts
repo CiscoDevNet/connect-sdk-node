@@ -1,7 +1,7 @@
 import {WhatsappTextMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 
-describe("WhatsappTemplateMessage", () => {
+describe("WhatsappTextMessage", () => {
     it("sets constructor values properly", () => {
         const message = new WhatsappTextMessage('12345', '+14443332222', 'tmpl1234');
 
@@ -13,13 +13,6 @@ describe("WhatsappTemplateMessage", () => {
 
     it("throws validation errors correctly", () => {
         const message = new WhatsappTextMessage('12345', '+14443332222', 'tmpl1234');
-
-        expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
 
         expect(() => {
             message.to = "abc";

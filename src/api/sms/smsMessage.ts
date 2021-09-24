@@ -3,7 +3,6 @@ import {
     isValidHttpUrl,
     isValidISO8601,
     isValidE164,
-    isNumeric,
     isBinary,
     hasUnicode,
     isArrayBool
@@ -70,10 +69,6 @@ export class SmsMessage {
 
     get from(): string {return this._from;}
     set from(value: string) {
-        if(!isNumeric(value)) {
-            throw new Error("from must be a number or E.164 string");
-        }
-
         this._from = value;
     }
 

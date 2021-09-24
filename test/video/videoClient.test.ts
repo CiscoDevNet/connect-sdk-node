@@ -2,6 +2,7 @@ import {VideoClient, VideoSession, VideoToken} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
 import {API_URL, API_PORT} from "../../src/config/constants";
+import {API_VERSION} from "../../dist/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -17,7 +18,7 @@ describe("VideoClient", () => {
         const session = new VideoSession('12345', 'test session');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions')
+            .post(`/${API_VERSION}/video/sessions`)
             .reply(201, {
                 "appId": "12345",
                 "name": "test session"
@@ -59,7 +60,7 @@ describe("VideoClient", () => {
         const session = new VideoSession('12345', 'test session');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions')
+            .post(`/${API_VERSION}/video/sessions`)
             .reply(201, {
                 "sessionId": "12345"
             }, {
@@ -72,7 +73,7 @@ describe("VideoClient", () => {
         expect(response.location).to.equal('http://mysession.com');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions')
+            .post(`/${API_VERSION}/video/sessions`)
             .reply(400, {
                 code: '1234',
                 message: 'error msg'
@@ -86,7 +87,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions')
+            .post(`/${API_VERSION}/video/sessions`)
             .reply(500, {
                 code: '890',
                 message: 'error msg'
@@ -100,7 +101,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions')
+            .post(`/${API_VERSION}/video/sessions`)
             .reply(600, {
                 code: '890',
                 message: 'error msg'
@@ -123,7 +124,7 @@ describe("VideoClient", () => {
         const token = new VideoToken('12345');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions/12345/tokens')
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(200, {
                 "token": "14ced030-183b-4dfd-966d-c3c4a285f66a",
                 "expiresAt": "2021-08-01T13:03:00.000Z"
@@ -152,7 +153,7 @@ describe("VideoClient", () => {
         const token = new VideoToken('12345');
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions/12345/tokens')
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(200, {
                 "token": "14ced030-183b-4dfd-966d-c3c4a285f66a",
                 "expiresAt": "2021-08-01T13:03:00.000Z"
@@ -166,7 +167,7 @@ describe("VideoClient", () => {
         nock.cleanAll();
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions/12345/tokens')
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(400, {
                 code: '1234',
                 message: 'error msg'
@@ -180,7 +181,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions/12345/tokens')
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(500, {
                 code: '890',
                 message: 'error msg'
@@ -194,7 +195,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .post('/v1/video/sessions/12345/tokens')
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(600, {
                 code: '890',
                 message: 'error msg'
@@ -216,7 +217,7 @@ describe("VideoClient", () => {
         const client = new VideoClient('bearer test: 1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/video/sessions/12345')
+            .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(200, {
                 "appId": "a786c77d-57a2-4010-b875-51fde17aa72b",
                 "name": "My Video Session",
@@ -235,7 +236,7 @@ describe("VideoClient", () => {
         expect(response.sessionId).to.equal("c251a7de-0523-4f34-8914-45e71a4c114f");
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/video/sessions/12345')
+            .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(400, {
                 "code": "807",
                 "message": "error msg"
@@ -249,7 +250,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/video/sessions/12345')
+            .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(500, {
                 "code": "807",
                 "message": "error msg"
@@ -263,7 +264,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .get('/v1/video/sessions/12345')
+            .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(600, {
                 "code": "807",
                 "message": "error msg"
@@ -286,7 +287,7 @@ describe("VideoClient", () => {
         const client = new VideoClient('bearer test: 1234');
 
         nock(`${API_URL}:${API_PORT}`)
-            .delete('/v1/video/sessions/12345')
+            .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(200);
 
         let response = await client.deleteSession('12345');
@@ -295,7 +296,7 @@ describe("VideoClient", () => {
         expect(response.statusCode).to.equal(200);
 
         nock(`${API_URL}:${API_PORT}`)
-            .delete('/v1/video/sessions/12345')
+            .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(400, {
                 "code": "807",
                 "message": "error msg"
@@ -310,7 +311,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .delete('/v1/video/sessions/12345')
+            .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(500, {
                 "code": "807",
                 "message": "error msg"
@@ -325,7 +326,7 @@ describe("VideoClient", () => {
         }
 
         nock(`${API_URL}:${API_PORT}`)
-            .delete('/v1/video/sessions/12345')
+            .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(600, {
                 "code": "807",
                 "message": "error msg"

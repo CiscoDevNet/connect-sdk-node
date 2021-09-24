@@ -16,13 +16,6 @@ describe("WhatsappDocMessage", () => {
         const message = new WhatsappDocMessage('12345', '+14443332222', 'http://www.site.com/sticker.png', 'image/png');
 
         expect(() => {
-            message.from = "abc";
-        }).to.throw();
-        expect(() => {
-            message.from = "12345";
-        }).to.not.throw();
-
-        expect(() => {
             message.to = "abc";
         }).to.throw();
         expect(() => {

@@ -15,13 +15,6 @@ describe("SmsMessage", () => {
         const smsMessage = new SmsMessage('12345', '+14443332222');
 
         expect(() => {
-            smsMessage.from = "abc";
-        }).to.throw();
-        expect(() => {
-            smsMessage.from = "12345";
-        }).to.not.throw();
-
-        expect(() => {
             smsMessage.to = "abc";
         }).to.throw();
         expect(() => {
