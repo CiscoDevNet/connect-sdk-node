@@ -198,7 +198,6 @@ export class VoiceClient extends CpaasClient {
                             answeredTime: body.answeredTime
                         })
                     } else if (res.statusCode === 404) {
-                        console.log('reject 404');
                         reject({
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id']
