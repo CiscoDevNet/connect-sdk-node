@@ -20,31 +20,38 @@ export class TtsAudio {
 
     /**
      * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
+     * @default 1
      */
     private _loop: number | undefined;
     /**
      * @remark Whether to use standard or neural speech
+     * @default STANDARD
      */
     private _style: string | undefined = StyleType.STANDARD;
     /**
      * @remark Language of the text being synthesized
+     * @default EN_US
      */
     private _language: string | undefined = "EN_US";
     /**
      * @remark The desired voice for the rendered speech
+     * @default Aria
      */
     private _voice: string | undefined = "Aria";
     /**
      * @remark Gender of the synthesized voice
+     * @default FEMALE
      */
     private _gender: string | undefined = GenderType.FEMALE;
     /**
      * @remark Which TTS engine to use to render the speech
+     * @default AZURE
      */
     private _engine: string | undefined = "AZURE";
     /**
      * @remark Format of text feild. If TEXT, text field contains plain text. If SSML, text field
      * contains valid SSML script.
+     * @default TEXT
      */
     private _textFormat: string | undefined = TextFormatType.TEXT;
 

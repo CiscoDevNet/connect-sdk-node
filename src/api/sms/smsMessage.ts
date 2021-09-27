@@ -31,6 +31,7 @@ export class SmsMessage {
     private _binaryContent: BinaryData | undefined;
     /**
      * @remark Denotes whether the content string is the actual text content to be sent or a reference to a template ID.
+     * @default TEXT
      */
     private _contentType: string = SmsContentType.TEXT;
     /**

@@ -17,6 +17,7 @@ export class MediaAudio {
 
     /**
      * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
+     * @default 1
      */
     private _loop: number | undefined;
 

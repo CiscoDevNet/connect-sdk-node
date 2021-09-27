@@ -27,6 +27,7 @@ export class VoiceCall {
     /**
      * @remark if true, VoiceMailDetected event will be sent if call is answered by an Answering Machine.
      * PlayAction is expected in repsonse of this event.
+     * @default FALSE
      */
     private _detectVoiceMail: boolean | undefined = false;
     /**
