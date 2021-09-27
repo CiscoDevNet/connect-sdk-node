@@ -21,6 +21,7 @@ export class WhatsappTextMessage {
     private _content: string = "";
     /**
      * @remark Provides a preview of a URL included in the text message body
+     * @default FALSE
      */
     private _previewUrl: boolean | undefined = false;
     /**
