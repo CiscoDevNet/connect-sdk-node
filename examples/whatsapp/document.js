@@ -1,8 +1,9 @@
 const {WhatsappClient, WhatsappDocMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppMessage = new WhatsappDocMessage("+14443332222", "+14443332222", "http://my.website.com/document.doc", "application/msword");
+const whatsAppMessage = new WhatsappDocMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/document.doc", "application/msword");
 whatsAppMessage.caption = "My document";
 whatsAppMessage.fileName = "document.doc";
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";

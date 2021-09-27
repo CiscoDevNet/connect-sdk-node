@@ -4,9 +4,10 @@ const {VoiceClient,
     StyleType,
     GenderType,
     TextFormatType} = require('../../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../../privateConst");
 
-const client = new VoiceClient('f2d88f74-1966-11ec-a806-025578af612b');
-const message = new VoiceMessage("+12019401281");
+const client = new VoiceClient(AUTH_TOKEN);
+const message = new VoiceMessage(FROM_NUMBER);
 const audio = new TtsAudio("Hello World");
 
 /*
@@ -20,7 +21,7 @@ audio.engine = "AZURE";
 audio.textFormat = TextFormatType.TEXT;
 */
 
-message.addDialedNumber('+15613172975');
+message.addDialedNumber(TO_NUMBER);
 //message.callbackUrl = "http://www.google.com";
 //message.correlationId = "cor123";
 message.audio = audio;

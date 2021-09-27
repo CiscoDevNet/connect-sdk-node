@@ -1,8 +1,9 @@
 const {WhatsappClient, WhatsappLocMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppMessage = new WhatsappLocMessage("+14443332222", "+14443332222", 28.372395561985662, -81.50942795589746);
+const whatsAppMessage = new WhatsappLocMessage(FROM_NUMBER, TO_NUMBER, 28.372395561985662, -81.50942795589746);
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.name = "Unknown Location";

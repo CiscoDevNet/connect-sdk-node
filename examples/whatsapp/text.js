@@ -1,33 +1,13 @@
 const {WhatsappClient, WhatsappTextMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
-
-const whatsAppMessage = new WhatsappTextMessage("+14443332222", "+14443332222", "Hello World!");
-whatsAppMessage.addSubstitution("name", "Tester");
-whatsAppMessage.addSubstitution("dept", "Testing");
-whatsAppMessage.previewUrl = false;
-whatsAppMessage.correlationId = "correlation1234";
-whatsAppMessage.callbackUrl = "https://my.website.com/callback";
-whatsAppMessage.callbackData = "customerID123|1234|new_sale";
-
-console.log(whatsAppMessage.toJSON());
-
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
+const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 
 response
     .then(res => {
         console.log(res);
-
-        const statusReq = whatsAppClient.getStatus(res.messageId);
-
-        statusReq
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
     })
     .catch(err => {
         console.error(err);

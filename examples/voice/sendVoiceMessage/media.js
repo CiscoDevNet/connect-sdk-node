@@ -1,15 +1,15 @@
 const {VoiceClient,
     VoiceMessage,
     MediaAudio} = require('../../../dist');
+const {AUTH_TOKEN, TO_NUMBER, FROM_NUMBER} = require("../../../privateConst");
 
-const client = new VoiceClient('bearer test: 1234');
-const message = new VoiceMessage("+14443332222");
+const client = new VoiceClient(AUTH_TOKEN);
+const message = new VoiceMessage(FROM_NUMBER);
 const media = new MediaAudio("media1234");
 
 media.loop = 3;
 
-message.addDialedNumber('+15554443333');
-message.addDialedNumber('+19998884444');
+message.addDialedNumber(TO_NUMBER);
 message.callbackUrl = "http://www.google.com";
 message.correlationId = "cor123";
 message.audio = media;

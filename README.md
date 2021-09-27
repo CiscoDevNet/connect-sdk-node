@@ -12,46 +12,74 @@ $ npm i --save cpaas-sdk-node
 
 - NodeJS 14+
 
-## Example
+## Examples
+[Sending a SMS message](#sending-a-sms-message)\
+[Sending a TTS voice message](#sending-a-tts-voice-message)\
+[Sending a WhatsApp text message](#sending-a-whatsapp-text-message)
 
-### Sending a SMS message and getting its status
+### Sending a SMS message
 
-```js
-const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
+````javascript
+const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
 
-const smsClient = new WhatsappDocClient('bearer test: 1234');
+const smsClient = new SmsClient({AUTH_TOKEN});
+const smsMessage = new SmsMessage({FROM_NUMBER}, {TO_NUMBER});
 
-const smsMessage = new WhatsappDocMessage();
-smsMessage.from = "+14443332222";
-smsMessage.to = "+14443332222";
-smsMessage.content = "Hello World!";
-smsMessage.contentType = SmsContentType.TEXT;
+smsMessage.content = "Hello $(name), today is $(date)!";
 smsMessage.addSubstitution("name", "Tester");
-smsMessage.addSubstitution("dept", "Testing");
-smsMessage.correlationId = "correlation1234";
-smsMessage.dltTemplateId = "dlt444";
-smsMessage.callbackUrl = "https://my.website.com/callback";
-smsMessage.callbackData = "customerID123|1234|new_sale";
-smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
 
-const request = smsClient.sendMessage(smsMessage);
+const response = smsClient.sendMessage(smsMessage);
 
-request
+response
     .then(res => {
         console.log(res);
-
-        const statusReq = smsClient.getStatus(res.messageId);
-
-        statusReq
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
     })
     .catch(err => {
         console.error(err);
     });
-```
+````
+
+### Sending a TTS voice message
+
+````javascript
+const {
+    VoiceClient,
+    VoiceMessage,
+    TtsAudio
+} = require('cpaas-sdk-node');
+
+const client = new VoiceClient({AUTH_TOKEN});
+const message = new VoiceMessage({FROM_NUMBER});
+const audio = new TtsAudio("Hello World");
+
+message.addDialedNumber({TO_NUMBER});
+message.audio = audio;
+
+const response = client.sendVoiceMessage(message);
+
+response
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.error(err);
+    });
+````
+
+### Sending a WhatsApp text message
+
+````javascript
+const {WhatsappClient, WhatsappTextMessage} = require('../../dist');
+
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
+const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
+const response = whatsAppClient.sendMessage(whatsAppMessage);
+
+response
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.error(err);
+    });
+````

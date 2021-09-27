@@ -1,8 +1,9 @@
 const {WhatsappClient, WhatsappTemplateMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppMessage = new WhatsappTemplateMessage("+14443332222", "+14443332222");
+const whatsAppMessage = new WhatsappTemplateMessage(FROM_NUMBER, TO_NUMBER);
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";

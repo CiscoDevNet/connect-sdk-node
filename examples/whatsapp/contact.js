@@ -3,11 +3,12 @@ const {WhatsappContactPhone} = require("../../dist/api/whatsapp/contacts/whatsap
 const {WhatsappContactAddr} = require("../../dist/api/whatsapp/contacts/whatsappContactAddr");
 const {WhatsappContactEmail} = require("../../dist/api/whatsapp/contacts/whatsappContactEmail");
 const {WhatsappContactUrl} = require("../../dist/api/whatsapp/contacts/whatsappContactUrl");
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppMessage = new WhatsappContactMessage("+14443332222", "+14443332222");
+const whatsAppMessage = new WhatsappContactMessage(FROM_NUMBER, TO_NUMBER);
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.correlationId = "correlation1234";

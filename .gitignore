@@ -53,3 +53,5 @@ Thumbs.db
 docker-compose.yml
 
 openAPI/
+
+privateConst.ts

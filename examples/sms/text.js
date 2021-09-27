@@ -1,25 +1,11 @@
 const {SmsClient, SmsMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-let today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-const yyyy = today.getFullYear();
-const hour = today.getHours();
-let min = today.getMinutes();
-
-if(min < 10) {
-    min = "0" + min;
-}
-
-today = `${mm}/${dd}/${yyyy} ${hour}:${min}`;
-
-const smsClient = new SmsClient('f2d88f74-1966-11ec-a806-025578af612b');
-const smsMessage = new SmsMessage("12019401281", "+15613172975");
+const smsClient = new SmsClient(AUTH_TOKEN);
+const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
 
 smsMessage.content = "Hello $(name), today is $(date)!";
 smsMessage.addSubstitution("name", "Tester");
-smsMessage.addSubstitution("date", today);
-smsMessage.correlationId = "test1234";
 
 console.log(smsMessage.toJSON());
 

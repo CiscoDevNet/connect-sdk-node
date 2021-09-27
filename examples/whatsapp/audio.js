@@ -1,8 +1,9 @@
 const {WhatsappClient, WhatsappAudioMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-const whatsAppClient = new WhatsappClient('bearer test: 1234');
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppMessage = new WhatsappAudioMessage("+14443332222", "+14443332222", "http://my.website.com/audio.wav", "audio/wav");
+const whatsAppMessage = new WhatsappAudioMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/audio.wav", "audio/wav");
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";
 whatsAppMessage.callbackData = "customerID123|1234|new_sale";
 whatsAppMessage.correlationId = "correlation1234";
