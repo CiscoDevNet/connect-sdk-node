@@ -102,203 +102,205 @@ export class WhatsappClient extends CpaasClient {
                     const body: any = JSON.parse(res.body);
 
                     if(res.statusCode === 200) {
-                        if(body.contentType) {
-                            if(body.contentType === WhatsappContentType.TEXT) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    content: body.content,
-                                    previewUrl: body.previewUrl,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime,
-                                }
+                        if(body.contentType === WhatsappContentType.TEXT) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                content: body.content,
+                                previewUrl: body.previewUrl,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime,
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.AUDIO) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                url: body.url,
+                                mimeType: body.mimeType,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.IMAGE) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                url: body.url,
+                                mimeType: body.mimeType,
+                                caption: body.caption,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.VIDEO) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                url: body.url,
+                                mimeType: body.mimeType,
+                                caption: body.caption,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.DOCUMENT) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                fileName: body.fileName,
+                                url: body.url,
+                                mimeType: body.mimeType,
+                                caption: body.caption,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.STICKER) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                url: body.url,
+                                mimeType: body.mimeType,
+                                messageId: body.messageType,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.LOCATION) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                latitude: body.latitude,
+                                longitude: body.longitude,
+                                name: body.name,
+                                address: body.address,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
+                        if(body.contentType === WhatsappContentType.CONTACTS) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                contacts: new Array<WhatsappContact>(),
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
                             }
 
-                            if(body.contentType === WhatsappContentType.AUDIO) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    url: body.url,
-                                    mimeType: body.mimeType,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
+                            if(body.contacts && body.contacts.length > 0) {
+                                body.contacts.forEach((contact: WhatsappContact) => {
+                                    const contactPush = {
+                                        formattedName: contact.formattedName,
+                                        namePrefix: contact.namePrefix,
+                                        firstName: contact.firstName,
+                                        middleName: contact.middleName,
+                                        lastName: contact.lastName,
+                                        nameSuffix: contact.nameSuffix,
+                                        birthday: contact.birthday,
+                                        company: contact.company,
+                                        department: contact.department,
+                                        title: contact.title,
+                                        phones: new Array<WhatsappContactPhone>(),
+                                        addresses: new Array<WhatsappContactAddr>(),
+                                        emails: new Array<WhatsappContactEmail>(),
+                                        urls: new Array<WhatsappContactUrl>()
+                                    };
 
-                            if(body.contentType === WhatsappContentType.IMAGE) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    url: body.url,
-                                    mimeType: body.mimeType,
-                                    caption: body.caption,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
-
-                            if(body.contentType === WhatsappContentType.VIDEO) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    url: body.url,
-                                    mimeType: body.mimeType,
-                                    caption: body.caption,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
-
-                            if(body.contentType === WhatsappContentType.DOCUMENT) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    fileName: body.fileName,
-                                    url: body.url,
-                                    mimeType: body.mimeType,
-                                    caption: body.caption,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
-
-                            if(body.contentType === WhatsappContentType.STICKER) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    url: body.url,
-                                    mimeType: body.mimeType,
-                                    messageId: body.messageType,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
-
-                            if(body.contentType === WhatsappContentType.LOCATION) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    latitude: body.latitude,
-                                    longitude: body.longitude,
-                                    name: body.name,
-                                    address: body.address,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-                            }
-
-                            if(body.contentType === WhatsappContentType.CONTACTS) {
-                                payload = {
-                                    statusCode: res.statusCode,
-                                    requestId: res.headers['request-id'],
-                                    contentType: body.contentType,
-                                    messageId: body.messageId,
-                                    acceptedTime: body.acceptedTime,
-                                    from: body.from,
-                                    contacts: new Array<WhatsappContact>(),
-                                    to: body.to,
-                                    status: body.status,
-                                    statusTime: body.statusTime
-                                }
-
-                                if(body.contacts && body.contacts.length > 0) {
-                                    body.contacts.forEach((contact: WhatsappContact) => {
-                                        const contactPush = {
-                                            formattedName: contact.formattedName,
-                                            namePrefix: contact.namePrefix,
-                                            firstName: contact.firstName,
-                                            middleName: contact.middleName,
-                                            lastName: contact.lastName,
-                                            nameSuffix: contact.nameSuffix,
-                                            birthday: contact.birthday,
-                                            company: contact.company,
-                                            department: contact.department,
-                                            title: contact.title,
-                                            phones: new Array<WhatsappContactPhone>(),
-                                            addresses: new Array<WhatsappContactAddr>(),
-                                            emails: new Array<WhatsappContactEmail>(),
-                                            urls: new Array<WhatsappContactUrl>()
-                                        };
-
-                                        if(contact.phones && contact.phones.length > 0) {
-                                            contact.phones.forEach((phone: WhatsappContactPhone) => {
-                                                contactPush.phones.push(<WhatsappContactPhone>{
-                                                    type: phone.type,
-                                                    number: phone.number,
-                                                    whatsAppId: phone.whatsAppId
-                                                })
+                                    /* istanbul ignore next */
+                                    if(contact.phones && contact.phones.length > 0) {
+                                        contact.phones.forEach((phone: WhatsappContactPhone) => {
+                                            contactPush.phones.push(<WhatsappContactPhone>{
+                                                type: phone.type,
+                                                number: phone.number,
+                                                whatsAppId: phone.whatsAppId
                                             })
-                                        }
+                                        })
+                                    }
 
-                                        if(contact.addresses && contact.addresses.length > 0) {
-                                            contact.addresses.forEach((address: WhatsappContactAddr) => {
-                                                contactPush.addresses.push(<WhatsappContactAddr>{
-                                                    type: address.type,
-                                                    street: address.street,
-                                                    city: address.city,
-                                                    state: address.state,
-                                                    zip: address.zip,
-                                                    country: address.country,
-                                                    countryCode: address.countryCode
-                                                });
-                                            })
-                                        }
+                                    /* istanbul ignore next */
+                                    if(contact.addresses && contact.addresses.length > 0) {
+                                        contact.addresses.forEach((address: WhatsappContactAddr) => {
+                                            contactPush.addresses.push(<WhatsappContactAddr>{
+                                                type: address.type,
+                                                street: address.street,
+                                                city: address.city,
+                                                state: address.state,
+                                                zip: address.zip,
+                                                country: address.country,
+                                                countryCode: address.countryCode
+                                            });
+                                        })
+                                    }
 
-                                        if(contact.emails && contact.emails.length > 0) {
-                                            contact.emails.forEach((email: WhatsappContactEmail) => {
-                                                contactPush.emails.push(<WhatsappContactEmail>{
-                                                    type: email.type,
-                                                    address: email.address
-                                                });
-                                            })
-                                        }
+                                    /* istanbul ignore next */
+                                    if(contact.emails && contact.emails.length > 0) {
+                                        contact.emails.forEach((email: WhatsappContactEmail) => {
+                                            contactPush.emails.push(<WhatsappContactEmail>{
+                                                type: email.type,
+                                                address: email.address
+                                            });
+                                        })
+                                    }
 
-                                        if(contact.urls && contact.urls.length > 0) {
-                                            contact.urls.forEach((url: WhatsappContactUrl) => {
-                                                contactPush.urls.push(<WhatsappContactUrl>{
-                                                    type: url.type,
-                                                    address: url.address
-                                                });
-                                            })
-                                        }
+                                    /* istanbul ignore next */
+                                    if(contact.urls && contact.urls.length > 0) {
+                                        contact.urls.forEach((url: WhatsappContactUrl) => {
+                                            contactPush.urls.push(<WhatsappContactUrl>{
+                                                type: url.type,
+                                                address: url.address
+                                            });
+                                        })
+                                    }
 
-                                        payload.contacts.push(contactPush);
-                                    })
-                                }
+                                    payload.contacts.push(contactPush);
+                                })
                             }
                         }
 

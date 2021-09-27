@@ -1,9 +1,8 @@
 import {WhatsappClient, WhatsappTextMessage} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_URL} from "../../src/config/constants";
-import {API_PORT} from "../../src/config/constants";
-import {API_VERSION} from "../../dist/config/constants";
+import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
+import {WhatsappContentType} from '../../src';
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -139,6 +138,18 @@ describe("WhatsappClient", () => {
 
         nock(`${API_URL}:${API_PORT}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(404, {
+                statusCode: 404
+            });
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err.statusCode).to.equal(404);
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(500, {
                 code: '445'
             });
@@ -165,6 +176,170 @@ describe("WhatsappClient", () => {
                 headers: { 'content-type': 'application/json' }
             });
         }
+    });
+
+    it('gets status of text message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.TEXT,
+                content: 'hello world'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.TEXT);
+        expect(response.content).to.equal('hello world');
+    });
+
+    it('gets status of audio message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.AUDIO,
+                url: 'http://www.audio.com/audio.mp3'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.AUDIO);
+        expect(response.url).to.equal('http://www.audio.com/audio.mp3');
+    });
+
+    it('gets status of image message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.IMAGE,
+                url: 'http://www.image.com/image.jpg'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.IMAGE);
+        expect(response.url).to.equal('http://www.image.com/image.jpg');
+    });
+
+    it('gets status of video message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.VIDEO,
+                url: 'http://www.video.com/video.avi'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.VIDEO);
+        expect(response.url).to.equal('http://www.video.com/video.avi');
+    });
+
+    it('gets status of document message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.DOCUMENT,
+                url: 'http://www.myurl.com/doc.docx'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.DOCUMENT);
+        expect(response.url).to.equal('http://www.myurl.com/doc.docx');
+    });
+
+    it('gets status of sticker message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.STICKER,
+                url: 'http://www.myurl.com/sticker.jpg'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.STICKER);
+        expect(response.url).to.equal('http://www.myurl.com/sticker.jpg');
+    });
+
+    it('gets status of location message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.LOCATION,
+                latitude: 12.12,
+                error: {
+                    code: 1234,
+                    message: 'error message'
+                }
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.LOCATION);
+        expect(response.latitude).to.equal(12.12);
+        expect(response.error).to.deep.equal({
+            code: 1234,
+            message: 'error message'
+        })
+    });
+
+    it('gets status of contact message correctly', async () => {
+        const client = new WhatsappClient('bearer test: 1234');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.CONTACTS,
+                contacts: [
+                    {
+                        firstName: 'Tester',
+                        phones: [{number: '+13334445555'}],
+                        addresses: [{city: 'fake city'}],
+                        emails: [{address: 'fake@email.com'}],
+                        urls: [{address: 'http://mysite.com'}]
+                    }
+                ]
+            });
+
+        let response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.CONTACTS);
+        // @ts-ignore
+        expect(response.contacts[0].firstName).to.equal('Tester');
+        // @ts-ignore
+        expect(response.contacts[0].phones[0].number).to.equal('+13334445555');
+        // @ts-ignore
+        expect(response.contacts[0].addresses[0].city).to.equal('fake city');
+        // @ts-ignore
+        expect(response.contacts[0].emails[0].address).to.equal('fake@email.com');
+        // @ts-ignore
+        expect(response.contacts[0].urls[0].address).to.equal('http://mysite.com');
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.CONTACTS
+            });
+
+        response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.CONTACTS);
+        expect(response.contacts).to.deep.equal([]);
     });
 
 });
