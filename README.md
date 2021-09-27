@@ -69,7 +69,7 @@ response
 ### Sending a WhatsApp text message
 
 ````javascript
-const {WhatsappClient, WhatsappTextMessage} = require('../../dist');
+const {WhatsappClient, WhatsappTextMessage} = require('cpaas-sdk-node');
 
 const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
