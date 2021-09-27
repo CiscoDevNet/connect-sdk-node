@@ -1,4 +1,9 @@
 {
     "extends": "@istanbuljs/nyc-config-typescript",
-    "report-dir": "./coverage"
+    "report-dir": "./coverage",
+    "exclude": [
+        "dist/**/*.*",
+        "test/**/*.*",
+        "privateConst.ts"
+    ]
 }

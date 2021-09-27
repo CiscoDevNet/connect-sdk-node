@@ -3,26 +3,64 @@ import {
     isValidHttpUrl,
     isValidISO8601,
     isValidE164,
-    isNumeric,
-    isBinary,
-    hasUnicode,
-    isArrayBool
+    hasUnicode
 } from "../../helpers/validators";
 import {SmsContentType} from "./smsContentType";
-import {SMS_CONTENT_MAXLEN} from "../../config/constants";
+import {btoa} from "buffer";
+
+/**
+ * Message class to construct a message object to send to an SmsClient
+*/
 
 export class SmsMessage {
+    /**
+     * @remark Short or long code that the message should be sent from
+     */
     private _from: string = "";
+    /**
+     * @remark The mobile device phone number in E.164 format that should receive the message
+     */
     private _to: string = "";
-    private _content: string = "";
+    /**
+     * @remark string or unicode content to send to the user
+     */
+    private _content: string | undefined;
+    /**
+     * @remark binary content to send to the user
+     */
+    private _binaryContent: BinaryData | undefined;
+    /**
+     * @remark Denotes whether the content string is the actual text content to be sent or a reference to a template ID.
+     */
     private _contentType: string = SmsContentType.TEXT;
-    private _substitutions: Array<object> | undefined;
+    /**
+     * @remark Members of this object are used to replace placeholders within the content or template specified.
+     */
+    private _substitutions: object | undefined;
+    /**
+     * @remark User defined ID that is assigned to an individual message
+     */
     private _correlationId: string | undefined;
+    /**
+     * @remark Specifies the DLT template ID used for this message. This is only used in certain regions.
+     */
     private _dltTemplateId: string | undefined;
+    /**
+     * @remark If provided, events related to the delivery of this message will be POSTed to this URL.
+     */
     private _callbackUrl: string | undefined;
+    /**
+     * @remark Additional data that will be echoed back in all callback requests made to callbackUrl
+     */
     private _callbackData: string | undefined;
+    /**
+     * @remark If the message has not been sent by this date & time, it will be removed from the sending queue
+     */
     private _expireAt: string | undefined;
 
+    /**
+     * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
+     */
     _idempotencyKey: string = "";
 
     constructor(from: string, to: string) {
@@ -33,10 +71,6 @@ export class SmsMessage {
 
     get from(): string {return this._from;}
     set from(value: string) {
-        if(!isNumeric(value)) {
-            throw new Error("from must be a number or E.164 string");
-        }
-
         this._from = value;
     }
 
@@ -49,27 +83,29 @@ export class SmsMessage {
         this._to = value;
     }
 
-    get content(): string {return this._content;}
-    set content(value: any) {
+    get content(): string | undefined {return this._content;}
+    set content(value: string | undefined) {
         this._contentType = SmsContentType.TEXT;
 
-        if(isBinary(value) || isArrayBool(value)) {
-            this._contentType = SmsContentType.BINARY;
-        } else if (hasUnicode(value)) {
+        if(hasUnicode(value)) {
             this._contentType = SmsContentType.UNICODE;
-        }
-
-        if(this._contentType === SmsContentType.TEXT && value.length > SMS_CONTENT_MAXLEN) {
-            throw Error(`content must be no more than ${SMS_CONTENT_MAXLEN} characters`);
         }
 
         this._content = value;
     }
 
+    get binaryContent(): BinaryData | undefined {return this._binaryContent}
+    set binaryContent(value: BinaryData | undefined) {
+        this._contentType = SmsContentType.BINARY;
+        this._binaryContent = value;
+    }
+
     set contentTemplateId(value: string) {
         if(value === "") {
-            this._contentType = SmsContentType.TEXT;
+            /* istanbul ignore next */
+            this._contentType = (this.contentType) ? this.contentType : SmsContentType.TEXT;
         } else {
+            /* istanbul ignore next */
             this._contentType = SmsContentType.TEMPLATE;
         }
 
@@ -78,7 +114,7 @@ export class SmsMessage {
 
     get contentType(): string {return this._contentType;}
 
-    get substitutions(): Array<object> | undefined {return this._substitutions;}
+    get substitutions(): object | undefined {return this._substitutions;}
 
     get correlationId(): string | undefined {return this._correlationId;}
     set correlationId(value: string | undefined) {this._correlationId = value;}
@@ -109,6 +145,13 @@ export class SmsMessage {
 
     get idempotencyKey(): string {return this._idempotencyKey;}
 
+    /**
+     * Adds a substitution object to the substitution array
+     *
+     * @param name value indicating the name of the field for the substitution
+     * @param value sets the value of the field for the substitution
+     */
+
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
@@ -116,9 +159,66 @@ export class SmsMessage {
 
         /* istanbul ignore next */
         if(!this._substitutions) {
-            this._substitutions = [];
+            this._substitutions = {};
         }
 
-        this._substitutions.push({[name]: value});
+        // @ts-ignore
+        this._substitutions[name] = value;
+    }
+
+    arrayBufferToBase64(buffer: ArrayBuffer) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+
+        return btoa(binary);
+    }
+
+    convertToBase64(value: ArrayBuffer | BinaryData | undefined) {
+        /* istanbul ignore next */
+        if(value) {
+            const constName = value.constructor.name;
+
+            if(constName === "Uint8Array") {
+                return this.arrayBufferToBase64(<ArrayBuffer>value);
+            } else {
+                // @ts-ignore
+                return btoa(value);
+            }
+        }
+    }
+
+    /**
+     * Returns object of fields for the API, stripping any undefined values
+     *
+     * @returns object fields packaged for sending to the API
+     */
+
+    toJSON() {
+        const payload = {
+            from: this.from,
+            to: this.to,
+            content: (this.contentType === SmsContentType.BINARY) ? this.convertToBase64(this.binaryContent) : this.content,
+            contentType: this.contentType,
+            substitutions: this.substitutions,
+            correlationId: this.correlationId,
+            dltTemplateId: this.dltTemplateId,
+            callbackUrl: this.callbackUrl,
+            callbackData: this.callbackData,
+            expireAt: this.expireAt
+        }
+
+        for(const [key, value] of Object.entries(payload)) {
+            if(value === undefined) {
+                // @ts-ignore
+                delete payload[key];
+            }
+        }
+
+        return payload;
     }
 }

@@ -1,40 +1,25 @@
 const {SmsClient, SmsMessage} = require('../../dist');
-const fs = require('fs');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
+const data = new Uint8Array(5);
+data[0] = 1;
+data[1] = 2;
+data[2] = 3;
+data[3] = 4;
+data[4] = 5;
 
-const data = new Uint8Array(1024);
+const smsClient = new SmsClient(AUTH_TOKEN);
+const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
 
-const smsClient = new SmsClient('bearer test: 1234');
+smsMessage.binaryContent = data;
 
-const smsMessage = new SmsMessage("+14443332222", "+14443332222");
-smsMessage.content = data;
-smsMessage.addSubstitution("name", "Tester");
-smsMessage.addSubstitution("dept", "Testing");
-smsMessage.correlationId = "correlation1234";
-smsMessage.dltTemplateId = "dlt444";
-smsMessage.callbackUrl = "https://my.website.com/callback";
-smsMessage.callbackData = "customerID123|1234|new_sale";
-smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
-
-console.log(smsMessage);
+console.log(smsMessage.toJSON());
 
 const response = smsClient.sendMessage(smsMessage);
 
 response
     .then(res => {
-        console.log(JSON.parse(res));
-
-        const statusReq = smsClient.getStatus(JSON.parse(res).messageId);
-
-        statusReq
-            .then(res => {
-                console.log(JSON.parse(res));
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
+        console.log(res);
     })
     .catch(err => {
         console.error(err);

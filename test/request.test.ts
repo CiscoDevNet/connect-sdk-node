@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import request from '../src/request/index';
-import {API_URL} from "../src/config/constants";
+import {API_URL, API_PORT} from "../src/config/constants";
 
 const chaiHttp = require('chai-http'),
     nock = require('nock'),
@@ -16,13 +16,29 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(`${API_URL}:80`)
+        nock(`${API_URL}:${API_PORT}`)
+            .get('/something')
+            .reply(200, "Hello World", {'request-id': '12345'});
+
+        let response = await request(reqOptions);
+
+        // @ts-ignore
+        expect(response.statusCode).to.equal(200);
+        // @ts-ignore
+        expect(response.body).to.equal("Hello World");
+        // @ts-ignore
+        expect(response.headers['request-id']).to.equal('12345');
+
+        nock.cleanAll();
+
+        nock(`${API_URL}:${API_PORT}`)
             .get('/something')
             .reply(200, "Hello World");
 
-        const response = await request(reqOptions);
+        response = await request(reqOptions);
 
-        //expect(response).to.equal("Hello World");
+        // @ts-ignore
+        expect(response.headers).to.deep.equal({});
     });
 
     it("fails correctly", async () => {
@@ -31,7 +47,7 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(API_URL)
+        const scope = nock(`${API_URL}:${API_PORT}`)
             .get('/something')
             .replyWithError("Invalid Request");
 
@@ -40,7 +56,7 @@ describe("Request", () => {
         try{
             response = await request(reqOptions);
         } catch(e:any) {
-            expect(e.message).to.equal("Invalid Request");
+            expect(e.error.message).to.equal("Invalid Request");
         }
     });
 })

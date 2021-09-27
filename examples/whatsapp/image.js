@@ -1,10 +1,9 @@
-const {WhatsappImageClient, WhatsappImageMessage} = require('../../dist');
+const {WhatsappClient, WhatsappImageMessage} = require('../../dist');
+const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-//const {WhatsappDocClient, WhatsappDocMessage} = require('cpaas-sdk-node')
+const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
 
-const whatsAppClient = new WhatsappImageClient('bearer test: 1234');
-
-const whatsAppMessage = new WhatsappImageMessage("+14443332222", "+14443332222", "http://my.website.com/image.png", "image/png");
+const whatsAppMessage = new WhatsappImageMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/image.png", "image/png");
 whatsAppMessage.caption = "My image";
 whatsAppMessage.callbackUrl = "https://my.website.com/callback";
 whatsAppMessage.callbackData = "customerID123|1234|new_sale";
@@ -12,19 +11,19 @@ whatsAppMessage.correlationId = "correlation1234";
 whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 
-console.log(whatsAppMessage);
+console.log(whatsAppMessage.toJSON());
 
 const response = whatsAppClient.sendMessage(whatsAppMessage);
 
 response
     .then(res => {
-        console.log(JSON.parse(res));
+        console.log(res);
 
-        const statusReq = whatsAppClient.getStatus(JSON.parse(res).messageId);
+        const statusReq = whatsAppClient.getStatus(res.messageId);
 
         statusReq
             .then(res => {
-                console.log(JSON.parse(res));
+                console.log(res);
             })
             .catch(err => {
                 console.error(err);

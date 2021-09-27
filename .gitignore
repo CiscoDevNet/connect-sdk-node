@@ -49,3 +49,9 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+docker-compose.yml
+
+openAPI/
+
+privateConst.ts

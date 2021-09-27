@@ -1,6 +1,8 @@
 /**
- * class for CPAAS Client
- * @param {string} _bearerToken: Sets the bearer token for client requests to the API
+ * Main class for all clients that accepts a value to set the bearer token.
+ *
+ *
+ * @param bearerToken - Bearer token for the client that inherits the class
  */
 
 export class CpaasClient {
