@@ -76,32 +76,6 @@ export function isFloat(value: any) {
 }
 
 /**
- * Validates that a passed string is binary
- *
- * @returns boolean true/false if passed value is binary
- */
-
-export function isBinary(value: any) {
-    const regEx: RegExp = new RegExp(/\ufffd/);
-
-    return regEx.test(value);
-}
-
-/**
- * Validates that a passed string is an array of boolean values (bytes)
- *
- * @returns boolean true/false if passed value is a array of boolean values
- */
-
-export function isArrayBool(value: any) {
-    for (let i of value) {
-        if (i !== 0 && i !== 1) return false;
-    }
-
-    return true;
-}
-
-/**
  * Validates that a passed string is boolean
  *
  * @returns boolean true/false if passed value is a boolean value

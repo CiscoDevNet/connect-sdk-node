@@ -59,7 +59,7 @@ describe("SmsClient", () => {
 
         expect(() => {
             smsClient.sendMessage(smsMessage)
-        }).to.throw("Must provide a 'content' value for sending a message");
+        }).to.throw("Must provide a 'content', or 'binaryContent' value for sending a message");
 
         stub(smsMessage, 'content').restore();
     });

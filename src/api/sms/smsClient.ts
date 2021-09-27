@@ -31,8 +31,8 @@ export class SmsClient extends CpaasClient {
             throw Error("Must provide a 'to' value for sending a message");
         }
 
-        if(!message.content || message.content === "") {
-            throw Error("Must provide a 'content' value for sending a message");
+        if((!message.content || message.content === "") && !message.binaryContent) {
+            throw Error("Must provide a 'content', or 'binaryContent' value for sending a message");
         }
 
         const options = {
