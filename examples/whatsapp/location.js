@@ -1,4 +1,4 @@
-const {WhatsappClient, WhatsappLocMessage} = require('../../dist');
+const {WhatsappClient, WhatsappLocMessage} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
 const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
@@ -8,28 +8,12 @@ whatsAppMessage.addSubstitution("name", "Tester");
 whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.name = "Unknown Location";
 whatsAppMessage.address = "123 main street";
-whatsAppMessage.correlationId = "correlation1234";
-whatsAppMessage.callbackUrl = "https://my.website.com/callback";
-whatsAppMessage.callbackData = "customerID123|1234|new_sale";
 
-console.log(whatsAppMessage.toJSON());
+const request = whatsAppClient.sendMessage(whatsAppMessage);
 
-const response = whatsAppClient.sendMessage(whatsAppMessage);
-
-response
+request
     .then(res => {
         console.log(res);
-
-        const statusReq = whatsAppClient.getStatus(res.messageId);
-
-        statusReq
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
     })
     .catch(err => {
         console.error(err);

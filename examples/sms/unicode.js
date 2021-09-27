@@ -1,4 +1,4 @@
-const {SmsClient, SmsMessage} = require('../../dist');
+const {SmsClient, SmsMessage} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
 const smsClient = new SmsClient(AUTH_TOKEN);
@@ -6,11 +6,9 @@ const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
 
 smsMessage.content = "Hello World 🗺️!";
 
-console.log(smsMessage.toJSON());
+const request = smsClient.sendMessage(smsMessage);
 
-const response = smsClient.sendMessage(smsMessage);
-
-response
+request
     .then(res => {
         console.log(res);
     })

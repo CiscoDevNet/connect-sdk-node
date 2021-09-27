@@ -6,4 +6,4 @@ tsconfig.json
 .nyc_output/
 coverage/
 docs/
-privateConst.ts
+privateConst.*

@@ -103,6 +103,6 @@
     "./dist/",
     "./coverage/",
     "./docs/",
-    "./privateConst.ts"
+    "./privateConst.*"
   ]
 }
