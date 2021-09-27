@@ -1,8 +1,7 @@
 import {VoiceClient, VoiceMessage, VoiceCall} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_URL, API_PORT} from "../../src/config/constants";
-import {API_VERSION} from "../../dist/config/constants";
+import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
