@@ -3,6 +3,7 @@ import {StyleType} from "../types/styleType";
 import {GenderType} from "../types/genderType";
 import {TextFormatType} from "../types/textFormatType";
 import {isFloat, isNumeric} from "../../../helpers/validators";
+import {typeToArr, concatTypes} from "../../../helpers/tools";
 
 /**
  * TtsAudio object for sending with voice message call to API
@@ -20,88 +21,50 @@ export class TtsAudio {
 
     /**
      * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
+     * @default 1
      */
     private _loop: number | undefined;
     /**
      * @remark Whether to use standard or neural speech
+     * @default STANDARD
      */
     private _style: string | undefined = StyleType.STANDARD;
     /**
      * @remark Language of the text being synthesized
+     * @default EN_US
      */
     private _language: string | undefined = "EN_US";
     /**
      * @remark The desired voice for the rendered speech
+     * @default Aria
      */
     private _voice: string | undefined = "Aria";
     /**
      * @remark Gender of the synthesized voice
+     * @default FEMALE
      */
     private _gender: string | undefined = GenderType.FEMALE;
     /**
      * @remark Which TTS engine to use to render the speech
+     * @default AZURE
      */
     private _engine: string | undefined = "AZURE";
     /**
      * @remark Format of text feild. If TEXT, text field contains plain text. If SSML, text field
      * contains valid SSML script.
+     * @default TEXT
      */
     private _textFormat: string | undefined = TextFormatType.TEXT;
 
-    private styleTypeArr = [];
-    private styleTypeStrList = "";
-    private genderTypeArr = [];
-    private genderTypeStrList = "";
-    private txtFormatTypeArr = [];
-    private txtFormatTypeStrList = "";
+    private styleTypeArr: Array<string> = typeToArr(StyleType);
+    private styleTypeStrList = concatTypes(this.styleTypeArr);
+    private genderTypeArr: Array<string> = typeToArr(GenderType);
+    private genderTypeStrList = concatTypes(this.genderTypeArr);
+    private txtFormatTypeArr: Array<string> = typeToArr(TextFormatType);
+    private txtFormatTypeStrList = concatTypes(this.txtFormatTypeArr);
 
     constructor(text: string) {
         this.text = text;
-
-        /* istanbul ignore next */
-        for(const [key, value] of Object.entries(StyleType)) {
-            // @ts-ignore
-            this.styleTypeArr.push(value);
-        }
-
-        /* istanbul ignore next */
-        for(let i = 0; i < this.styleTypeArr.length; i++) {
-            this.styleTypeStrList += this.styleTypeArr[i];
-
-            if(i < this.styleTypeArr.length) {
-                this.styleTypeStrList += ", ";
-            }
-        }
-
-        /* istanbul ignore next */
-        for(const [key, value] of Object.entries(GenderType)) {
-            // @ts-ignore
-            this.genderTypeArr.push(value);
-        }
-
-        /* istanbul ignore next */
-        for(let i = 0; i < this.genderTypeArr.length; i++) {
-            this.genderTypeStrList += this.genderTypeArr[i];
-
-            if(i < this.genderTypeArr.length) {
-                this.genderTypeStrList += ", ";
-            }
-        }
-
-        /* istanbul ignore next */
-        for(const [key, value] of Object.entries(TextFormatType)) {
-            // @ts-ignore
-            this.txtFormatTypeArr.push(value);
-        }
-
-        /* istanbul ignore next */
-        for(let i = 0; i < this.txtFormatTypeArr.length; i++) {
-            this.txtFormatTypeStrList += this.txtFormatTypeArr[i];
-
-            if(i < this.txtFormatTypeArr.length) {
-                this.txtFormatTypeStrList += ", ";
-            }
-        }
     }
 
     get text(): string {return this._text}
@@ -126,15 +89,12 @@ export class TtsAudio {
 
     get style(): string | undefined {return this._style}
     set style(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.styleTypeArr.includes(value)) {
-                throw Error(`Style type must be of type [${this.styleTypeStrList}]`);
-            }
-
-            this._style = value;
+        // @ts-ignore
+        if(!this.styleTypeArr.includes(value)) {
+            throw Error(`Style type must be of type [${this.styleTypeStrList}]`);
         }
+
+        this._style = value;
     }
 
     get language(): string | undefined {return this._language}
@@ -149,15 +109,12 @@ export class TtsAudio {
 
     get gender(): string | undefined {return this._gender}
     set gender(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.genderTypeArr.includes(value)) {
-                throw Error(`gender type must be of type [${this.genderTypeStrList}]`);
-            }
-
-            this._gender = value;
+        // @ts-ignore
+        if(!this.genderTypeArr.includes(value)) {
+            throw Error(`gender type must be of type [${this.genderTypeStrList}]`);
         }
+
+        this._gender = value;
     }
 
     get engine(): string | undefined {return this._engine}
@@ -167,15 +124,12 @@ export class TtsAudio {
 
     get textFormat(): string | undefined {return this._textFormat}
     set textFormat(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.txtFormatTypeArr.includes(value)) {
-                throw Error(`textFormat type must be of type [${this.txtFormatTypeStrList}]`);
-            }
-
-            this._textFormat = value;
+        // @ts-ignore
+        if(!this.txtFormatTypeArr.includes(value)) {
+            throw Error(`textFormat type must be of type [${this.txtFormatTypeStrList}]`);
         }
+
+        this._textFormat = value;
     }
 
     /**

@@ -55,7 +55,7 @@ export class WhatsappLocMessage {
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: Array<object> | undefined;
+    private _substitutions: Array<object> = [];
 
     /**
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
@@ -139,11 +139,6 @@ export class WhatsappLocMessage {
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
-        }
-
-        /* istanbul ignore next */
-        if(!this._substitutions) {
-            this._substitutions = [];
         }
 
         this._substitutions.push({[name]: value});

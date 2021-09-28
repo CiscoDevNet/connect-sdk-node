@@ -1,4 +1,5 @@
 import {AddressType} from "./types";
+import {concatTypes, typeToArr} from "../../../helpers/tools"
 
 /**
  * Address class that gets passed into a WhatsappContact address array
@@ -34,36 +35,17 @@ export class WhatsappContactAddr {
      */
     private _countryCode: string | undefined;
 
-    private addrTypeArr = [];
-    private addrTypeStrList = "";
-
-    constructor() {
-        for(const [key, value] of Object.entries(AddressType)) {
-            // @ts-ignore
-            this.addrTypeArr.push(value);
-        }
-
-        for(let i = 0; i < this.addrTypeArr.length; i++) {
-            this.addrTypeStrList += this.addrTypeArr[i];
-
-            /* istanbul ignore next */
-            if(i < this.addrTypeArr.length) {
-                this.addrTypeStrList += ", ";
-            }
-        }
-    }
+    private addrTypeArr: Array<string> = typeToArr(AddressType);
+    private addrTypeStrList = concatTypes(this.addrTypeArr);
 
     get type() {return this._type}
     set type(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.addrTypeArr.includes(value)) {
-                throw Error(`Contact address type must be of type [${this.addrTypeStrList}]`);
-            }
-
-            this._type = value;
+        // @ts-ignore
+        if(!this.addrTypeArr.includes(value)) {
+            throw Error(`Contact address type must be of type [${this.addrTypeStrList}]`);
         }
+
+        this._type = value;
     }
 
     get street() {return this._street}

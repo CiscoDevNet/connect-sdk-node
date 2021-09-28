@@ -1,5 +1,6 @@
 import {EmailType} from "./types";
 import {isValidEmail} from "../../../helpers/validators";
+import {concatTypes, typeToArr} from "../../../helpers/tools";
 
 /**
  * Email class that gets passed into a WhatsappContact emails array
@@ -15,36 +16,17 @@ export class WhatsappContactEmail {
      */
     private _address: string | undefined;
 
-    private emailTypeArr = [];
-    private emailTypeStrList = "";
-
-    constructor() {
-        for(const [key, value] of Object.entries(EmailType)) {
-            // @ts-ignore
-            this.emailTypeArr.push(value);
-        }
-
-        for(let i = 0; i < this.emailTypeArr.length; i++) {
-            this.emailTypeStrList += this.emailTypeArr[i];
-
-            /* istanbul ignore next */
-            if(i < this.emailTypeArr.length) {
-                this.emailTypeStrList += ", ";
-            }
-        }
-    }
+    private emailTypeArr: Array<string> = typeToArr(EmailType);
+    private emailTypeStrList = concatTypes(this.emailTypeArr);
 
     get type() {return this._type}
     set type(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.emailTypeArr.includes(value)) {
-                throw Error(`Contact email type must be of type [${this.emailTypeStrList}]`);
-            }
-
-            this._type = value;
+        // @ts-ignore
+        if(!this.emailTypeArr.includes(value)) {
+            throw Error(`Contact email type must be of type [${this.emailTypeStrList}]`);
         }
+
+        this._type = value;
     }
 
     get address() {return this._address}

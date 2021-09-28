@@ -6,7 +6,7 @@ import {
     hasUnicode
 } from "../../helpers/validators";
 import {SmsContentType} from "./smsContentType";
-import {btoa} from "buffer";
+import {byteArrToHex} from '../../helpers/tools';
 
 /**
  * Message class to construct a message object to send to an SmsClient
@@ -31,12 +31,13 @@ export class SmsMessage {
     private _binaryContent: BinaryData | undefined;
     /**
      * @remark Denotes whether the content string is the actual text content to be sent or a reference to a template ID.
+     * @default TEXT
      */
     private _contentType: string = SmsContentType.TEXT;
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: object | undefined;
+    private _substitutions: object = {};
     /**
      * @remark User defined ID that is assigned to an individual message
      */
@@ -101,14 +102,7 @@ export class SmsMessage {
     }
 
     set contentTemplateId(value: string) {
-        if(value === "") {
-            /* istanbul ignore next */
-            this._contentType = (this.contentType) ? this.contentType : SmsContentType.TEXT;
-        } else {
-            /* istanbul ignore next */
-            this._contentType = SmsContentType.TEMPLATE;
-        }
-
+        this._contentType = SmsContentType.TEMPLATE;
         this._content = value;
     }
 
@@ -157,40 +151,11 @@ export class SmsMessage {
             throw Error("name must be specified in substitution");
         }
 
-        /* istanbul ignore next */
-        if(!this._substitutions) {
-            this._substitutions = {};
-        }
-
         // @ts-ignore
         this._substitutions[name] = value;
     }
 
-    arrayBufferToBase64(buffer: ArrayBuffer) {
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
 
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-
-        return btoa(binary);
-    }
-
-    convertToBase64(value: ArrayBuffer | BinaryData | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            const constName = value.constructor.name;
-
-            if(constName === "Uint8Array") {
-                return this.arrayBufferToBase64(<ArrayBuffer>value);
-            } else {
-                // @ts-ignore
-                return btoa(value);
-            }
-        }
-    }
 
     /**
      * Returns object of fields for the API, stripping any undefined values
@@ -202,7 +167,7 @@ export class SmsMessage {
         const payload = {
             from: this.from,
             to: this.to,
-            content: (this.contentType === SmsContentType.BINARY) ? this.convertToBase64(this.binaryContent) : this.content,
+            content: (this.binaryContent !== undefined) ? byteArrToHex(this.binaryContent) : this.content,
             contentType: this.contentType,
             substitutions: this.substitutions,
             correlationId: this.correlationId,

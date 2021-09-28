@@ -74,45 +74,69 @@
 				<ul>
 					<li>NodeJS 14+</li>
 				</ul>
-				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
-					<h2>Example</h2>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h2>Examples</h2>
 				</a>
-				<a href="#sending-a-sms-message-and-getting-its-status" id="sending-a-sms-message-and-getting-its-status" style="color: inherit; text-decoration: none;">
-					<h3>Sending a SMS message and getting its status</h3>
+				<p><a href="#sending-a-sms-message">Sending a SMS message</a><br><a href="#sending-a-tts-voice-message">Sending a TTS voice message</a><br><a href="#sending-a-whatsapp-text-message">Sending a WhatsApp text message</a></p>
+				<a href="#sending-a-sms-message" id="sending-a-sms-message" style="color: inherit; text-decoration: none;">
+					<h3>Sending a SMS message</h3>
 				</a>
-				<pre><code class="language-js"><span style="color: #0000FF">const</span><span style="color: #000000"> {</span><span style="color: #0070C1">WhatsappDocClient</span><span style="color: #000000">, </span><span style="color: #0070C1">WhatsappDocMessage</span><span style="color: #000000">} = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cpaas-sdk-node&#039;</span><span style="color: #000000">)</span>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> {</span><span style="color: #0070C1">SmsClient</span><span style="color: #000000">, </span><span style="color: #0070C1">SmsMessage</span><span style="color: #000000">} = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cpaas-sdk-node&#039;</span><span style="color: #000000">)</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">smsClient</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">WhatsappDocClient</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;bearer test: 1234&#039;</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">smsClient</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">SmsClient</span><span style="color: #000000">({</span><span style="color: #001080">AUTH_TOKEN</span><span style="color: #000000">});</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">smsMessage</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">SmsMessage</span><span style="color: #000000">({</span><span style="color: #001080">FROM_NUMBER</span><span style="color: #000000">}, {</span><span style="color: #001080">TO_NUMBER</span><span style="color: #000000">});</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">smsMessage</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">WhatsappDocMessage</span><span style="color: #000000">();</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">from</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;+14443332222&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">to</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;+14443332222&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;Hello World!&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">contentType</span><span style="color: #000000"> = </span><span style="color: #001080">SmsContentType</span><span style="color: #000000">.</span><span style="color: #0070C1">TEXT</span><span style="color: #000000">;</span>
+<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">content</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;Hello $(name), today is $(date)!&quot;</span><span style="color: #000000">;</span>
 <span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #795E26">addSubstitution</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;name&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;Tester&quot;</span><span style="color: #000000">);</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #795E26">addSubstitution</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;dept&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;Testing&quot;</span><span style="color: #000000">);</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">correlationId</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;correlation1234&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">dltTemplateId</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;dlt444&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">callbackUrl</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;https://my.website.com/callback&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">callbackData</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;customerID123|1234|new_sale&quot;</span><span style="color: #000000">;</span>
-<span style="color: #001080">smsMessage</span><span style="color: #000000">.</span><span style="color: #001080">expireAt</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;2021-08-01T14:24:33.000Z&quot;</span><span style="color: #000000">;</span>
 
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">request</span><span style="color: #000000"> = </span><span style="color: #001080">smsClient</span><span style="color: #000000">.</span><span style="color: #795E26">sendMessage</span><span style="color: #000000">(</span><span style="color: #001080">smsMessage</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">response</span><span style="color: #000000"> = </span><span style="color: #001080">smsClient</span><span style="color: #000000">.</span><span style="color: #795E26">sendMessage</span><span style="color: #000000">(</span><span style="color: #001080">smsMessage</span><span style="color: #000000">);</span>
 
-<span style="color: #001080">request</span>
+<span style="color: #001080">response</span>
 <span style="color: #000000">    .</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000">);</span>
+<span style="color: #000000">    })</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">catch</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000">);</span>
+<span style="color: #000000">    });</span>
+</code></pre>
+				<a href="#sending-a-tts-voice-message" id="sending-a-tts-voice-message" style="color: inherit; text-decoration: none;">
+					<h3>Sending a TTS voice message</h3>
+				</a>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">VoiceClient</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">VoiceMessage</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">TtsAudio</span>
+<span style="color: #000000">} = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cpaas-sdk-node&#039;</span><span style="color: #000000">);</span>
 
-<span style="color: #000000">        </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">statusReq</span><span style="color: #000000"> = </span><span style="color: #001080">smsClient</span><span style="color: #000000">.</span><span style="color: #795E26">getStatus</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000">.</span><span style="color: #001080">messageId</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">client</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">VoiceClient</span><span style="color: #000000">({</span><span style="color: #001080">AUTH_TOKEN</span><span style="color: #000000">});</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">message</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">VoiceMessage</span><span style="color: #000000">({</span><span style="color: #001080">FROM_NUMBER</span><span style="color: #000000">});</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">audio</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">TtsAudio</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Hello World&quot;</span><span style="color: #000000">);</span>
 
-<span style="color: #000000">        </span><span style="color: #001080">statusReq</span>
-<span style="color: #000000">            .</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000">);</span>
-<span style="color: #000000">            })</span>
-<span style="color: #000000">            .</span><span style="color: #795E26">catch</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
-<span style="color: #000000">                </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000">);</span>
-<span style="color: #000000">            })</span>
+<span style="color: #001080">message</span><span style="color: #000000">.</span><span style="color: #795E26">addDialedNumber</span><span style="color: #000000">({</span><span style="color: #001080">TO_NUMBER</span><span style="color: #000000">});</span>
+<span style="color: #001080">message</span><span style="color: #000000">.</span><span style="color: #001080">audio</span><span style="color: #000000"> = </span><span style="color: #001080">audio</span><span style="color: #000000">;</span>
 
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">response</span><span style="color: #000000"> = </span><span style="color: #001080">client</span><span style="color: #000000">.</span><span style="color: #795E26">sendVoiceMessage</span><span style="color: #000000">(</span><span style="color: #001080">message</span><span style="color: #000000">);</span>
+
+<span style="color: #001080">response</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000">);</span>
+<span style="color: #000000">    })</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">catch</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000">);</span>
+<span style="color: #000000">    });</span>
+</code></pre>
+				<a href="#sending-a-whatsapp-text-message" id="sending-a-whatsapp-text-message" style="color: inherit; text-decoration: none;">
+					<h3>Sending a WhatsApp text message</h3>
+				</a>
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> {</span><span style="color: #0070C1">WhatsappClient</span><span style="color: #000000">, </span><span style="color: #0070C1">WhatsappTextMessage</span><span style="color: #000000">} = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;cpaas-sdk-node&#039;</span><span style="color: #000000">);</span>
+
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">whatsAppClient</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">WhatsappClient</span><span style="color: #000000">(</span><span style="color: #0070C1">AUTH_TOKEN</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">whatsAppMessage</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">WhatsappTextMessage</span><span style="color: #000000">(</span><span style="color: #0070C1">FROM_NUMBER</span><span style="color: #000000">, </span><span style="color: #0070C1">TO_NUMBER</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;Hello World!&quot;</span><span style="color: #000000">);</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">response</span><span style="color: #000000"> = </span><span style="color: #001080">whatsAppClient</span><span style="color: #000000">.</span><span style="color: #795E26">sendMessage</span><span style="color: #000000">(</span><span style="color: #001080">whatsAppMessage</span><span style="color: #000000">);</span>
+
+<span style="color: #001080">response</span>
+<span style="color: #000000">    .</span><span style="color: #795E26">then</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">res</span><span style="color: #000000">);</span>
 <span style="color: #000000">    })</span>
 <span style="color: #000000">    .</span><span style="color: #795E26">catch</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
 <span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #001080">err</span><span style="color: #000000">);</span>
@@ -314,6 +338,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/helpers_identifiers.html">helpers/identifiers</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/helpers_tools.html">helpers/tools</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/helpers_validators.html">helpers/validators</a>

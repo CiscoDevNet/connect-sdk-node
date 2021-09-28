@@ -1,19 +1,20 @@
-const {WhatsappClient, WhatsappContactMessage, WhatsappContact, PhoneType, AddressType, EmailType, UrlType} = require('../../dist');
-const {WhatsappContactPhone} = require("../../dist/api/whatsapp/contacts/whatsappContactPhone");
-const {WhatsappContactAddr} = require("../../dist/api/whatsapp/contacts/whatsappContactAddr");
-const {WhatsappContactEmail} = require("../../dist/api/whatsapp/contacts/whatsappContactEmail");
-const {WhatsappContactUrl} = require("../../dist/api/whatsapp/contacts/whatsappContactUrl");
+const {
+    WhatsappClient,
+    WhatsappContactMessage,
+    WhatsappContact,
+    PhoneType,
+    AddressType,
+    EmailType,
+    UrlType,
+    WhatsappContactPhone,
+    WhatsappContactAddr,
+    WhatsappContactEmail,
+    WhatsappContactUrl
+} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 
-
 const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
-
 const whatsAppMessage = new WhatsappContactMessage(FROM_NUMBER, TO_NUMBER);
-whatsAppMessage.addSubstitution("name", "Tester");
-whatsAppMessage.addSubstitution("dept", "Testing");
-whatsAppMessage.correlationId = "correlation1234";
-whatsAppMessage.callbackUrl = "https://my.website.com/callback";
-whatsAppMessage.callbackData = "customerID123|1234|new_sale";
 
 const contact = new WhatsappContact();
 contact.formattedName = "John Snow Smith";
@@ -59,24 +60,11 @@ contact.addUrl(url);
 
 whatsAppMessage.addContact(contact);
 
-console.log(whatsAppMessage.toJSON());
+const request = whatsAppClient.sendMessage(whatsAppMessage);
 
-const response = whatsAppClient.sendMessage(whatsAppMessage);
-
-response
+request
     .then(res => {
         console.log(res);
-
-        const statusReq = whatsAppClient.getStatus(res.messageId);
-
-        statusReq
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => {
-                console.error(err);
-            })
-
     })
     .catch(err => {
         console.error(err);

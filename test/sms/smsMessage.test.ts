@@ -63,17 +63,9 @@ describe("SmsMessage", () => {
     it('sets contentType correctly when template Id is specified', () => {
         const message = new SmsMessage('12345', '+13333223333');
 
-        message.contentTemplateId = "";
+        message.contentTemplateId = "abc";
 
-        expect(message.contentType).to.equal(SmsContentType.TEXT);
-
-        message.content = "Hello World 🗺️!";
-
-        expect(message.contentType).to.equal(SmsContentType.UNICODE);
-
-        message.contentTemplateId = "";
-
-        expect(message.contentType).to.equal(SmsContentType.UNICODE);
+        expect(message.contentType).to.equal(SmsContentType.TEMPLATE);
     });
 
     it("addSubstitution adds substitutions correctly and errors correctly", () => {
@@ -115,9 +107,10 @@ describe("SmsMessage", () => {
         message.binaryContent = data;
 
         expect(message.toJSON()).to.deep.equal({
-            "content": "AQIDBAU=",
+            "content": "0102030405",
             "contentType": "BINARY",
             "from": "12345",
+            "substitutions": {},
             "to": "+12223334444"
         });
 
@@ -125,9 +118,10 @@ describe("SmsMessage", () => {
         message.binaryContent = "100011 001101";
 
         expect(message.toJSON()).to.deep.equal({
-            "content": "MTAwMDExIDAwMTEwMQ==",
+            "content": "01000000010100000001010001",
             "contentType": "BINARY",
             "from": "12345",
+            "substitutions": {},
             "to": "+12223334444"
         });
     });

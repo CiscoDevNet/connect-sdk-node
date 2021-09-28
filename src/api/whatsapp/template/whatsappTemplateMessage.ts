@@ -33,7 +33,7 @@ export class WhatsappTemplateMessage {
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: Array<object> | undefined;
+    private _substitutions: Array<object> = [];
     /**
      * @remark Identifies to Whatsapp that this is an audio message
      */
@@ -105,11 +105,6 @@ export class WhatsappTemplateMessage {
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
-        }
-
-        /* istanbul ignore next */
-        if(!this._substitutions) {
-            this._substitutions = [];
         }
 
         this._substitutions.push({[name]: value});

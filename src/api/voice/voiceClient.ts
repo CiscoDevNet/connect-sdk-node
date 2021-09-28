@@ -61,7 +61,6 @@ export class VoiceClient extends CpaasClient {
                             status: res.status
                         }
 
-                        /* istanbul ignore next */
                         if(body.sessions) {
                             body.sessions.forEach((session: any) => {
                                 payload.sessions.push({
@@ -134,7 +133,6 @@ export class VoiceClient extends CpaasClient {
                             status: res.status
                         }
 
-                        /* istanbul ignore next */
                         if(body.sessions) {
                             body.sessions.forEach((session: any) => {
                                 payload.sessions.push({
@@ -241,7 +239,6 @@ export class VoiceClient extends CpaasClient {
                             recordings: new Array<RecordingResponse>()
                         }
 
-                        /* istanbul ignore next */
                         if (body.recordings) {
                             body.recordings.forEach((recording: any) => {
                                 payload.recordings.push({
