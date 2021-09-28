@@ -115,7 +115,7 @@ describe("SmsMessage", () => {
         message.binaryContent = data;
 
         expect(message.toJSON()).to.deep.equal({
-            "content": "AQIDBAU=",
+            "content": "0102030405",
             "contentType": "BINARY",
             "from": "12345",
             "substitutions": {},
@@ -126,7 +126,7 @@ describe("SmsMessage", () => {
         message.binaryContent = "100011 001101";
 
         expect(message.toJSON()).to.deep.equal({
-            "content": "MTAwMDExIDAwMTEwMQ==",
+            "content": "01000000010100000001010001",
             "contentType": "BINARY",
             "from": "12345",
             "substitutions": {},

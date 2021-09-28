@@ -6,7 +6,7 @@ import {
     hasUnicode
 } from "../../helpers/validators";
 import {SmsContentType} from "./smsContentType";
-import {btoa} from "buffer";
+import {byteArrToHex} from '../../helpers/tools';
 
 /**
  * Message class to construct a message object to send to an SmsClient
@@ -162,31 +162,7 @@ export class SmsMessage {
         this._substitutions[name] = value;
     }
 
-    arrayBufferToBase64(buffer: ArrayBuffer) {
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
 
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-
-        return btoa(binary);
-    }
-
-    convertToBase64(value: ArrayBuffer | BinaryData | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            const constName = value.constructor.name;
-
-            if(constName === "Uint8Array") {
-                return this.arrayBufferToBase64(<ArrayBuffer>value);
-            } else {
-                // @ts-ignore
-                return btoa(value);
-            }
-        }
-    }
 
     /**
      * Returns object of fields for the API, stripping any undefined values
@@ -198,7 +174,7 @@ export class SmsMessage {
         const payload = {
             from: this.from,
             to: this.to,
-            content: (this.contentType === SmsContentType.BINARY) ? this.convertToBase64(this.binaryContent) : this.content,
+            content: (this.binaryContent !== undefined) ? byteArrToHex(this.binaryContent) : this.content,
             contentType: this.contentType,
             substitutions: this.substitutions,
             correlationId: this.correlationId,
