@@ -70,7 +70,11 @@ describe("WhatsappContactMessage", () => {
             {
                 _formattedName: 'John Snow Smith',
                 _namePrefix: 'Mr.',
-                _firstName: 'John'
+                _firstName: 'John',
+                _addresses: [],
+                _phones: [],
+                _urls: [],
+                _emails: []
             }
         ])
     })

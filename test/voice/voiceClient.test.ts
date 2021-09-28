@@ -205,6 +205,15 @@ describe("VoiceClient", () => {
 
         nock(`${API_URL}:${API_PORT}`)
             .post(`/${API_VERSION}/voice/messages`)
+            .reply(202, {});
+
+        response = await client.sendVoiceMessage(message);
+
+        // @ts-ignore
+        expect(response.sessions).to.deep.equal([]);
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/voice/messages`)
             .reply(400, {
                 code: '1234'
             });
@@ -278,6 +287,17 @@ describe("VoiceClient", () => {
 
         // @ts-ignore
         expect(response.sessions[0].sessionId).to.equal('0e36bb32-5f5d-46c9-b132-85e010a80c2a');
+
+        nock.cleanAll();
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/voice/calls`)
+            .reply(202, {});
+
+        response = await client.placeCall(message);
+
+        // @ts-ignore
+        expect(response.sessions).to.deep.equal([]);
 
         nock(`${API_URL}:${API_PORT}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -407,6 +427,17 @@ describe("VoiceClient", () => {
 
         // @ts-ignore
         expect(response.recordings[0].durationSeconds).to.equal(609);
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
+            .reply(200, {
+                "sessionId": "1da5e55c-52e4-4054-bec4-43256dd2eb91",
+            });
+
+        response = await client.getRecordings('1234');
+
+        // @ts-ignore
+        expect(response.recordings).to.deep.equal([]);
 
         nock(`${API_URL}:${API_PORT}`)
             .get(`/${API_VERSION}/voice/calls/1234/recordings`)

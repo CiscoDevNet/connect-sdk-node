@@ -52,18 +52,19 @@ export class WhatsappContact {
     /**
      * @remark Array of WhatsappContactPhone objects
      */
-    private _phones: Array<WhatsappContactPhone> | undefined;
+    private _phones: Array<WhatsappContactPhone> = [];
     /**
      * @remark Array of WhatsappContactAddr objects
      */
-    private _addresses: Array<WhatsappContactAddr> | undefined;/**
+    private _addresses: Array<WhatsappContactAddr> = [];
+    /**
      * @remark Array of WhatsappContactEmail objects
      */
-    private _emails: Array<WhatsappContactEmail> | undefined;
+    private _emails: Array<WhatsappContactEmail> = [];
     /**
      * @remark Array of WhatsappContactUrl objects
      */
-    private _urls: Array<WhatsappContactUrl> | undefined;
+    private _urls: Array<WhatsappContactUrl> = [];
 
     get formattedName() {return this._formattedName}
     set formattedName(value: string | undefined) {
@@ -132,11 +133,6 @@ export class WhatsappContact {
             throw Error("Must provide a valid phone media to add to contacts");
         }
 
-        /* istanbul ignore next */
-        if(!this._phones) {
-            this._phones = [];
-        }
-
         // @ts-ignore
         this._phones.push(value.toJSON());
     }
@@ -152,11 +148,6 @@ export class WhatsappContact {
     addAddress(value: WhatsappContactAddr) {
         if(!value) {
             throw Error("Must provide a valid address media to add to contacts");
-        }
-
-        /* istanbul ignore next */
-        if(!this._addresses) {
-            this._addresses = [];
         }
 
         // @ts-ignore
@@ -176,11 +167,6 @@ export class WhatsappContact {
             throw Error("Must provide a valid email media to add to contacts");
         }
 
-        /* istanbul ignore next */
-        if(!this._emails) {
-            this._emails = [];
-        }
-
         // @ts-ignore
         this._emails.push(value.toJSON());
     }
@@ -196,11 +182,6 @@ export class WhatsappContact {
     addUrl(value: WhatsappContactUrl) {
         if(!value) {
             throw Error("Must provide a valid url media to add to contacts");
-        }
-
-        /* istanbul ignore next */
-        if(!this._urls) {
-            this._urls = [];
         }
 
         // @ts-ignore

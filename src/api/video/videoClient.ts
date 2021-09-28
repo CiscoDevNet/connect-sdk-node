@@ -154,7 +154,6 @@ export class VideoClient extends CpaasClient {
                             message: body.message
                         });
                     } else {
-                        /* istanbul ignore next */
                         reject(res);
                     }
                 });

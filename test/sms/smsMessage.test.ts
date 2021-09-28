@@ -63,17 +63,9 @@ describe("SmsMessage", () => {
     it('sets contentType correctly when template Id is specified', () => {
         const message = new SmsMessage('12345', '+13333223333');
 
-        message.contentTemplateId = "";
+        message.contentTemplateId = "abc";
 
-        expect(message.contentType).to.equal(SmsContentType.TEXT);
-
-        message.content = "Hello World 🗺️!";
-
-        expect(message.contentType).to.equal(SmsContentType.UNICODE);
-
-        message.contentTemplateId = "";
-
-        expect(message.contentType).to.equal(SmsContentType.UNICODE);
+        expect(message.contentType).to.equal(SmsContentType.TEMPLATE);
     });
 
     it("addSubstitution adds substitutions correctly and errors correctly", () => {

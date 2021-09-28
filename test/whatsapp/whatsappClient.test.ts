@@ -340,6 +340,48 @@ describe("WhatsappClient", () => {
 
         expect(response.contentType).to.equal(WhatsappContentType.CONTACTS);
         expect(response.contacts).to.deep.equal([]);
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.CONTACTS,
+                contacts: [
+                    {
+                        firstName: 'Tester',
+                        company: 'Test Company',
+                        birthday: '2021-08-01T14:24:33.000Z',
+                        department: 'test dept',
+                        formattedName: 'Tester',
+                        lastName: 'Smith',
+                        middleName: 'J',
+                        namePrefix: 'Mr.',
+                        nameSuffix: 'Sr',
+                        title: "tester"
+                    }
+                ]
+            });
+
+        response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.CONTACTS);
+        expect(response.contacts).to.deep.equal([
+            {
+                "addresses": [],
+                "birthday": "2021-08-01T14:24:33.000Z",
+                "company": "Test Company",
+                "department": "test dept",
+                "emails": [],
+                "firstName": "Tester",
+                "formattedName": "Tester",
+                "lastName": "Smith",
+                "middleName": "J",
+                "namePrefix": "Mr.",
+                "nameSuffix": "Sr",
+                "phones": [],
+                "title": "tester",
+                "urls": []
+            }
+        ]);
     });
 
 });

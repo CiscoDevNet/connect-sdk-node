@@ -58,7 +58,10 @@ describe("WhatsappContact", () => {
         contact.addPhone(phone);
 
         expect(contact.toJSON()).to.deep.equal({
-            phones: [ { type: 'HOME', number: '+13334440000', whatsAppId: '30403' } ]
+            phones: [ { type: 'HOME', number: '+13334440000', whatsAppId: '30403' } ],
+            addresses: [],
+            emails: [],
+            urls: []
         });
     })
 
@@ -82,7 +85,10 @@ describe("WhatsappContact", () => {
                     "city": "Beverly Hills",
                     "type": "HOME"
                 }
-            ]
+            ],
+            "phones": [],
+            "emails": [],
+            "urls": []
         });
     })
 
@@ -106,7 +112,10 @@ describe("WhatsappContact", () => {
                     "address": "someone@somewhere.com",
                     "type": "HOME"
                 }
-            ]
+            ],
+            "phones": [],
+            "addresses": [],
+            "urls": []
         });
     })
 
@@ -130,7 +139,10 @@ describe("WhatsappContact", () => {
                     "address": "http://www.google.com",
                     "type": "HOME"
                 }
-            ]
+            ],
+            "phones": [],
+            "addresses": [],
+            "emails": []
         });
     })
 
@@ -149,7 +161,11 @@ describe("WhatsappContact", () => {
             firstName: 'John',
             middleName: 'Snow',
             lastName: 'Smith',
-            title: 'Tester'
+            title: 'Tester',
+            phones: [],
+            addresses: [],
+            emails: [],
+            urls: []
         });
 
     });

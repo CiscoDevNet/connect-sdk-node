@@ -102,14 +102,7 @@ export class SmsMessage {
     }
 
     set contentTemplateId(value: string) {
-        if(value === "") {
-            /* istanbul ignore next */
-            this._contentType = (this.contentType) ? this.contentType : SmsContentType.TEXT;
-        } else {
-            /* istanbul ignore next */
-            this._contentType = SmsContentType.TEMPLATE;
-        }
-
+        this._contentType = SmsContentType.TEMPLATE;
         this._content = value;
     }
 

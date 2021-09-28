@@ -253,7 +253,6 @@ export class WhatsappClient extends CpaasClient {
                                         urls: new Array<WhatsappContactUrl>()
                                     };
 
-                                    /* istanbul ignore next */
                                     if(contact.phones && contact.phones.length > 0) {
                                         contact.phones.forEach((phone: WhatsappContactPhone) => {
                                             contactPush.phones.push(<WhatsappContactPhone>{
@@ -264,7 +263,6 @@ export class WhatsappClient extends CpaasClient {
                                         })
                                     }
 
-                                    /* istanbul ignore next */
                                     if(contact.addresses && contact.addresses.length > 0) {
                                         contact.addresses.forEach((address: WhatsappContactAddr) => {
                                             contactPush.addresses.push(<WhatsappContactAddr>{
@@ -279,7 +277,6 @@ export class WhatsappClient extends CpaasClient {
                                         })
                                     }
 
-                                    /* istanbul ignore next */
                                     if(contact.emails && contact.emails.length > 0) {
                                         contact.emails.forEach((email: WhatsappContactEmail) => {
                                             contactPush.emails.push(<WhatsappContactEmail>{
@@ -289,7 +286,6 @@ export class WhatsappClient extends CpaasClient {
                                         })
                                     }
 
-                                    /* istanbul ignore next */
                                     if(contact.urls && contact.urls.length > 0) {
                                         contact.urls.forEach((url: WhatsappContactUrl) => {
                                             contactPush.urls.push(<WhatsappContactUrl>{

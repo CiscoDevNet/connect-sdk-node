@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {byteArrToHex} from '../src/helpers/tools';
+import {byteArrToHex, typeToArr, concatTypes} from '../src/helpers/tools';
 
 describe("Tools", () => {
     it("byteArrToHex converts correctly", () => {
@@ -12,4 +12,20 @@ describe("Tools", () => {
 
         expect(byteArrToHex(data)).to.equal("48656c6c6f");
     });
+
+    it('typeToArr outputs correctly', () => {
+        enum Types {
+            TEXT = "TEXT",
+            IMAGE = "IMAGE"
+        }
+
+        expect(typeToArr(Types)).to.deep.equal(["TEXT", "IMAGE"]);
+    });
+
+    it('concatTypes outputs correctly', () => {
+        const types = ["TEXT", "IMAGE"];
+
+        expect(concatTypes(types)).to.equal("TEXT, IMAGE");
+    })
+
 });

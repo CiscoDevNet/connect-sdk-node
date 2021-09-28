@@ -22,7 +22,7 @@ export default function _request(options: any) {
         body: undefined,
         error: undefined,
         headers: {}
-    };
+    }
 
     const payload = JSON.stringify(options.payload) || undefined;
 
@@ -38,9 +38,7 @@ export default function _request(options: any) {
             res.on('end', () => {
                 // @ts-ignore
                 returnRes.body = data;
-
-                /* istanbul ignore next */
-                returnRes.headers = (res.headers) ? res.headers : {};
+                returnRes.headers = res.headers;
 
                 resolve(returnRes);
             });

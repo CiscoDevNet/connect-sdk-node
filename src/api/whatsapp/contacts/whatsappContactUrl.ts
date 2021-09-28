@@ -1,5 +1,6 @@
 import {UrlType} from "./types";
 import {isValidHttpUrl} from "../../../helpers/validators";
+import {concatTypes, typeToArr} from "../../../helpers/tools"
 
 /**
  * URL class that gets passed into a WhatsappContact urls array
@@ -15,36 +16,17 @@ export class WhatsappContactUrl {
      */
     private _address: string | undefined;
 
-    private urlTypeArr = [];
-    private urlTypeStrList = "";
-
-    constructor() {
-        for(const [key, value] of Object.entries(UrlType)) {
-            // @ts-ignore
-            this.urlTypeArr.push(value);
-        }
-
-        for(let i = 0; i < this.urlTypeArr.length; i++) {
-            this.urlTypeStrList += this.urlTypeArr[i];
-
-            /* istanbul ignore next */
-            if(i < this.urlTypeArr.length) {
-                this.urlTypeStrList += ", ";
-            }
-        }
-    }
+    private urlTypeArr: Array<string> = typeToArr(UrlType);
+    private urlTypeStrList = concatTypes(this.urlTypeArr);
 
     get type() {return this._type}
     set type(value: string | undefined) {
-        /* istanbul ignore next */
-        if(value) {
-            // @ts-ignore
-            if(!this.urlTypeArr.includes(value)) {
-                throw Error(`Contact URL type must be of type [${this.urlTypeStrList}]`);
-            }
-
-            this._type = value;
+        // @ts-ignore
+        if(!this.urlTypeArr.includes(value)) {
+            throw Error(`Contact URL type must be of type [${this.urlTypeStrList}]`);
         }
+
+        this._type = value;
     }
 
     get address() {return this._address}
