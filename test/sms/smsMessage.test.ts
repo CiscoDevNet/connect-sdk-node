@@ -118,6 +118,7 @@ describe("SmsMessage", () => {
             "content": "AQIDBAU=",
             "contentType": "BINARY",
             "from": "12345",
+            "substitutions": {},
             "to": "+12223334444"
         });
 
@@ -128,6 +129,7 @@ describe("SmsMessage", () => {
             "content": "MTAwMDExIDAwMTEwMQ==",
             "contentType": "BINARY",
             "from": "12345",
+            "substitutions": {},
             "to": "+12223334444"
         });
     });

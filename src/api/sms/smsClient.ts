@@ -51,8 +51,7 @@ export class SmsClient extends CpaasClient {
 
             request(options)
                 .then((res: any) => {
-                    // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 202) {
                         resolve({
@@ -97,8 +96,6 @@ export class SmsClient extends CpaasClient {
         return new Promise<SmsStatusResponse>((resolve, reject) => {
             request(options)
                 .then((res: any) => {
-                    // @ts-ignore
-                    /* istanbul ignore next */
                     const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
@@ -118,7 +115,6 @@ export class SmsClient extends CpaasClient {
                             error: {}
                         }
 
-                        /* istanbul ignore next */
                         if(body.error) {
                             payload.error = body.error;
                         }

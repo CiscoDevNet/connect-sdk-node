@@ -81,6 +81,15 @@ describe("SmsClient", () => {
 
         nock(`${API_URL}:${API_PORT}`)
             .post(`/${API_VERSION}/sms/messages`)
+            .reply(202);
+
+        response = await smsClient.sendMessage(smsMessage);
+
+        // @ts-ignore
+        expect(response.acceptedTime).to.be.undefined;
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
             .reply(400, {
                 code: '123',
                 message: '456'
@@ -134,13 +143,29 @@ describe("SmsClient", () => {
         nock(`${API_URL}:${API_PORT}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(200, {
-                messageId: '1234'
+                messageId: '1234',
+                error: {
+                    code: '500',
+                    message: 'error msg'
+                }
             });
 
         let response = await smsClient.getStatus('1234');
 
-        // @ts-ignore
-        expect(response.messageId).to.not.be.null;
+        expect(response.messageId).to.equal('1234');
+        expect(response.error).to.deep.equal({
+            code: '500',
+            message: 'error msg'
+        })
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .reply(200);
+
+        response = await smsClient.getStatus('1234');
+
+        expect(response.messageId).to.be.undefined;
+
 
         nock(`${API_URL}:${API_PORT}`)
             .get(`/${API_VERSION}/sms/messages/1234`)

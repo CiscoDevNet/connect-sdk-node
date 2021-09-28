@@ -37,7 +37,7 @@ export class SmsMessage {
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: object | undefined;
+    private _substitutions: object = {};
     /**
      * @remark User defined ID that is assigned to an individual message
      */
@@ -156,11 +156,6 @@ export class SmsMessage {
     addSubstitution(name: string, value: string) {
         if(name === "") {
             throw Error("name must be specified in substitution");
-        }
-
-        /* istanbul ignore next */
-        if(!this._substitutions) {
-            this._substitutions = {};
         }
 
         // @ts-ignore
