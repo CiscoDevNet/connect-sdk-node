@@ -53,5 +53,8 @@ Thumbs.db
 docker-compose.yml
 
 openAPI/
+coverage/
+docs/
 
+.nycrc
 privateConst.*

@@ -1,9 +1,13 @@
-src/
-examples/
-test/
 .idea/
-tsconfig.json
 .nyc_output/
 coverage/
 docs/
+examples/
+node_modules/
+openAPI/
+src/
+test/
+.gitignore
+.nycrc
 privateConst.*
+tsconfig.json
