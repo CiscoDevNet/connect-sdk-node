@@ -264,6 +264,16 @@ describe("VoiceClient", () => {
                 headers: { 'content-type': 'application/json' }
             })
         }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/voice/messages`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.sendVoiceMessage(message);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
+        }
     });
 
     it("returns proper values on placeCall", async () => {
@@ -354,6 +364,16 @@ describe("VoiceClient", () => {
             })
         }
 
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/voice/calls`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.placeCall(message);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
+        }
+
     });
 
     it("returns proper values on getStatus", async () => {
@@ -405,6 +425,16 @@ describe("VoiceClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             })
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/voice/calls/1234`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
         }
     });
 
@@ -467,6 +497,16 @@ describe("VoiceClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             })
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.getRecordings('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
         }
     });
 

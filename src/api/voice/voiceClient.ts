@@ -82,6 +82,9 @@ export class VoiceClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -154,6 +157,9 @@ export class VoiceClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -203,6 +209,9 @@ export class VoiceClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -257,6 +266,9 @@ export class VoiceClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }

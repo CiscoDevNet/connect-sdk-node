@@ -1,8 +1,8 @@
-import {WhatsappClient, WhatsappTextMessage} from "../../src";
+import {WhatsappClient, WhatsappTextMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
 import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
-import {WhatsappContentType} from '../../src';
+import {WhatsappContact, WhatsappContactMessage} from "../../dist";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -50,6 +50,40 @@ describe("WhatsappClient", () => {
 
         stub(message, 'from').restore();
     });
+
+    it("handles contact message validation properly", () => {
+        const client = new WhatsappClient('bearer test: 1234');
+        const message = new WhatsappContactMessage('+12223334444', '+13334445555');
+        const contact = new WhatsappContact();
+
+        expect(() => {
+            client.sendMessage(message);
+        }).to.throw();
+
+        message.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(message);
+        }).to.throw();
+
+        const messageB = new WhatsappContactMessage('+12223334444', '+13334445555');
+
+        contact.formattedName = "tester mctester";
+        messageB.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(messageB);
+        }).to.throw();
+
+        const messageC = new WhatsappContactMessage('+12223334444', '+13334445555');
+
+        contact.firstName = "tester";
+        messageC.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(messageC);
+        }).to.not.throw();
+    })
 
     it("returns proper values on sendMessage", async () => {
         const client = new WhatsappClient('bearer test: 1234');
@@ -175,6 +209,16 @@ describe("WhatsappClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             });
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .replyWithError("Test Error");
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("Test Error");
         }
     });
 

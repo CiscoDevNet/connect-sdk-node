@@ -37,6 +37,28 @@ export class WhatsappClient extends CpaasClient {
             throw Error("Must provide a 'to' value for sending a message");
         }
 
+        if(message.contentType === WhatsappContentType.CONTACTS && (!message.contacts || message.contacts.length < 1)) {
+            throw Error("Must provide at least one entry in 'contacts' value");
+        }
+
+        if(message.contentType === WhatsappContentType.CONTACTS && message.contacts && message.contacts.length > 0) {
+            message.contacts.forEach((contact: WhatsappContact) => {
+                if(!contact.formattedName) {
+                    throw Error("Contacts need to include a 'formattedName' value");
+                }
+
+                if(
+                    !contact.firstName &&
+                    !contact.lastName &&
+                    !contact.middleName &&
+                    !contact.nameSuffix &&
+                    !contact.namePrefix
+                ) {
+                    throw Error("Contacts must include at least a firstName, lastName, middleName, nameSuffix, or namePrefix");
+                }
+            })
+        }
+
         const options = {
             method: 'POST',
             path: `/${API_VERSION}/whatsapp/messages`,
@@ -73,6 +95,9 @@ export class WhatsappClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
     }
@@ -320,6 +345,9 @@ export class WhatsappClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
     }

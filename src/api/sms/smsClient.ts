@@ -71,6 +71,9 @@ export class SmsClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
 
@@ -135,6 +138,9 @@ export class SmsClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
     }

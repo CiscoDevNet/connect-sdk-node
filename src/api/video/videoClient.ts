@@ -67,6 +67,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -113,6 +116,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -156,6 +162,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -211,6 +220,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }

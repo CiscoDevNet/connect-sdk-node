@@ -5,7 +5,7 @@ export {WhatsappVideoMessage} from './video/whatsappVideoMessage';
 export {WhatsappDocMessage} from './document/whatsappDocMessage';
 export {WhatsappStickerMessage} from './sticker/whatsappStickerMessage';
 export {WhatsappLocMessage} from './location/whatsappLocMessage';
-export {WhatsappContact} from './contacts/whatsappContact';
+export * from './contacts';
 export {WhatsappContactMessage} from './contacts/whatsappContactMessage';
 export {WhatsappTemplateMessage} from './template/whatsappTemplateMessage';
 export {WhatsappContentType} from './whatsappContentType';

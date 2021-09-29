@@ -116,6 +116,16 @@ describe("VideoClient", () => {
                 headers: { 'content-type': 'application/json' }
             })
         }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/video/sessions`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.createSession(session);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
+        }
     });
 
     it("throws error if required values are not proper for creating a video token", () => {
@@ -210,6 +220,16 @@ describe("VideoClient", () => {
                 headers: { 'content-type': 'application/json' }
             })
         }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/video/sessions/12345/tokens`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.createToken(token);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
+        }
     });
 
     it('retrieveSession responds properly', async () => {
@@ -280,6 +300,16 @@ describe("VideoClient", () => {
             })
         }
 
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/video/sessions/12345`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.retrieveSession('12345');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
+        }
+
     });
 
     it('deleteSession responds properly', async () => {
@@ -340,6 +370,16 @@ describe("VideoClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             });
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .delete(`/${API_VERSION}/video/sessions/12345`)
+            .replyWithError("test error");
+
+        try {
+            response = await client.deleteSession('12345');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error");
         }
     });
 

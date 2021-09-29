@@ -18,6 +18,8 @@ const whatsAppMessage = new WhatsappContactMessage(FROM_NUMBER, TO_NUMBER);
 
 const contact = new WhatsappContact();
 contact.formattedName = "John Snow Smith";
+
+
 contact.namePrefix = "Mr.";
 contact.firstName = "John";
 contact.middleName = "Snow";

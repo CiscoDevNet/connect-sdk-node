@@ -134,6 +134,15 @@ describe("SmsClient", () => {
             })
         }
 
+        nock(`${API_URL}:${API_PORT}`)
+            .post(`/${API_VERSION}/sms/messages`)
+            .replyWithError("test error");
+
+        try {
+            response = await smsClient.sendMessage(smsMessage);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
+        }
 
     });
 
@@ -210,6 +219,16 @@ describe("SmsClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             })
+        }
+
+        nock(`${API_URL}:${API_PORT}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .replyWithError("test error");
+
+        try {
+            response = await smsClient.getStatus('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
         }
     });
 });
