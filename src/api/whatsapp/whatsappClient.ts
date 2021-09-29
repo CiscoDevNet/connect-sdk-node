@@ -3,11 +3,13 @@ import request from "../../request";
 import {WhatsappContentType} from "./whatsappContentType";
 import {WhatsAppSendResponse} from "./models/whatsAppSendResponse";
 import {WhatsAppStatusResponse} from "./models/whatsAppStatusResponse";
-import {WhatsappContact} from "./contacts/whatsappContact";
-import {WhatsappContactPhone} from "./contacts/whatsappContactPhone";
-import {WhatsappContactAddr} from "./contacts/whatsappContactAddr";
-import {WhatsappContactEmail} from "./contacts/whatsappContactEmail";
-import {WhatsappContactUrl} from "./contacts/whatsappContactUrl";
+import {
+    WhatsappContact,
+    WhatsappContactUrl,
+    WhatsappContactPhone,
+    WhatsappContactEmail,
+    WhatsappContactAddr
+} from "./contacts";
 import {API_VERSION} from "../../config/constants";
 
 /**

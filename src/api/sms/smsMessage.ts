@@ -155,8 +155,6 @@ export class SmsMessage {
         this._substitutions[name] = value;
     }
 
-
-
     /**
      * Returns object of fields for the API, stripping any undefined values
      *
