@@ -90,3 +90,7 @@ request
     });
 
 ````
+
+## License
+
+&copy; 2021 Cisco Systems, Inc. and/or its affiliates. All Rights Reserved. See [LICENSE](LICENSE) for details.
