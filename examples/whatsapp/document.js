@@ -1,7 +1,10 @@
-const {WhatsappClient, WhatsappDocMessage} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappDocMessage, ClientConfiguration} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
+const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+
+const whatsAppClient = new WhatsappClient(clientConfiguration);
 
 const whatsAppMessage = new WhatsappDocMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/document.doc", "application/msword");
 whatsAppMessage.caption = "My document";
