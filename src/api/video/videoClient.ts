@@ -1,5 +1,4 @@
 import request from "../../request";
-import {CpaasClient} from "../cpaasClient";
 import {VideoSession} from "./videoSession";
 import {VideoToken} from "./videoToken";
 import {VideoCreateResponse} from "./models/videoCreateResponse";
@@ -7,11 +6,21 @@ import {VideoRetrieveResponse} from "./models/videoRetrieveResponse";
 import {VideoDeleteResponse} from "./models/videoDeleteResponse";
 import {VideoTokenResponse} from "./models/videoTokenResponse";
 import {API_VERSION} from "../../config/constants";
+import {ClientConfiguration} from "../clientConfiguration";
 
 /**
  * Client class for sending a video request
+ *
+ * @param ClientConfiguration configuration for CPAAS client
  */
-export class VideoClient extends CpaasClient {
+export class VideoClient {
+    private readonly _clientConfiguration: ClientConfiguration;
+
+    constructor(clientConfiguration: ClientConfiguration) {
+        this._clientConfiguration = clientConfiguration;
+    }
+
+    get clientConfiguration(): ClientConfiguration {return this._clientConfiguration}
 
     /**
      * Creates a video session
@@ -39,13 +48,13 @@ export class VideoClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': videoSession.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: videoSession.toJSON()
         };
 
         return new Promise<VideoCreateResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
@@ -67,6 +76,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -84,12 +96,12 @@ export class VideoClient extends CpaasClient {
             path: `/${API_VERSION}/video/sessions/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<VideoRetrieveResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
                     // @ts-ignore
@@ -113,6 +125,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -130,12 +145,12 @@ export class VideoClient extends CpaasClient {
             path: `/${API_VERSION}/video/sessions/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<VideoDeleteResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
                     // @ts-ignore
@@ -156,6 +171,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }
@@ -182,13 +200,13 @@ export class VideoClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': videoToken.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: videoToken.toJSON()
         };
 
         return new Promise<VideoTokenResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
                     // @ts-ignore
@@ -211,6 +229,9 @@ export class VideoClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         });
     }

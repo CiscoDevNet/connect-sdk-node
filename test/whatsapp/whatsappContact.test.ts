@@ -1,9 +1,15 @@
-import {WhatsappContactPhone} from "../../src/api/whatsapp/contacts/whatsappContactPhone";
-import {WhatsappContactAddr} from "../../src/api/whatsapp/contacts/whatsappContactAddr";
-import {WhatsappContactUrl} from "../../src/api/whatsapp/contacts/whatsappContactUrl";
-import {WhatsappContactEmail} from "../../src/api/whatsapp/contacts/whatsappContactEmail";
+import {
+    WhatsappContactEmail,
+    WhatsappContactUrl,
+    WhatsappContactAddr,
+    WhatsappContactPhone,
+    PhoneType,
+    AddressType,
+    EmailType,
+    UrlType,
+    WhatsappContact
+} from "../../src";
 import {expect} from "chai";
-import {PhoneType, AddressType, EmailType, UrlType, WhatsappContact} from "../../src";
 
 describe("WhatsappContact", () => {
     it("throws validation errors correctly", () => {

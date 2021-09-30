@@ -20,17 +20,19 @@ $ npm i --save cpaas-sdk-node
 ### Sending a SMS message
 
 ````javascript
-const {SmsClient, SmsMessage} = require('cpaas-sdk-node')
+const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
 
-const smsClient = new SmsClient({AUTH_TOKEN});
-const smsMessage = new SmsMessage({FROM_NUMBER}, {TO_NUMBER});
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
 
-smsMessage.content = "Hello $(name), today is $(date)!";
+const smsClient = new SmsClient(clientConfiguration);
+const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
+
+smsMessage.content = "Hello $(name)!";
 smsMessage.addSubstitution("name", "Tester");
 
-const response = smsClient.sendMessage(smsMessage);
+const request = smsClient.sendMessage(smsMessage);
 
-response
+request
     .then(res => {
         console.log(res);
     })
@@ -42,44 +44,49 @@ response
 ### Sending a TTS voice message
 
 ````javascript
-const {
-    VoiceClient,
+const {VoiceClient,
     VoiceMessage,
-    TtsAudio
+    TtsAudio, ClientConfiguration
 } = require('cpaas-sdk-node');
 
-const client = new VoiceClient({AUTH_TOKEN});
-const message = new VoiceMessage({FROM_NUMBER});
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+
+const client = new VoiceClient(clientConfiguration);
+const message = new VoiceMessage(FROM_NUMBER);
 const audio = new TtsAudio("Hello World");
 
-message.addDialedNumber({TO_NUMBER});
+message.addDialedNumber(TO_NUMBER);
 message.audio = audio;
 
-const response = client.sendVoiceMessage(message);
+const request = client.sendVoiceMessage(message);
 
-response
+request
     .then(res => {
         console.log(res);
     })
     .catch(err => {
         console.error(err);
     });
+
 ````
 
 ### Sending a WhatsApp text message
 
 ````javascript
-const {WhatsappClient, WhatsappTextMessage} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('cpaas-sdk-node');
 
-const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+
+const whatsAppClient = new WhatsappClient(clientConfiguration);
 const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
-const response = whatsAppClient.sendMessage(whatsAppMessage);
+const request = whatsAppClient.sendMessage(whatsAppMessage);
 
-response
+request
     .then(res => {
         console.log(res);
     })
     .catch(err => {
         console.error(err);
     });
+
 ````

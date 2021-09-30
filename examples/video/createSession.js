@@ -1,7 +1,10 @@
-const {VideoClient, VideoSession} = require('cpaas-sdk-node');
+const {VideoClient, VideoSession, ClientConfiguration} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, VIDEO_APP_ID} = require("../../privateConst");
+const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const client = new VideoClient(AUTH_TOKEN);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+
+const client = new VideoClient(clientConfiguration);
 const session = new VideoSession(VIDEO_APP_ID, "My test video");
 
 const request = client.createSession(session);

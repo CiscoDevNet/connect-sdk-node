@@ -1,6 +1,7 @@
 import {expect} from "chai";
 import request from '../src/request/index';
-import {API_URL, API_PORT} from "../src/config/constants";
+import {API_SANDBOX_URL} from "../src/config/constants";
+import {ClientConfiguration} from "../src";
 
 const chaiHttp = require('chai-http'),
     nock = require('nock'),
@@ -9,6 +10,8 @@ const chaiHttp = require('chai-http'),
 chai.use(chaiHttp);
 
 describe("Request", () => {
+    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+    const clientConfigHttp = new ClientConfiguration('123', new URL("http://www.google.com"));
 
     it("sends the request and returns the correct response", async () => {
         const reqOptions = {
@@ -16,11 +19,11 @@ describe("Request", () => {
             path: '/something'
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get('/something')
             .reply(200, "Hello World", {'request-id': '12345'});
 
-        let response = await request(reqOptions);
+        let response = await request(reqOptions, clientConfig);
 
         // @ts-ignore
         expect(response.statusCode).to.equal(200);
@@ -31,14 +34,34 @@ describe("Request", () => {
 
         nock.cleanAll();
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get('/something')
             .reply(200, "Hello World");
 
-        response = await request(reqOptions);
+        response = await request(reqOptions, clientConfig);
 
         // @ts-ignore
         expect(response.headers).to.deep.equal({});
+    });
+
+    it("sends http request correctly", async () => {
+        const reqOptions = {
+            method: 'GET',
+            path: '/something'
+        }
+
+        nock("http://www.google.com")
+            .get('/something')
+            .reply(200, "Hello World", {'request-id': '12345'});
+
+        let response = await request(reqOptions, clientConfigHttp);
+
+        // @ts-ignore
+        expect(response.statusCode).to.equal(200);
+        // @ts-ignore
+        expect(response.body).to.equal("Hello World");
+        // @ts-ignore
+        expect(response.headers['request-id']).to.equal('12345');
     });
 
     it("fails correctly", async () => {
@@ -47,14 +70,14 @@ describe("Request", () => {
             path: '/something'
         }
 
-        const scope = nock(`${API_URL}:${API_PORT}`)
+        const scope = nock(`${API_SANDBOX_URL}`)
             .get('/something')
             .replyWithError("Invalid Request");
 
         let response:any;
 
         try{
-            response = await request(reqOptions);
+            response = await request(reqOptions, clientConfig);
         } catch(e:any) {
             expect(e.error.message).to.equal("Invalid Request");
         }

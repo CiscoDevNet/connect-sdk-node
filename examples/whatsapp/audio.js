@@ -1,7 +1,10 @@
-const {WhatsappClient, WhatsappAudioMessage} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappAudioMessage, ClientConfiguration} = require('cpaas-sdk-node');
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
+const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const whatsAppClient = new WhatsappClient(AUTH_TOKEN);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+
+const whatsAppClient = new WhatsappClient(clientConfiguration);
 
 const whatsAppMessage = new WhatsappAudioMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/audio.wav", "audio/wav");
 

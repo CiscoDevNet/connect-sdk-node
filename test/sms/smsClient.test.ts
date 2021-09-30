@@ -1,7 +1,7 @@
-import {SmsClient, SmsMessage} from "../../src";
+import {ClientConfiguration, SmsClient, SmsMessage} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
+import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -11,8 +11,10 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("SmsClient", () => {
+    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+
     it("throws error if idempotencyKey is blank", () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
         const smsMessage = new SmsMessage('12345', '+14443332222');
 
         stub(smsMessage, 'idempotencyKey').get(() => '');
@@ -25,7 +27,7 @@ describe("SmsClient", () => {
     });
 
     it("throws error if 'to' is blank", () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
         const smsMessage = new SmsMessage('12345', '+14443332222');
 
         stub(smsMessage, 'to').get(() => '');
@@ -38,7 +40,7 @@ describe("SmsClient", () => {
     });
 
     it("throws error if 'from' is blank", () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
         const smsMessage = new SmsMessage('12345', '+14443332222');
 
         stub(smsMessage, 'from').get(() => '');
@@ -51,7 +53,7 @@ describe("SmsClient", () => {
     });
 
     it("throws error if 'content' is blank", () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
         const smsMessage = new SmsMessage('12345', '+14443332222');
 
         stub(smsMessage, 'content').get(() => '');
@@ -64,11 +66,11 @@ describe("SmsClient", () => {
     });
 
     it("returns proper values on sendMessage", async () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
         const smsMessage = new SmsMessage('12345', '+14443332222');
         smsMessage.content = "Hello World";
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)
             .reply(202, {
                 acceptedTime: '2021-08-01T14:24:33.000Z'
@@ -79,7 +81,7 @@ describe("SmsClient", () => {
         // @ts-ignore
         expect(response.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)
             .reply(202);
 
@@ -88,7 +90,7 @@ describe("SmsClient", () => {
         // @ts-ignore
         expect(response.acceptedTime).to.be.undefined;
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)
             .reply(400, {
                 code: '123',
@@ -102,7 +104,7 @@ describe("SmsClient", () => {
             expect(err.message).to.equal('456');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)
             .reply(500, {
                 code: '123',
@@ -116,7 +118,7 @@ describe("SmsClient", () => {
             expect(err.message).to.equal('456');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)
             .reply(600, {
                 code: '123',
@@ -134,13 +136,22 @@ describe("SmsClient", () => {
             })
         }
 
+        nock(`${API_SANDBOX_URL}`)
+            .post(`/${API_VERSION}/sms/messages`)
+            .replyWithError("test error");
+
+        try {
+            response = await smsClient.sendMessage(smsMessage);
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
+        }
 
     });
 
     it("returns proper values on getStatus", async () => {
-        const smsClient = new SmsClient('bearer test: 1234');
+        const smsClient = new SmsClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(200, {
                 messageId: '1234',
@@ -158,7 +169,7 @@ describe("SmsClient", () => {
             message: 'error msg'
         })
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(200);
 
@@ -167,7 +178,7 @@ describe("SmsClient", () => {
         expect(response.messageId).to.be.undefined;
 
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(404, {}, {
                 'request-id': '1234'
@@ -180,7 +191,7 @@ describe("SmsClient", () => {
             expect(err.requestId).to.equal('1234');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(500, {
                 code: '123',
@@ -194,7 +205,7 @@ describe("SmsClient", () => {
             expect(err.message).to.equal('456');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/sms/messages/1234`)
             .reply(600, {
                 code: '123',
@@ -210,6 +221,16 @@ describe("SmsClient", () => {
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
             })
+        }
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/sms/messages/1234`)
+            .replyWithError("test error");
+
+        try {
+            response = await smsClient.getStatus('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("test error")
         }
     });
 });

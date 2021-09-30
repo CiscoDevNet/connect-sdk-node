@@ -1,20 +1,32 @@
-import {CpaasClient} from "../cpaasClient";
 import request from "../../request";
 import {WhatsappContentType} from "./whatsappContentType";
 import {WhatsAppSendResponse} from "./models/whatsAppSendResponse";
 import {WhatsAppStatusResponse} from "./models/whatsAppStatusResponse";
-import {WhatsappContact} from "./contacts/whatsappContact";
-import {WhatsappContactPhone} from "./contacts/whatsappContactPhone";
-import {WhatsappContactAddr} from "./contacts/whatsappContactAddr";
-import {WhatsappContactEmail} from "./contacts/whatsappContactEmail";
-import {WhatsappContactUrl} from "./contacts/whatsappContactUrl";
+import {
+    WhatsappContact,
+    WhatsappContactUrl,
+    WhatsappContactPhone,
+    WhatsappContactEmail,
+    WhatsappContactAddr
+} from "./contacts";
 import {API_VERSION} from "../../config/constants";
+import {ClientConfiguration} from "../clientConfiguration";
 
 /**
  * Client class for sending a Whatsapp message
+ *
+ * @param ClientConfiguration configuration for CPAAS client
  */
 
-export class WhatsappClient extends CpaasClient {
+export class WhatsappClient {
+
+    private readonly _clientConfiguration: ClientConfiguration;
+
+    constructor(clientConfiguration: ClientConfiguration) {
+        this._clientConfiguration = clientConfiguration;
+    }
+
+    get clientConfiguration(): ClientConfiguration {return this._clientConfiguration}
 
     /**
      * Sends an Whatsapp message
@@ -37,19 +49,41 @@ export class WhatsappClient extends CpaasClient {
             throw Error("Must provide a 'to' value for sending a message");
         }
 
+        if(message.contentType === WhatsappContentType.CONTACTS && (!message.contacts || message.contacts.length < 1)) {
+            throw Error("Must provide at least one entry in 'contacts' value");
+        }
+
+        if(message.contentType === WhatsappContentType.CONTACTS && message.contacts && message.contacts.length > 0) {
+            message.contacts.forEach((contact: WhatsappContact) => {
+                if(!contact.formattedName) {
+                    throw Error("Contacts need to include a 'formattedName' value");
+                }
+
+                if(
+                    !contact.firstName &&
+                    !contact.lastName &&
+                    !contact.middleName &&
+                    !contact.nameSuffix &&
+                    !contact.namePrefix
+                ) {
+                    throw Error("Contacts must include at least a firstName, lastName, middleName, nameSuffix, or namePrefix");
+                }
+            })
+        }
+
         const options = {
             method: 'POST',
             path: `/${API_VERSION}/whatsapp/messages`,
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: message.toJSON()
         };
 
         return new Promise<WhatsAppSendResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
@@ -73,6 +107,9 @@ export class WhatsappClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
     }
@@ -90,12 +127,12 @@ export class WhatsappClient extends CpaasClient {
             path: `/${API_VERSION}/whatsapp/messages/${messageId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<WhatsAppStatusResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
                     // @ts-ignore
@@ -320,6 +357,9 @@ export class WhatsappClient extends CpaasClient {
                     } else {
                         reject(res);
                     }
+                })
+                .catch(err => {
+                    reject(err);
                 });
         })
     }

@@ -1,8 +1,8 @@
-import {WhatsappClient, WhatsappTextMessage} from "../../src";
+import {WhatsappClient, WhatsappTextMessage, WhatsappContentType, ClientConfiguration} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
-import {WhatsappContentType} from '../../src';
+import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
+import {WhatsappContact, WhatsappContactMessage} from "../../src";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -12,8 +12,10 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("WhatsappClient", () => {
+    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+
     it("throws error if idempotencyKey is blank", () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
         const message = new WhatsappTextMessage('12345', '+14443332222', 'hello world');
 
         stub(message, 'idempotencyKey').get(() => '');
@@ -26,7 +28,7 @@ describe("WhatsappClient", () => {
     });
 
     it("throws error if 'to' is blank", () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
         const message = new WhatsappTextMessage('12345', '+14443332222', 'hello world');
 
         stub(message, 'to').get(() => '');
@@ -39,7 +41,7 @@ describe("WhatsappClient", () => {
     });
 
     it("throws error if 'from' is blank", () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
         const message = new WhatsappTextMessage('12345', '+14443332222', 'hello world');
 
         stub(message, 'from').get(() => '');
@@ -51,12 +53,46 @@ describe("WhatsappClient", () => {
         stub(message, 'from').restore();
     });
 
+    it("handles contact message validation properly", () => {
+        const client = new WhatsappClient(clientConfig);
+        const message = new WhatsappContactMessage('+12223334444', '+13334445555');
+        const contact = new WhatsappContact();
+
+        expect(() => {
+            client.sendMessage(message);
+        }).to.throw();
+
+        message.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(message);
+        }).to.throw();
+
+        const messageB = new WhatsappContactMessage('+12223334444', '+13334445555');
+
+        contact.formattedName = "tester mctester";
+        messageB.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(messageB);
+        }).to.throw();
+
+        const messageC = new WhatsappContactMessage('+12223334444', '+13334445555');
+
+        contact.firstName = "tester";
+        messageC.addContact(contact);
+
+        expect(() => {
+            client.sendMessage(messageC);
+        }).to.not.throw();
+    })
+
     it("returns proper values on sendMessage", async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
         const message = new WhatsappTextMessage('12345', '+14443332222', 'hello world');
         message.content = "Hello World";
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(202, {
                 acceptedTime: '2021-08-01T14:24:33.000Z'
@@ -67,7 +103,7 @@ describe("WhatsappClient", () => {
         // @ts-ignore
         expect(response.acceptedTime).to.equal('2021-08-01T14:24:33.000Z');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(400, {
                 code: '1234'
@@ -79,7 +115,7 @@ describe("WhatsappClient", () => {
             expect(err.code).to.equal('1234');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(403, {
                 code: '456'
@@ -91,7 +127,7 @@ describe("WhatsappClient", () => {
             expect(err.code).to.equal('456');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(500, {
                 code: '890'
@@ -103,7 +139,7 @@ describe("WhatsappClient", () => {
             expect(err.code).to.equal('890');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(600, {
                 code: '890'
@@ -122,9 +158,9 @@ describe("WhatsappClient", () => {
     });
 
     it("returns proper values on getStatus", async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 messageId: '1234',
@@ -136,7 +172,7 @@ describe("WhatsappClient", () => {
         // @ts-ignore
         expect(response.messageId).to.equal('1234');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(404, {
                 statusCode: 404
@@ -148,7 +184,7 @@ describe("WhatsappClient", () => {
             expect(err.statusCode).to.equal(404);
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(500, {
                 code: '445'
@@ -160,7 +196,7 @@ describe("WhatsappClient", () => {
             expect(err.code).to.equal('445');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(600, {
                 code: '890'
@@ -176,12 +212,22 @@ describe("WhatsappClient", () => {
                 headers: { 'content-type': 'application/json' }
             });
         }
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .replyWithError("Test Error");
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err.error.message).to.equal("Test Error");
+        }
     });
 
     it('gets status of text message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.TEXT,
@@ -195,9 +241,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of audio message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.AUDIO,
@@ -211,9 +257,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of image message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.IMAGE,
@@ -227,9 +273,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of video message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.VIDEO,
@@ -243,9 +289,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of document message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.DOCUMENT,
@@ -259,9 +305,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of sticker message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.STICKER,
@@ -275,9 +321,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of location message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.LOCATION,
@@ -299,9 +345,9 @@ describe("WhatsappClient", () => {
     });
 
     it('gets status of contact message correctly', async () => {
-        const client = new WhatsappClient('bearer test: 1234');
+        const client = new WhatsappClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.CONTACTS,
@@ -330,7 +376,7 @@ describe("WhatsappClient", () => {
         // @ts-ignore
         expect(response.contacts[0].urls[0].address).to.equal('http://mysite.com');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.CONTACTS
@@ -341,7 +387,7 @@ describe("WhatsappClient", () => {
         expect(response.contentType).to.equal(WhatsappContentType.CONTACTS);
         expect(response.contacts).to.deep.equal([]);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
             .reply(200, {
                 contentType: WhatsappContentType.CONTACTS,
