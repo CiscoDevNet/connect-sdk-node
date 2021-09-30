@@ -1,4 +1,3 @@
-import {CpaasClient} from "../cpaasClient";
 import request from "../../request";
 import {WhatsappContentType} from "./whatsappContentType";
 import {WhatsAppSendResponse} from "./models/whatsAppSendResponse";
@@ -11,12 +10,23 @@ import {
     WhatsappContactAddr
 } from "./contacts";
 import {API_VERSION} from "../../config/constants";
+import {ClientConfiguration} from "../clientConfiguration";
 
 /**
  * Client class for sending a Whatsapp message
+ *
+ * @param ClientConfiguration configuration for CPAAS client
  */
 
-export class WhatsappClient extends CpaasClient {
+export class WhatsappClient {
+
+    private readonly _clientConfiguration: ClientConfiguration;
+
+    constructor(clientConfiguration: ClientConfiguration) {
+        this._clientConfiguration = clientConfiguration;
+    }
+
+    get clientConfiguration(): ClientConfiguration {return this._clientConfiguration}
 
     /**
      * Sends an Whatsapp message
@@ -67,13 +77,13 @@ export class WhatsappClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: message.toJSON()
         };
 
         return new Promise<WhatsAppSendResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
@@ -117,12 +127,12 @@ export class WhatsappClient extends CpaasClient {
             path: `/${API_VERSION}/whatsapp/messages/${messageId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<WhatsAppStatusResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
                     // @ts-ignore

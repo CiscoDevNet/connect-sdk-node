@@ -1,17 +1,27 @@
 import request from "../../request";
 import {VoiceCall} from "./voiceCall";
-import {CpaasClient} from "../cpaasClient";
 import {VoiceMessageResponse} from "./models/voiceMessageResponse";
 import {VoiceCallResponse} from "./models/voiceCallResponse";
 import {VoiceStatusResponse} from "./models/voiceStatusResponse";
 import {RecordingResponse, VoiceRecordingResponse} from "./models/voiceRecordingResponse";
 import {API_VERSION} from "../../config/constants";
+import {ClientConfiguration} from "../clientConfiguration";
 
 /**
  * Client class for sending a voice message
+ *
+ * @param ClientConfiguration configuration for CPAAS client
  */
 
-export class VoiceClient extends CpaasClient {
+export class VoiceClient {
+
+    private readonly _clientConfiguration: ClientConfiguration;
+
+    constructor(clientConfiguration: ClientConfiguration) {
+        this._clientConfiguration = clientConfiguration;
+    }
+
+    get clientConfiguration(): ClientConfiguration {return this._clientConfiguration}
 
     /**
      * Sends an voice message
@@ -39,13 +49,13 @@ export class VoiceClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: message.toJSON()
         };
 
         return new Promise<VoiceMessageResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
 
@@ -115,13 +125,13 @@ export class VoiceClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': callData.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: callData.toJSON()
         };
 
         return new Promise<VoiceCallResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
@@ -178,12 +188,12 @@ export class VoiceClient extends CpaasClient {
             path: `/${API_VERSION}/voice/calls/${sessionId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<VoiceStatusResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
                     const body: any = JSON.parse(res.body);
@@ -229,12 +239,12 @@ export class VoiceClient extends CpaasClient {
             path: `/${API_VERSION}/voice/calls/${sessionId}/recordings`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<VoiceRecordingResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
 
                     // @ts-ignore

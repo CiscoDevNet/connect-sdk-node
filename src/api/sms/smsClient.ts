@@ -1,15 +1,24 @@
-import {CpaasClient} from "../cpaasClient";
 import {SmsMessage} from "./smsMessage";
 import request from "../../request/index";
 import {SmsSendResponse} from "./models/smsSendResponse";
 import {SmsStatusResponse} from "./models/smsStatusResponse";
 import {API_VERSION} from "../../config/constants";
+import {ClientConfiguration} from "../clientConfiguration";
 
 /**
  * Client class for sending a SMS message
+ *
+ * @param ClientConfiguration configuration for CPAAS client
  */
 
-export class SmsClient extends CpaasClient {
+export class SmsClient {
+    private readonly _clientConfiguration: ClientConfiguration;
+
+    constructor(clientConfiguration: ClientConfiguration) {
+        this._clientConfiguration = clientConfiguration;
+    }
+
+    get clientConfiguration(): ClientConfiguration {return this._clientConfiguration}
 
     /**
      * Sends an SMS message to a mobile device
@@ -41,7 +50,7 @@ export class SmsClient extends CpaasClient {
             headers: {
                 'Idempotency-Key': message.idempotencyKey,
                 'Content-Type': 'application/json',
-                'Authorization': `${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             },
             payload: message.toJSON()
         };
@@ -49,7 +58,7 @@ export class SmsClient extends CpaasClient {
         return new Promise<SmsSendResponse>((resolve, reject) => {
             const rejectCodes = [400, 403, 500];
 
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
@@ -92,12 +101,12 @@ export class SmsClient extends CpaasClient {
             path: `/${API_VERSION}/sms/messages/${messageId}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${this.bearerToken}`
+                'Authorization': `Bearer ${this.clientConfiguration.bearerToken}`
             }
         };
 
         return new Promise<SmsStatusResponse>((resolve, reject) => {
-            request(options)
+            request(options, this.clientConfiguration)
                 .then((res: any) => {
                     const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 

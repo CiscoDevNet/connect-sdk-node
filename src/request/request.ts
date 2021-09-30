@@ -1,4 +1,5 @@
-import {request} from 'https';
+import {request as requestHttps} from 'https';
+import {request as requestHttp} from 'http';
 
 /**
  * Function to send request to api
@@ -23,6 +24,8 @@ export default function _request(options: any) {
         error: undefined,
         headers: {}
     }
+
+    const request = (options.protocol && options.protocol === "https:") ? requestHttps : requestHttp;
 
     const payload = JSON.stringify(options.payload) || undefined;
 

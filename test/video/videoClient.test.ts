@@ -1,7 +1,7 @@
-import {VideoClient, VideoSession, VideoToken} from "../../src";
+import {ClientConfiguration, VideoClient, VideoSession, VideoToken} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_URL, API_PORT, API_VERSION} from "../../src/config/constants";
+import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -11,12 +11,13 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("VideoClient", () => {
+    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
 
     it("throws error if required values are not proper for creating a video session", () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
         const session = new VideoSession('12345', 'test session');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .reply(201, {
                 "appId": "12345",
@@ -55,10 +56,10 @@ describe("VideoClient", () => {
     });
 
     it("returns proper values on createSession", async () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
         const session = new VideoSession('12345', 'test session');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .reply(201, {
                 "sessionId": "12345"
@@ -71,7 +72,7 @@ describe("VideoClient", () => {
         expect(response.sessionId).to.equal('12345');
         expect(response.location).to.equal('http://mysession.com');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .reply(400, {
                 code: '1234',
@@ -85,7 +86,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .reply(500, {
                 code: '890',
@@ -99,7 +100,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .reply(600, {
                 code: '890',
@@ -117,7 +118,7 @@ describe("VideoClient", () => {
             })
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions`)
             .replyWithError("test error");
 
@@ -129,10 +130,10 @@ describe("VideoClient", () => {
     });
 
     it("throws error if required values are not proper for creating a video token", () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
         const token = new VideoToken('12345');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(200, {
                 "token": "14ced030-183b-4dfd-966d-c3c4a285f66a",
@@ -158,10 +159,10 @@ describe("VideoClient", () => {
     });
 
     it("returns proper values on createToken", async () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
         const token = new VideoToken('12345');
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(200, {
                 "token": "14ced030-183b-4dfd-966d-c3c4a285f66a",
@@ -175,7 +176,7 @@ describe("VideoClient", () => {
 
         nock.cleanAll();
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(400, {
                 code: '1234',
@@ -189,7 +190,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(500, {
                 code: '890',
@@ -203,7 +204,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .reply(600, {
                 code: '890',
@@ -221,7 +222,7 @@ describe("VideoClient", () => {
             })
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/video/sessions/12345/tokens`)
             .replyWithError("test error");
 
@@ -233,9 +234,9 @@ describe("VideoClient", () => {
     });
 
     it('retrieveSession responds properly', async () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(200, {
                 "appId": "a786c77d-57a2-4010-b875-51fde17aa72b",
@@ -254,7 +255,7 @@ describe("VideoClient", () => {
         // @ts-ignore
         expect(response.sessionId).to.equal("c251a7de-0523-4f34-8914-45e71a4c114f");
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(400, {
                 "code": "807",
@@ -268,7 +269,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(500, {
                 "code": "807",
@@ -282,7 +283,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/video/sessions/12345`)
             .reply(600, {
                 "code": "807",
@@ -300,7 +301,7 @@ describe("VideoClient", () => {
             })
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/video/sessions/12345`)
             .replyWithError("test error");
 
@@ -313,9 +314,9 @@ describe("VideoClient", () => {
     });
 
     it('deleteSession responds properly', async () => {
-        const client = new VideoClient('bearer test: 1234');
+        const client = new VideoClient(clientConfig);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(200);
 
@@ -324,7 +325,7 @@ describe("VideoClient", () => {
         // @ts-ignore
         expect(response.statusCode).to.equal(200);
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(400, {
                 "code": "807",
@@ -339,7 +340,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(500, {
                 "code": "807",
@@ -354,7 +355,7 @@ describe("VideoClient", () => {
             expect(err.message).to.equal('error msg');
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .delete(`/${API_VERSION}/video/sessions/12345`)
             .reply(600, {
                 "code": "807",
@@ -372,7 +373,7 @@ describe("VideoClient", () => {
             });
         }
 
-        nock(`${API_URL}:${API_PORT}`)
+        nock(`${API_SANDBOX_URL}`)
             .delete(`/${API_VERSION}/video/sessions/12345`)
             .replyWithError("test error");
 
