@@ -29,7 +29,7 @@ describe("VoiceClient", () => {
     it('throws error if callerId is not proper for sendVoiceMessage', () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceMessage('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -59,7 +59,7 @@ describe("VoiceClient", () => {
     it('throws error if dialedNumber array is not proper for sendVoiceMessage', () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceMessage('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -120,7 +120,7 @@ describe("VoiceClient", () => {
     it('throws error if callerId is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceCall('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -150,7 +150,7 @@ describe("VoiceClient", () => {
     it('throws error if dialedNumber array is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceCall('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -186,7 +186,7 @@ describe("VoiceClient", () => {
     it("returns proper values on sendVoiceMessage", async () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceMessage('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -252,18 +252,16 @@ describe("VoiceClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
-            .reply(600, {
-                code: '890'
-            });
+            .reply(600);
 
         try {
             response = await client.sendVoiceMessage(message);
         } catch(err: any) {
             expect(err).to.deep.equal({
-                statusCode: 600,
-                body: '{"code":"890"}',
-                error: undefined,
-                headers: { 'content-type': 'application/json' }
+                "body": "",
+                "error": undefined,
+                "headers": {},
+                "statusCode": 600
             })
         }
 
@@ -281,7 +279,7 @@ describe("VoiceClient", () => {
     it("returns proper values on placeCall", async () => {
         const client = new VoiceClient(clientConfig);
         const message = new VoiceCall('+14443332222');
-        message.addDialedNumber('+13334440000');
+        message.dialedNumber = '+13334440000';
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -351,18 +349,16 @@ describe("VoiceClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
-            .reply(600, {
-                code: '890'
-            });
+            .reply(600);
 
         try {
             response = await client.placeCall(message);
         } catch(err: any) {
             expect(err).to.deep.equal({
                 statusCode: 600,
-                body: '{"code":"890"}',
+                body: '',
                 error: undefined,
-                headers: { 'content-type': 'application/json' }
+                headers: {}
             })
         }
 
@@ -401,6 +397,24 @@ describe("VoiceClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/voice/calls/1234`)
+            .reply(200, {
+                "sessionId": "1da5e55c-52e4-4054-bec4-43256dd2eb91",
+                "error": {
+                    "code": 123,
+                    "message": "test error"
+                }
+            });
+
+        response = await client.getStatus('1234');
+
+        // @ts-ignore
+        expect(response.error).to.deep.equal({
+            "code": 123,
+            "message": "test error"
+        });
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/voice/calls/1234`)
             .reply(404, {}, {
                 'request-id': '1234'
             });
@@ -426,6 +440,21 @@ describe("VoiceClient", () => {
                 body: '{}',
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
+            })
+        }
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/voice/calls/1234`)
+            .reply(600);
+
+        try {
+            response = await client.getStatus('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '',
+                error: undefined,
+                headers: {}
             })
         }
 
@@ -498,6 +527,21 @@ describe("VoiceClient", () => {
                 body: '{}',
                 error: undefined,
                 headers: { 'content-type': 'application/json' }
+            })
+        }
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/voice/calls/1234/recordings`)
+            .reply(600);
+
+        try {
+            response = await client.getRecordings('1234');
+        } catch(err: any) {
+            expect(err).to.deep.equal({
+                statusCode: 600,
+                body: '',
+                error: undefined,
+                headers: {}
             })
         }
 

@@ -42,11 +42,4 @@ export class ClientConfiguration {
     }
 
     get hostPort(): string | undefined {return this._hostPort}
-
-    /**
-     * Sets the API base URL to the sandbox environment
-     */
-    sandboxed() {
-        this.baseUrl = new URL(API_SANDBOX_URL);
-    }
 }

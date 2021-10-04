@@ -16,7 +16,7 @@ export class VoiceMessage {
     /**
      * @remark Array of numbers to dial and start call sessions with.
      */
-    private _dialedNumber: Array<string> = [];
+    private _dialedNumber: string = "";
     /**
      * @remark TtsAudio or MediaAudio or UrlAudio object to send with voice message
      */
@@ -52,20 +52,14 @@ export class VoiceMessage {
         this._callerId = value;
     }
 
-    get dialedNumber(): Array<string> {return this._dialedNumber}
+    get dialedNumber(): string {return this._dialedNumber}
 
-    /**
-     * Adds a dialed number to the dialedNumber array
-     *
-     * @param number E.164 number to add to dialedNumber array
-     */
-
-    addDialedNumber(number: string) {
+    set dialedNumber(number: string) {
         if(!isValidE164(number)) {
             throw Error("Number must be a valid E.164 string");
         }
 
-        this._dialedNumber.push(number);
+        this._dialedNumber = number;
     }
 
     get audio(): TtsAudio | MediaAudio | UrlAudio | undefined {return this._audio}

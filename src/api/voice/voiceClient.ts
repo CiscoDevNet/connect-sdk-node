@@ -57,9 +57,7 @@ export class VoiceClient {
         return new Promise<VoiceMessageResponse>((resolve, reject) => {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
-                    // @ts-ignore
-
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
                     const rejectCodes = [400, 403, 404, 405, 409, 429];
 
                     if(res.statusCode === 202) {
@@ -133,8 +131,7 @@ export class VoiceClient {
         return new Promise<VoiceCallResponse>((resolve, reject) => {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
-                    // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
                     const rejectCodes = [400, 401, 404, 405, 409, 429];
 
                     if(res.statusCode === 202) {
@@ -195,8 +192,7 @@ export class VoiceClient {
         return new Promise<VoiceStatusResponse>((resolve, reject) => {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
-                    // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
                         resolve({
@@ -205,11 +201,13 @@ export class VoiceClient {
                             sessionId: body.sessionId,
                             callerId: body.callerId,
                             dialedNumber: body.dialedNumber,
-                            status: res.status,
+                            status: body.status,
                             correlationId: body.correlationId,
                             durationSeconds: body.durationSeconds,
                             offeredTime: body.offeredTime,
-                            answeredTime: body.answeredTime
+                            answeredTime: body.answeredTime,
+                            // @ts-ignore
+                            error: (body.error) ? body.error : {}
                         })
                     } else if (res.statusCode === 404) {
                         reject({
@@ -246,9 +244,7 @@ export class VoiceClient {
         return new Promise<VoiceRecordingResponse>((resolve, reject) => {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
-
-                    // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
                         let payload: any = {

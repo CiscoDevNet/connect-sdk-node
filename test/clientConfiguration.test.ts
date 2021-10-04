@@ -28,11 +28,4 @@ describe("ClientConfiguration", () => {
             const config = new ClientConfiguration('123', new URL('ftp://www.google.com'));
         }).to.throw();
     });
-
-    it('sets sandbox mode correctly', () => {
-        const config = new ClientConfiguration('123', new URL("https://www.google.com"));
-        config.sandboxed();
-
-        expect(config.baseUrl.hostname).to.equal(API_SANDBOX_DOMAIN);
-    })
 });
