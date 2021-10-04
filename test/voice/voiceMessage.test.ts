@@ -53,15 +53,15 @@ describe("VoiceMessage", () => {
         voiceMsg.audio = audio;
 
         expect(() => {
-            voiceMsg.addDialedNumber("abc");
+            voiceMsg.dialedNumber = "abc";
         }).to.throw();
 
-        voiceMsg.addDialedNumber("+13332223333");
+        voiceMsg.dialedNumber = "+13332223333";
         voiceMsg.callbackUrl = "http://www.google.com";
         voiceMsg.correlationId = "corl1234";
 
         expect(voiceMsg.callerId).to.equal("12345");
-        expect(voiceMsg.dialedNumber).to.deep.equal(["+13332223333"]);
+        expect(voiceMsg.dialedNumber).to.deep.equal("+13332223333");
         expect(voiceMsg.audio).to.deep.equal(audio);
         expect(voiceMsg.callbackUrl).to.equal("http://www.google.com");
         expect(voiceMsg.correlationId).to.equal("corl1234");
@@ -71,7 +71,7 @@ describe("VoiceMessage", () => {
         const voiceMsg = new VoiceMessage('+14443332222');
         const audio = new UrlAudio('http://www.mysite.com/audio.mp3');
 
-        voiceMsg.addDialedNumber("+12229993333");
+        voiceMsg.dialedNumber = "+12229993333";
         voiceMsg.audio = audio;
 
         expect(voiceMsg.toJSON()).to.deep.equal({
@@ -80,9 +80,7 @@ describe("VoiceMessage", () => {
                 "type": "URL"
             },
             "callerId": "+14443332222",
-            "dialedNumber": [
-                "+12229993333"
-            ]
+            "dialedNumber": "+12229993333"
         });
     });
 

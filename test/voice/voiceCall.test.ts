@@ -60,17 +60,17 @@ describe("VoiceCall", () => {
         voiceCall.callerId = "12345";
 
         expect(() => {
-            voiceCall.addDialedNumber("abc");
+            voiceCall.dialedNumber = "abc";
         }).to.throw();
 
-        voiceCall.addDialedNumber("+13332223333");
+        voiceCall.dialedNumber = "+13332223333";
         voiceCall.callbackUrl = "http://www.google.com";
         voiceCall.recordCallSeconds = 23;
         voiceCall.detectVoiceMail = true;
         voiceCall.correlationId = "corl1234";
 
         expect(voiceCall.callerId).to.equal("12345");
-        expect(voiceCall.dialedNumber).to.deep.equal(["+13332223333"]);
+        expect(voiceCall.dialedNumber).to.deep.equal("+13332223333");
         expect(voiceCall.callbackUrl).to.equal("http://www.google.com");
         expect(voiceCall.recordCallSeconds).to.equal(23);
         expect(voiceCall.detectVoiceMail).to.be.true;
@@ -80,14 +80,12 @@ describe("VoiceCall", () => {
     it("toJSON returns properties correctly", () => {
         const voiceCall = new VoiceCall('+14443332222');
 
-        voiceCall.addDialedNumber("+12229993333");
+        voiceCall.dialedNumber = "+12229993333";
 
         expect(voiceCall.toJSON()).to.deep.equal({
             "callerId": "+14443332222",
             "detectVoiceMail": false,
-            "dialedNumber": [
-                "+12229993333"
-            ]
+            "dialedNumber": "+12229993333"
         });
     });
 

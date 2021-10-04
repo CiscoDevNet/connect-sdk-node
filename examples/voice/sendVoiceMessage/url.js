@@ -11,7 +11,7 @@ const client = new VoiceClient(clientConfiguration);
 const message = new VoiceMessage(FROM_NUMBER);
 const media = new UrlAudio("http://www.sounds.com");
 
-message.addDialedNumber(TO_NUMBER);
+message.dialedNumber = TO_NUMBER;
 message.audio = media;
 
 const request = client.sendVoiceMessage(message);

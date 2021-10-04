@@ -6,7 +6,7 @@ const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SAND
 
 const client = new VoiceClient(clientConfiguration);
 const call = new VoiceCall(FROM_NUMBER);
-call.addDialedNumber(TO_NUMBER);
+call.dialedNumber = TO_NUMBER;
 
 const audio = new UrlAudio('http://www.audio.com/sound.mp3');
 
