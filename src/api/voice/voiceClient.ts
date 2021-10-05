@@ -65,8 +65,8 @@ export class VoiceClient {
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             sessions: new Array<object>(),
-                            sessionId: res.sessionId,
-                            status: res.status
+                            sessionId: body.sessionId,
+                            status: body.status
                         }
 
                         if(body.sessions) {

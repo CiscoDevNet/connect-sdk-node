@@ -48,12 +48,12 @@ export class VoiceCall {
     }
 
     get callerId() {return this._callerId}
-    set callerId(value: string) {
-        if(!value || value === "") {
-            throw Error("callerId value not provided");
+    set callerId(number: string) {
+        if(!isValidE164(number)) {
+            throw Error("Number must be a valid E.164 string");
         }
 
-        this._callerId = value;
+        this._callerId = number;
     }
 
     get dialedNumber(): string {return this._dialedNumber}
