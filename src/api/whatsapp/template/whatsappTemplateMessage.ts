@@ -6,6 +6,33 @@ import {
 import {WhatsappContentType} from "../whatsappContentType";
 
 /**
+ * Quick reply class for creating a creating a quick reply for whatsapp template message
+ */
+
+export class QuickReply {
+    /**
+     * @remark type of the quick reply
+     */
+    public type: string = "contact";
+    /**
+     * @remark text to be displayed in the quick reply button
+     */
+    public buttonText: string = "";
+    /**
+     * @remark payload to send with the button click
+     */
+    public payload: string | undefined;
+
+    constructor(buttonText: string, payload: string | undefined) {
+        this.buttonText = buttonText;
+
+        if(payload) {
+            this.payload = payload;
+        }
+    }
+}
+
+/**
  * Message class to construct a template object to send to a WhatsappClient
  */
 
@@ -42,6 +69,11 @@ export class WhatsappTemplateMessage {
      * @remark Template ID for this message
      */
     private _templateId: string | undefined;
+
+    /**
+     * @remark Specifies a quick reply for message
+     */
+    private _quickReply: QuickReply | undefined;
 
     /**
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
@@ -93,6 +125,16 @@ export class WhatsappTemplateMessage {
         this._templateId = value;
     }
 
+    get quickReply() {return this._quickReply}
+
+    addQuickReply(buttonText: string, payload: string | undefined) {
+        if(!buttonText || buttonText === "") {
+            throw Error("buttonText must be defined and can't be blank");
+        }
+
+        this._quickReply = new QuickReply(buttonText, payload);
+    }
+
     get idempotencyKey(): string {return this._idempotencyKey;}
 
     /**
@@ -117,6 +159,21 @@ export class WhatsappTemplateMessage {
      */
 
     toJSON() {
+        let quickReply;
+
+        if(this.quickReply) {
+            quickReply = {
+                [this.quickReply.type]: {
+                    "buttonText": this.quickReply.buttonText,
+                    "payload": this.quickReply.payload
+                }
+            }
+
+            if(this.quickReply.payload === undefined) {
+                delete quickReply[this.quickReply.type].payload;
+            }
+        }
+
         const payload = {
             from: this.from,
             to: this.to,
@@ -125,7 +182,8 @@ export class WhatsappTemplateMessage {
             correlationId: this.correlationId,
             substitutions: this.substitutions,
             contentType: this.contentType,
-            templateId: this.templateId
+            templateId: this.templateId,
+            quickReply: quickReply
         };
 
         for(const [key, value] of Object.entries(payload)) {

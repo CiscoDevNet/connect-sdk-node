@@ -49,7 +49,6 @@ describe("VoiceMessage", () => {
         const voiceMsg = new VoiceMessage('+14443332222');
         const audio = new UrlAudio('http://www.mysite.com/audio.mp3');
 
-        voiceMsg.callerId = "12345";
         voiceMsg.audio = audio;
 
         expect(() => {
@@ -60,7 +59,7 @@ describe("VoiceMessage", () => {
         voiceMsg.callbackUrl = "http://www.google.com";
         voiceMsg.correlationId = "corl1234";
 
-        expect(voiceMsg.callerId).to.equal("12345");
+        expect(voiceMsg.callerId).to.equal("+14443332222");
         expect(voiceMsg.dialedNumber).to.deep.equal("+13332223333");
         expect(voiceMsg.audio).to.deep.equal(audio);
         expect(voiceMsg.callbackUrl).to.equal("http://www.google.com");

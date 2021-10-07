@@ -11,7 +11,7 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("VoiceClient", () => {
-    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+    const clientConfig = new ClientConfiguration('123', API_SANDBOX_URL);
 
     it("throws error if idempotencyKey is blank for sending a voice message", () => {
         const client = new VoiceClient(clientConfig);
@@ -94,7 +94,7 @@ describe("VoiceClient", () => {
 
     it("throws error if idempotencyKey is blank for sending a voice call", () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
+        const message = new VoiceCall('+14443332222', '+12223334444');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -119,8 +119,7 @@ describe("VoiceClient", () => {
 
     it('throws error if callerId is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -149,8 +148,7 @@ describe("VoiceClient", () => {
 
     it('throws error if dialedNumber array is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -278,8 +276,7 @@ describe("VoiceClient", () => {
 
     it("returns proper values on placeCall", async () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)

@@ -33,15 +33,6 @@ describe("SmsMessage", () => {
             smsMessage.callbackUrl = "https://www.google.com";
         }).to.not.throw();
         expect(smsMessage.callbackUrl).to.equal("https://www.google.com");
-
-        expect(() => {
-            smsMessage.expireAt = "2021-08-01T14:24:33.asdf";
-        }).to.throw();
-        expect(() => {
-            smsMessage.expireAt = "2021-08-01T14:24:33.000Z";
-        }).to.not.throw();
-
-        expect(smsMessage.expireAt).to.equal("2021-08-01T14:24:33.000Z");
     });
 
     it('detects content type automatically', () => {

@@ -1,5 +1,6 @@
 import {WhatsappTemplateMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
+import {QuickReply} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
 
 describe("WhatsappTemplateMessage", () => {
     it("sets constructor values properly", () => {
@@ -54,6 +55,37 @@ describe("WhatsappTemplateMessage", () => {
         expect(message.correlationId).to.equal("corr123");
         expect(message.callbackData).to.equal("cbdata123");
         expect(message.idempotencyKey).to.not.be.null;
+    });
+
+    it('creates quick reply object correctly', () => {
+        const quickReply = new QuickReply("btnText", "pld");
+
+        expect(quickReply.buttonText).to.equal("btnText");
+        expect(quickReply.payload).to.equal("pld");
+        expect(quickReply.type).to.equal("contact");
+    });
+
+    it('adds quick reply to message correctly', () => {
+        const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
+
+        expect(() => {
+            message.addQuickReply("", undefined);
+        }).to.throw();
+
+        message.addQuickReply("btnText", undefined);
+
+        expect(message.toJSON().quickReply).to.deep.equal({
+            contact: {buttonText: 'btnText'}
+        });
+
+        message.addQuickReply("btnText", "pyld");
+
+        expect(message.toJSON().quickReply).to.deep.equal({
+            contact: {
+                buttonText: 'btnText',
+                payload: 'pyld'
+            }
+        });
     });
 
     it("toJSON returns properties correctly", () => {

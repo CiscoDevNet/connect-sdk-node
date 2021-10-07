@@ -16,12 +16,6 @@ export class UrlAudio {
      */
     private _location: string | undefined;
 
-    /**
-     * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
-     * @default 1
-     */
-    private _loop: number | undefined;
-
     constructor(location: string) {
         this.location = location;
     }
@@ -37,15 +31,6 @@ export class UrlAudio {
         this._location = value;
     }
 
-    get loop(): number | undefined {return this._loop}
-    set loop(value: number | undefined) {
-        if(value && (!isNumeric(value) || isFloat(value))) {
-            throw Error("Loop value provided is not an integer");
-        }
-
-        this._loop = value;
-    }
-
     /**
      * Returns object of fields for the API, stripping any undefined values
      *
@@ -55,7 +40,6 @@ export class UrlAudio {
     toJSON() {
         const payload = {
             type: this.type,
-            loop: this.loop,
             location: this.location
         }
 

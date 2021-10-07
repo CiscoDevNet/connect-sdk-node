@@ -21,24 +21,13 @@ describe("UrlAudio", () => {
             // @ts-ignore
             urlAudio.location = undefined;
         }).to.throw();
-
-        expect(() => {
-            // @ts-ignore
-            urlAudio.loop = "abc";
-        }).to.throw();
-
-        expect(() => {
-            urlAudio.loop = 3;
-        }).to.not.throw();
     });
 
     it('sets values properly', () => {
         const urlAudio = new UrlAudio('http://www.mysite.com/audio.mp3');
-        urlAudio.loop = 3;
 
         expect(urlAudio.type).to.equal(VoiceContentType.URL);
         expect(urlAudio.location).to.equal('http://www.mysite.com/audio.mp3');
-        expect(urlAudio.loop).to.equal(3);
     });
 
     it("toJSON returns properties correctly", () => {

@@ -21,24 +21,13 @@ describe("MediaAudio", () => {
             // @ts-ignore
             mediaAudio.mediaId = undefined;
         }).to.throw();
-
-        expect(() => {
-            // @ts-ignore
-            mediaAudio.loop = "abc";
-        }).to.throw();
-
-        expect(() => {
-            mediaAudio.loop = 3;
-        }).to.not.throw();
     });
 
     it('sets values properly', () => {
         const mediaAudio = new MediaAudio('id1234');
-        mediaAudio.loop = 3;
 
         expect(mediaAudio.type).to.equal(VoiceContentType.MEDIA);
         expect(mediaAudio.mediaId).to.equal('id1234');
-        expect(mediaAudio.loop).to.equal(3);
     });
 
     it("toJSON returns properties correctly", () => {
