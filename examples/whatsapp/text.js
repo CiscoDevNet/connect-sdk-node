@@ -6,7 +6,7 @@ const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL)
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
 const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
-whatsAppMessage.previewUrl = "http://www.preview.com";
+whatsAppMessage.previewUrl = true;
 whatsAppMessage.callbackUrl = "http://www.google.com";
 whatsAppMessage.callbackData = "id:123|title:testData";
 whatsAppMessage.correlationId = "corlId123";
