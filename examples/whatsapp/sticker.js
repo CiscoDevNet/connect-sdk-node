@@ -2,7 +2,7 @@ const {WhatsappClient, WhatsappStickerMessage, ClientConfiguration} = require('c
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
 const whatsAppMessage = new WhatsappStickerMessage(FROM_NUMBER, TO_NUMBER, "http://my.website.com/sticker.png", "image/webp");

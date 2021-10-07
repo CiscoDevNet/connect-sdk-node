@@ -15,9 +15,14 @@ export class ClientConfiguration {
     private _hostname: string | undefined;
     private _hostPort: string | undefined;
 
-    constructor(bearerToken: string, baseUrl: URL) {
+    constructor(bearerToken: string, baseUrl: string) {
         this.bearerToken = bearerToken;
-        this.baseUrl = baseUrl;
+
+        try {
+            this.baseUrl = new URL(baseUrl);
+        } catch(e) {
+            throw Error("baseUrl is not a valid URL");
+        }
     }
 
     get bearerToken(): string {return this._bearerToken;}

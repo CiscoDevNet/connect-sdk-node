@@ -9,7 +9,7 @@ data[2] = 108;
 data[3] = 108;
 data[4] = 111;
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
 const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);

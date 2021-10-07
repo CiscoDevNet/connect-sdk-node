@@ -42,8 +42,9 @@ export class VoiceCall {
      */
     _idempotencyKey: string = "";
 
-    constructor(callerId: string) {
+    constructor(callerId: string, dialedNumber: string) {
         this.callerId = callerId;
+        this.dialedNumber = dialedNumber;
         this._idempotencyKey = uuidv4();
     }
 
