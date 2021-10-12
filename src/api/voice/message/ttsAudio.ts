@@ -2,7 +2,6 @@ import {VoiceContentType} from "../types/voiceContentType";
 import {StyleType} from "../types/styleType";
 import {GenderType} from "../types/genderType";
 import {TextFormatType} from "../types/textFormatType";
-import {isFloat, isNumeric} from "../../../helpers/validators";
 import {typeToArr, concatTypes} from "../../../helpers/tools";
 
 /**
@@ -31,9 +30,9 @@ export class TtsAudio {
     private _language: string | undefined = "EN_US";
     /**
      * @remark The desired voice for the rendered speech
-     * @default Aria
+     * @default AriaUS
      */
-    private _voice: string | undefined = "Aria";
+    private _voice: string | undefined = "AriaUS";
     /**
      * @remark Gender of the synthesized voice
      * @default FEMALE
