@@ -11,7 +11,7 @@ whatsAppMessage.callbackUrl = "http://www.google.com";
 whatsAppMessage.callbackData = "id:123|title:testData";
 whatsAppMessage.correlationId = "corlId123";
 
-whatsAppMessage.addSubstitution("name", "tester");
+//whatsAppMessage.addSubstitution("name", "tester");
 
 const request = whatsAppClient.sendMessage(whatsAppMessage);
 
