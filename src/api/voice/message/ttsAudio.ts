@@ -2,7 +2,6 @@ import {VoiceContentType} from "../types/voiceContentType";
 import {StyleType} from "../types/styleType";
 import {GenderType} from "../types/genderType";
 import {TextFormatType} from "../types/textFormatType";
-import {isFloat, isNumeric} from "../../../helpers/validators";
 import {typeToArr, concatTypes} from "../../../helpers/tools";
 
 /**
@@ -20,11 +19,6 @@ export class TtsAudio {
     private _type : string = VoiceContentType.TTS;
 
     /**
-     * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
-     * @default 1
-     */
-    private _loop: number | undefined;
-    /**
      * @remark Whether to use standard or neural speech
      * @default STANDARD
      */
@@ -33,12 +27,12 @@ export class TtsAudio {
      * @remark Language of the text being synthesized
      * @default EN_US
      */
-    private _language: string | undefined = "EN_US";
+    private _language: string | undefined = "en-US";
     /**
      * @remark The desired voice for the rendered speech
-     * @default Aria
+     * @default AriaUS
      */
-    private _voice: string | undefined = "Aria";
+    private _voice: string | undefined = "AriaUS";
     /**
      * @remark Gender of the synthesized voice
      * @default FEMALE
@@ -77,15 +71,6 @@ export class TtsAudio {
     }
 
     get type(): string {return this._type}
-
-    get loop(): number | undefined {return this._loop}
-    set loop(value: number | undefined) {
-        if(value && (!isNumeric(value) || isFloat(value))) {
-            throw Error("Loop value provided is not an integer");
-        }
-
-        this._loop = value;
-    }
 
     get style(): string | undefined {return this._style}
     set style(value: string | undefined) {
@@ -142,7 +127,6 @@ export class TtsAudio {
         const payload = {
             text: this.text,
             type: this.type,
-            loop: this.loop,
             style: this.style,
             language: this.language,
             voice: this.voice,

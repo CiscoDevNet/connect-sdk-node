@@ -23,15 +23,6 @@ describe("TtsAudio", () => {
         }).to.throw();
 
         expect(() => {
-            // @ts-ignore
-            ttsAudio.loop = "abc";
-        }).to.throw();
-
-        expect(() => {
-            ttsAudio.loop = 3;
-        }).to.not.throw();
-
-        expect(() => {
             ttsAudio.style = "abc";
         }).to.throw();
 
@@ -58,7 +49,6 @@ describe("TtsAudio", () => {
 
     it('sets values properly', () => {
         const ttsAudio = new TtsAudio('hello world');
-        ttsAudio.loop = 3;
         ttsAudio.style = StyleType.STANDARD
         ttsAudio.language = "EN_US";
         ttsAudio.voice = "Aria";
@@ -67,7 +57,6 @@ describe("TtsAudio", () => {
         ttsAudio.textFormat = TextFormatType.SSML;
 
         expect(ttsAudio.type).to.equal(VoiceContentType.TTS);
-        expect(ttsAudio.loop).to.equal(3);
         expect(ttsAudio.style).to.equal(StyleType.STANDARD);
         expect(ttsAudio.language).to.equal("EN_US");
         expect(ttsAudio.voice).to.equal("Aria");
@@ -78,16 +67,16 @@ describe("TtsAudio", () => {
 
     it("toJSON returns properties correctly", () => {
         const ttsAudio = new TtsAudio('hello world');
+        ttsAudio.voice = undefined;
 
         expect(ttsAudio.toJSON()).to.deep.equal({
             "engine": "AZURE",
             "gender": "FEMALE",
-            "language": "EN_US",
+            "language": "en-US",
             "style": "STANDARD",
             "text": "hello world",
             "textFormat": "TEXT",
-            "type": "TTS",
-            "voice": "Aria"
+            "type": "TTS"
         });
     });
 

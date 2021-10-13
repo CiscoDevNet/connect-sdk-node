@@ -2,15 +2,14 @@ const {VoiceClient, VoiceCall, UrlAudio, ClientConfiguration} = require('cpaas-s
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const client = new VoiceClient(clientConfiguration);
-const call = new VoiceCall(FROM_NUMBER);
-call.dialedNumber = TO_NUMBER;
-
-const audio = new UrlAudio('http://www.audio.com/sound.mp3');
-
-call.audio = audio;
+const call = new VoiceCall(FROM_NUMBER, TO_NUMBER);
+call.callbackUrl = "http://www.google.com";
+call.recordCallSeconds = 3;
+call.detectVoiceMail = true;
+call.correlationId = "corlId123";
 
 const request = client.placeCall(call);
 

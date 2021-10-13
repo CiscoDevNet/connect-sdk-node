@@ -11,7 +11,7 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("SmsClient", () => {
-    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+    const clientConfig = new ClientConfiguration('123', API_SANDBOX_URL);
 
     it("throws error if idempotencyKey is blank", () => {
         const smsClient = new SmsClient(clientConfig);

@@ -11,11 +11,11 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("VoiceClient", () => {
-    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+    const clientConfig = new ClientConfiguration('123', API_SANDBOX_URL);
 
     it("throws error if idempotencyKey is blank for sending a voice message", () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceMessage('+14443332222');
+        const message = new VoiceMessage('+14443332222', '+13332223333');
 
         stub(message, 'idempotencyKey').get(() => '');
 
@@ -28,8 +28,7 @@ describe("VoiceClient", () => {
 
     it('throws error if callerId is not proper for sendVoiceMessage', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceMessage('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceMessage('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -58,8 +57,7 @@ describe("VoiceClient", () => {
 
     it('throws error if dialedNumber array is not proper for sendVoiceMessage', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceMessage('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceMessage('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -77,7 +75,7 @@ describe("VoiceClient", () => {
             client.sendVoiceMessage(message);
         }).to.not.throw();
 
-        stub(message, 'dialedNumber').get(() => []);
+        stub(message, 'dialedNumber').get(() => '');
 
         expect(() => {
             client.sendVoiceMessage(message);
@@ -94,7 +92,7 @@ describe("VoiceClient", () => {
 
     it("throws error if idempotencyKey is blank for sending a voice call", () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
+        const message = new VoiceCall('+14443332222', '+12223334444');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -119,8 +117,9 @@ describe("VoiceClient", () => {
 
     it('throws error if callerId is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
+
+        message.callbackUrl = "http://www.google.com";
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -149,8 +148,9 @@ describe("VoiceClient", () => {
 
     it('throws error if dialedNumber array is not proper for placeCall', () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
+
+        message.callbackUrl = "http://www.google.com";
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -168,7 +168,7 @@ describe("VoiceClient", () => {
             client.placeCall(message);
         }).to.not.throw();
 
-        stub(message, 'dialedNumber').get(() => []);
+        stub(message, 'dialedNumber').get(() => '');
 
         expect(() => {
             client.placeCall(message);
@@ -185,8 +185,7 @@ describe("VoiceClient", () => {
 
     it("returns proper values on sendVoiceMessage", async () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceMessage('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceMessage('+14443332222', '+13334440000');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/messages`)
@@ -278,8 +277,9 @@ describe("VoiceClient", () => {
 
     it("returns proper values on placeCall", async () => {
         const client = new VoiceClient(clientConfig);
-        const message = new VoiceCall('+14443332222');
-        message.dialedNumber = '+13334440000';
+        const message = new VoiceCall('+14443332222', '+13334440000');
+
+        message.callbackUrl = "http://www.google.com";
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/voice/calls`)
@@ -468,6 +468,16 @@ describe("VoiceClient", () => {
             expect(err.error.message).to.equal("test error");
         }
     });
+
+    it('call must include a callback url', () => {
+        const client = new VoiceClient(clientConfig);
+        const voiceCall = new VoiceCall('+14443332222', '+13334440000');
+
+        expect(() => {
+            client.placeCall(voiceCall);
+        }).to.throw()
+
+    })
 
     it("returns proper values on getRecordings", async () => {
         const client = new VoiceClient(clientConfig);

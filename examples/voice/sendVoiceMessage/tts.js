@@ -5,13 +5,12 @@ const {VoiceClient,
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../../privateConst");
 const {API_SANDBOX_URL} = require("../../../dist/config/constants");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const client = new VoiceClient(clientConfiguration);
-const message = new VoiceMessage(FROM_NUMBER);
+const message = new VoiceMessage(FROM_NUMBER, TO_NUMBER);
 const audio = new TtsAudio("Hello World");
 
-message.dialedNumber = TO_NUMBER;
 message.audio = audio;
 
 const request = client.sendVoiceMessage(message);

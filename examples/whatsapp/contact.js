@@ -14,7 +14,7 @@ const {
 const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_SANDBOX_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
 const whatsAppMessage = new WhatsappContactMessage(FROM_NUMBER, TO_NUMBER);
@@ -28,7 +28,7 @@ contact.firstName = "John";
 contact.middleName = "Snow";
 contact.lastName = "Smith";
 contact.nameSuffix = "Sr.";
-contact.birthday = "2015-10-21T14:24:33.000Z";
+contact.birthday = "2015-10-21";
 contact.company = "ABC Corp";
 contact.department = "Testing";
 contact.title = "Tester";

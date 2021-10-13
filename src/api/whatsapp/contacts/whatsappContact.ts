@@ -97,12 +97,29 @@ export class WhatsappContact {
     }
 
     get birthday() {return this._birthday}
-    set birthday(value: string | undefined) {
-        if(value && !isValidISO8601(value)) {
-            throw Error("Contact birthday must be in a valid ISO8601 format");
+    set birthday(value: string | Date | undefined) {
+        let birthday: Date;
+        let birthdayFormatted: string | undefined;
+
+        if(value) {
+            if(value instanceof Date) {
+                birthday = value;
+            } else {
+                birthday = new Date(value);
+            }
+
+            const year = birthday.getFullYear(),
+                month = birthday.getMonth() + 1,
+                date = birthday.getDate();
+
+            birthdayFormatted = `${year}-${month}-${date}`;
+
+            if(birthdayFormatted.toLowerCase().includes("nan")) {
+                throw Error("Birthday for contact is not a valid date");
+            }
         }
 
-        this._birthday = value;
+        this._birthday = birthdayFormatted;
     }
 
     get company() {return this._company}

@@ -11,7 +11,7 @@ const chai = require('chai'),
 chai.use(chaiAsPromised);
 
 describe("VideoClient", () => {
-    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
+    const clientConfig = new ClientConfiguration('123', API_SANDBOX_URL);
 
     it("throws error if required values are not proper for creating a video session", () => {
         const client = new VideoClient(clientConfig);

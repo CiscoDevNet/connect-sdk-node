@@ -10,8 +10,8 @@ const chaiHttp = require('chai-http'),
 chai.use(chaiHttp);
 
 describe("Request", () => {
-    const clientConfig = new ClientConfiguration('123', new URL(API_SANDBOX_URL));
-    const clientConfigHttp = new ClientConfiguration('123', new URL("http://www.google.com"));
+    const clientConfig = new ClientConfiguration('123', API_SANDBOX_URL);
+    const clientConfigHttp = new ClientConfiguration('123', "http://www.google.com");
 
     it("sends the request and returns the correct response", async () => {
         const reqOptions = {

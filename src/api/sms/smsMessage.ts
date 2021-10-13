@@ -1,7 +1,6 @@
 import {uuidv4} from "../../helpers/identifiers";
 import {
     isValidHttpUrl,
-    isValidISO8601,
     isValidE164,
     hasUnicode
 } from "../../helpers/validators";
@@ -54,10 +53,6 @@ export class SmsMessage {
      * @remark Additional data that will be echoed back in all callback requests made to callbackUrl
      */
     private _callbackData: string | undefined;
-    /**
-     * @remark If the message has not been sent by this date & time, it will be removed from the sending queue
-     */
-    private _expireAt: string | undefined;
 
     /**
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
@@ -128,15 +123,6 @@ export class SmsMessage {
     get callbackData(): string | undefined {return this._callbackData;}
     set callbackData(value: string | undefined) {this._callbackData = value;}
 
-    get expireAt(): string | undefined {return this._expireAt;}
-    set expireAt(value: string | undefined) {
-        if(value && !isValidISO8601(value)) {
-            throw Error("expireAt must be a valid ISO 8601 value");
-        }
-
-        this._expireAt = value;
-    }
-
     get idempotencyKey(): string {return this._idempotencyKey;}
 
     /**
@@ -171,8 +157,7 @@ export class SmsMessage {
             correlationId: this.correlationId,
             dltTemplateId: this.dltTemplateId,
             callbackUrl: this.callbackUrl,
-            callbackData: this.callbackData,
-            expireAt: this.expireAt
+            callbackData: this.callbackData
         }
 
         for(const [key, value] of Object.entries(payload)) {

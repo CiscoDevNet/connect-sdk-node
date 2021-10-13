@@ -15,12 +15,6 @@ export class MediaAudio {
      */
     private _mediaId: string | undefined;
 
-    /**
-     * @remark Repeat the audio this many times,this parameter is used in patch greetingAudio.
-     * @default 1
-     */
-    private _loop: number | undefined;
-
     constructor(mediaId: string) {
         this.mediaId = mediaId;
     }
@@ -36,15 +30,6 @@ export class MediaAudio {
         this._mediaId = value;
     }
 
-    get loop(): number | undefined {return this._loop}
-    set loop(value: number | undefined) {
-        if(value && (!isNumeric(value) || isFloat(value)) ) {
-            throw Error("Loop value provided is not an integer");
-        }
-
-        this._loop = value;
-    }
-
     /**
      * Returns object of fields for the API, stripping any undefined values
      *
@@ -52,19 +37,9 @@ export class MediaAudio {
      */
 
     toJSON() {
-        const payload = {
+        return {
             type: this.type,
-            loop: this.loop,
             mediaId: this.mediaId
         }
-
-        for(const [key, value] of Object.entries(payload)) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete payload[key];
-            }
-        }
-
-        return payload;
     }
 }

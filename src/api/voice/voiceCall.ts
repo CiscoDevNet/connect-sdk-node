@@ -11,7 +11,7 @@ export class VoiceCall {
      */
     private _callerId: string = "";
     /**
-     * @remark Array of numbers to dial and start call sessions with.
+     * @remark number to dial and start call sessions with.
      */
     private _dialedNumber: string = "";
 
@@ -42,18 +42,19 @@ export class VoiceCall {
      */
     _idempotencyKey: string = "";
 
-    constructor(callerId: string) {
+    constructor(callerId: string, dialedNumber: string) {
         this.callerId = callerId;
+        this.dialedNumber = dialedNumber;
         this._idempotencyKey = uuidv4();
     }
 
     get callerId() {return this._callerId}
-    set callerId(value: string) {
-        if(!value || value === "") {
-            throw Error("callerId value not provided");
+    set callerId(number: string) {
+        if(!isValidE164(number)) {
+            throw Error("Number must be a valid E.164 string");
         }
 
-        this._callerId = value;
+        this._callerId = number;
     }
 
     get dialedNumber(): string {return this._dialedNumber}

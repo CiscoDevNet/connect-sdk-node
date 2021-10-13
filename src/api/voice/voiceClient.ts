@@ -39,8 +39,8 @@ export class VoiceClient {
             throw Error("Must provide a 'callerId' value for sending a voice message");
         }
 
-        if(!message.dialedNumber || message.dialedNumber.length < 1) {
-            throw Error("Must provide at least one 'dialedNumber' for sending a voice message");
+        if(!message.dialedNumber) {
+            throw Error("Must provide a 'dialedNumber' for sending a voice message");
         }
 
         const options = {
@@ -65,8 +65,8 @@ export class VoiceClient {
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             sessions: new Array<object>(),
-                            sessionId: res.sessionId,
-                            status: res.status
+                            sessionId: body.sessionId,
+                            status: body.status
                         }
 
                         if(body.sessions) {
@@ -113,8 +113,12 @@ export class VoiceClient {
             throw Error("Must provide a 'callerId' value for sending a voice call");
         }
 
-        if(!callData.dialedNumber || callData.dialedNumber.length < 1) {
-            throw Error("Must provide at least one 'dialedNumber' for sending a voice call");
+        if(!callData.dialedNumber) {
+            throw Error("Must provide a 'dialedNumber' for sending a voice call");
+        }
+
+        if(!callData.callbackUrl || callData.callbackUrl === "") {
+            throw Error("Must provide a 'callbackUrl' for placing a call");
         }
 
         const options = {
@@ -139,8 +143,8 @@ export class VoiceClient {
                             statusCode: res.statusCode,
                             requestId: res.headers['request-id'],
                             sessions: new Array<object>(),
-                            sessionId: res.sessionId,
-                            status: res.status
+                            sessionId: body.sessionId,
+                            status: body.status
                         }
 
                         if(body.sessions) {

@@ -9,14 +9,14 @@ chai.use(chaiAsPromised);
 describe("VoiceCall", () => {
 
     it("sets constructor values properly", () => {
-        const voiceCall = new VoiceCall('+14443334444');
+        const voiceCall = new VoiceCall('+14443334444', '+12223334444');
 
         expect(voiceCall.callerId).to.equal('+14443334444');
         expect(voiceCall.idempotencyKey).to.not.equal("");
     });
 
     it("detects invalid property values", () => {
-        const voiceCall = new VoiceCall('+14443332222');
+        const voiceCall = new VoiceCall('+14443332222', '+12223334444');
 
         expect(() => {
             // @ts-ignore
@@ -55,21 +55,18 @@ describe("VoiceCall", () => {
     });
 
     it('sets values properly', () => {
-        const voiceCall = new VoiceCall('+14443332222');
-
-        voiceCall.callerId = "12345";
+        const voiceCall = new VoiceCall('+14443332222', '+13332223333');
 
         expect(() => {
             voiceCall.dialedNumber = "abc";
         }).to.throw();
 
-        voiceCall.dialedNumber = "+13332223333";
         voiceCall.callbackUrl = "http://www.google.com";
         voiceCall.recordCallSeconds = 23;
         voiceCall.detectVoiceMail = true;
         voiceCall.correlationId = "corl1234";
 
-        expect(voiceCall.callerId).to.equal("12345");
+        expect(voiceCall.callerId).to.equal("+14443332222");
         expect(voiceCall.dialedNumber).to.deep.equal("+13332223333");
         expect(voiceCall.callbackUrl).to.equal("http://www.google.com");
         expect(voiceCall.recordCallSeconds).to.equal(23);
@@ -78,9 +75,7 @@ describe("VoiceCall", () => {
     });
 
     it("toJSON returns properties correctly", () => {
-        const voiceCall = new VoiceCall('+14443332222');
-
-        voiceCall.dialedNumber = "+12229993333";
+        const voiceCall = new VoiceCall('+14443332222', "+12229993333");
 
         expect(voiceCall.toJSON()).to.deep.equal({
             "callerId": "+14443332222",
