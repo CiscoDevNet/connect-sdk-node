@@ -27,7 +27,7 @@ export class TtsAudio {
      * @remark Language of the text being synthesized
      * @default EN_US
      */
-    private _language: string | undefined = "EN_US";
+    private _language: string | undefined = "en-US";
     /**
      * @remark The desired voice for the rendered speech
      * @default AriaUS

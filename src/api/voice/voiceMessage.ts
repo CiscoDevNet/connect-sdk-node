@@ -14,7 +14,7 @@ export class VoiceMessage {
      */
     private _callerId: string = "";
     /**
-     * @remark Array of numbers to dial and start call sessions with.
+     * @remark number to dial and start call sessions with.
      */
     private _dialedNumber: string = "";
     /**
