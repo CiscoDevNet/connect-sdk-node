@@ -42,11 +42,31 @@ describe("WhatsappContact", () => {
         expect(contact.middleName).to.equal("Snow");
         expect(contact.lastName).to.equal("Smith");
         expect(contact.nameSuffix).to.equal("Sr.");
-        expect(contact.birthday).to.equal("2015-10-21T14:24:33.000Z");
+        expect(contact.birthday).to.equal("2015-10-21");
         expect(contact.company).to.equal("ABC Corp");
         expect(contact.department).to.equal("Testing");
         expect(contact.title).to.equal("Tester");
     });
+
+    it('sets birthday correctly for both string and date', () => {
+        const contact = new WhatsappContact();
+
+        contact.birthday = "2015-10-21T14:24:33.000Z";
+
+        expect(contact.birthday).to.equal('2015-10-21');
+
+        contact.birthday = new Date('2015-10-21T14:24:33.000Z');
+
+        expect(contact.birthday).to.equal('2015-10-21');
+
+        expect(() => {
+            contact.birthday = "abc";
+        }).to.throw();
+
+        contact.birthday = undefined;
+
+        expect(contact.birthday).to.be.undefined;
+    })
 
     it("adds phone object correctly", () => {
         const contact = new WhatsappContact();

@@ -37,18 +37,9 @@ export class MediaAudio {
      */
 
     toJSON() {
-        const payload = {
+        return {
             type: this.type,
             mediaId: this.mediaId
         }
-
-        for(const [key, value] of Object.entries(payload)) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete payload[key];
-            }
-        }
-
-        return payload;
     }
 }

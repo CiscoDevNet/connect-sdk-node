@@ -67,16 +67,16 @@ describe("TtsAudio", () => {
 
     it("toJSON returns properties correctly", () => {
         const ttsAudio = new TtsAudio('hello world');
+        ttsAudio.voice = undefined;
 
         expect(ttsAudio.toJSON()).to.deep.equal({
             "engine": "AZURE",
             "gender": "FEMALE",
-            "language": "EN_US",
+            "language": "en-US",
             "style": "STANDARD",
             "text": "hello world",
             "textFormat": "TEXT",
-            "type": "TTS",
-            "voice": "Aria"
+            "type": "TTS"
         });
     });
 
