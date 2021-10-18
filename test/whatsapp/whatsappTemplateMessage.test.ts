@@ -44,7 +44,7 @@ describe("WhatsappTemplateMessage", () => {
             message.addSubstitution("name", "tester")
         }).to.not.throw();
 
-        expect(message.substitutions).to.deep.equal([{"name": "tester"}]);
+        expect(message.substitutions).to.deep.equal({"name": "tester"});
     });
 
     it("sets remaining values correctly", () => {
@@ -99,11 +99,9 @@ describe("WhatsappTemplateMessage", () => {
             "callbackUrl": "http://www.google.com",
             "contentType": "TEMPLATE",
             "from": "12345",
-            "substitutions": [
-                {
-                    "key1": "value1"
-                }
-            ],
+            "substitutions": {
+                "key1": "value1"
+            },
             "templateId": "tmpl1234",
             "to": "+14443332222"
         });
