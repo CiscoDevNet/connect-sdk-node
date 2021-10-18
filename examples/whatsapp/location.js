@@ -1,14 +1,12 @@
 const {WhatsappClient, WhatsappLocMessage, ClientConfiguration} = require('cpaas-sdk-node');
-const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
+const {AUTH_TOKEN, WHATSAPP_FROM, TO_NUMBER} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
 
-const whatsAppMessage = new WhatsappLocMessage(FROM_NUMBER, TO_NUMBER, 28.372395561985662, -81.50942795589746);
-whatsAppMessage.addSubstitution("name", "Tester");
-whatsAppMessage.addSubstitution("dept", "Testing");
+const whatsAppMessage = new WhatsappLocMessage(WHATSAPP_FROM, TO_NUMBER, 28.372395561985662, -81.50942795589746);
 whatsAppMessage.name = "Unknown Location";
 whatsAppMessage.address = "123 main street";
 

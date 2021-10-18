@@ -1,11 +1,11 @@
 const {VoiceClient, ClientConfiguration} = require('cpaas-sdk-node');
-const {AUTH_TOKEN, VOICE_SESSION_ID} = require("../../privateConst");
+const {AUTH_TOKEN, CALL_SESS_ID} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const client = new VoiceClient(clientConfiguration);
-const request = client.getStatus('8f925378-b90a-4eac-aeae-e7b17354a49b')
+const request = client.getStatus(CALL_SESS_ID)
 
 request
     .then(res => {

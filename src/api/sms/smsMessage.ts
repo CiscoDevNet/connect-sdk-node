@@ -67,6 +67,10 @@ export class SmsMessage {
 
     get from(): string {return this._from;}
     set from(value: string) {
+        if(value === "") {
+            throw Error("From value cannot be blank");
+        }
+
         this._from = value;
     }
 

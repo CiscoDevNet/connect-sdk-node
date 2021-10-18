@@ -1,11 +1,11 @@
-const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('cpaas-sdk-node');
-const {AUTH_TOKEN, FROM_NUMBER, TO_NUMBER} = require("../../privateConst");
+const {WhatsappClient, ClientConfiguration} = require('cpaas-sdk-node');
+const {AUTH_TOKEN, WA_MESSAGE_ID} = require("../../privateConst");
 const {API_SANDBOX_URL} = require("../../dist/config/constants");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
-const request = whatsAppClient.getStatus('476daca0-843f-447b-8512-259731f91080');
+const request = whatsAppClient.getStatus(WA_MESSAGE_ID);
 
 request
     .then(res => {

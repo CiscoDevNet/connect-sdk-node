@@ -108,9 +108,12 @@ export class WhatsappContact {
                 birthday = new Date(value);
             }
 
-            const year = birthday.getFullYear(),
-                month = birthday.getMonth() + 1,
-                date = birthday.getDate();
+            let year = birthday.getUTCFullYear(),
+                month = (birthday.getUTCMonth() + 1).toString(),
+                date = (birthday.getUTCDate()).toString();
+
+            month = month.length < 2 ? `0${month}` : month;
+            date = date.length < 2 ? `0${date}` : date;
 
             birthdayFormatted = `${year}-${month}-${date}`;
 

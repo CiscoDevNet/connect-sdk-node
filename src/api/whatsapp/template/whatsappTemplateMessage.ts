@@ -60,7 +60,7 @@ export class WhatsappTemplateMessage {
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: Array<object> = [];
+    private _substitutions: object = {};
     /**
      * @remark Identifies to Whatsapp that this is an audio message
      */
@@ -116,7 +116,7 @@ export class WhatsappTemplateMessage {
     get correlationId(): string | undefined {return this._correlationId;}
     set correlationId(value: string | undefined) {this._correlationId = value;}
 
-    get substitutions(): Array<object> | undefined {return this._substitutions;}
+    get substitutions(): object | undefined {return this._substitutions;}
 
     get contentType(): string {return this._contentType;}
 
@@ -149,7 +149,8 @@ export class WhatsappTemplateMessage {
             throw Error("name must be specified in substitution");
         }
 
-        this._substitutions.push({[name]: value});
+        // @ts-ignore
+        this._substitutions[name] = value;
     }
 
     /**
