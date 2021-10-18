@@ -32,7 +32,7 @@ export class TtsAudio {
      * @remark The desired voice for the rendered speech
      * @default AriaUS
      */
-    private _voice: string | undefined = "AriaUS";
+    private _voice: string | undefined = "AriaRUS";
     /**
      * @remark Gender of the synthesized voice
      * @default FEMALE
