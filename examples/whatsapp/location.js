@@ -7,8 +7,6 @@ const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL)
 const whatsAppClient = new WhatsappClient(clientConfiguration);
 
 const whatsAppMessage = new WhatsappLocMessage(WHATSAPP_FROM, TO_NUMBER, 28.372395561985662, -81.50942795589746);
-whatsAppMessage.addSubstitution("name", "Tester");
-whatsAppMessage.addSubstitution("dept", "Testing");
 whatsAppMessage.name = "Unknown Location";
 whatsAppMessage.address = "123 main street";
 
