@@ -59,6 +59,10 @@ describe("WhatsappContact", () => {
 
         expect(contact.birthday).to.equal('2015-10-21');
 
+        contact.birthday = new Date('2015-09-05T14:24:33.000Z');
+
+        expect(contact.birthday).to.equal('2015-09-05');
+
         expect(() => {
             contact.birthday = "abc";
         }).to.throw();
