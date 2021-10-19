@@ -51,7 +51,7 @@ describe("WhatsappTextMessage", () => {
             message.addSubstitution("name", "tester")
         }).to.not.throw();
 
-        expect(message.substitutions).to.deep.equal([{"name": "tester"}]);
+        expect(message.substitutions).to.deep.equal({"name": "tester"});
     });
 
     it("sets remaining values correctly", () => {
@@ -76,11 +76,9 @@ describe("WhatsappTextMessage", () => {
             "contentType": "TEXT",
             "previewUrl": false,
             "from": "12345",
-            "substitutions": [
-                {
-                    "key1": "value1"
-                }
-            ],
+            "substitutions": {
+                "key1": "value1"
+            },
             "content": "tmpl1234",
             "to": "+14443332222"
         });
