@@ -47,7 +47,7 @@ export class WhatsappTextMessage {
     /**
      * @remark Members of this object are used to replace placeholders within the content or template specified.
      */
-    private _substitutions: Array<object> = [];
+    private _substitutions: object = {};
 
     /**
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
@@ -106,7 +106,7 @@ export class WhatsappTextMessage {
     get correlationId(): string | undefined {return this._correlationId;}
     set correlationId(value: string | undefined) {this._correlationId = value;}
 
-    get substitutions(): Array<object> | undefined {return this._substitutions;}
+    get substitutions(): object | undefined {return this._substitutions;}
 
     get idempotencyKey(): string {return this._idempotencyKey;}
 
@@ -122,7 +122,8 @@ export class WhatsappTextMessage {
             throw Error("name must be specified in substitution");
         }
 
-        this._substitutions.push({[name]: value});
+        // @ts-ignore
+        this._substitutions[name] = value;
     }
 
     /**

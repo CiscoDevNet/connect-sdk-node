@@ -1,6 +1,7 @@
 import {WhatsappTemplateMessage, WhatsappContentType} from "../../src";
 import {expect} from "chai";
 import {QuickReply} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
+import {TemplateSubstitution} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
 
 describe("WhatsappTemplateMessage", () => {
     it("sets constructor values properly", () => {
@@ -36,15 +37,52 @@ describe("WhatsappTemplateMessage", () => {
     it("addSubstitution adds substitutions correctly and errors correctly", () => {
         const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
 
+        const dateSub = new TemplateSubstitution("newDate")
+            .of_datetime('2015-10-04', 'dateFallback');
+
+        message.addSubstitution(dateSub);
+
+        const urlSub = new TemplateSubstitution("newUrl")
+            .of_url("/someAction");
+
+        message.addSubstitution(urlSub);
+
+        const currSub = new TemplateSubstitution("newCurr")
+            .of_currency('USD', '100', 'currFallback');
+
+        message.addSubstitution(currSub);
+
+        const textSub = new TemplateSubstitution("newText")
+            .of_text("hello world");
+
+        message.addSubstitution(textSub);
+
+        expect(message.substitutions).to.deep.equal({
+            "newCurr": {
+                "amount1000": "100",
+                "code": "USD",
+                "contentType": "CURRENCY",
+                "fallbackValue": "currFallback"
+            },
+            "newDate": {
+                "contentType": "DATETIME",
+                "fallbackValue": "dateFallback",
+                "isoString": "2015-10-04"
+            },
+            "newText": {
+                "content": "hello world",
+                "contentType": "TEXT"
+            },
+            "newUrl": {
+                "contentType": "URL",
+                "suffix": "/someAction"
+            }
+        });
+
         expect(() => {
-            message.addSubstitution("", "test")
+            const currSubErr = new TemplateSubstitution("")
+                .of_currency('USD', '100', 'currFallback');
         }).to.throw();
-
-        expect(() => {
-            message.addSubstitution("name", "tester")
-        }).to.not.throw();
-
-        expect(message.substitutions).to.deep.equal({"name": "tester"});
     });
 
     it("sets remaining values correctly", () => {
@@ -62,7 +100,6 @@ describe("WhatsappTemplateMessage", () => {
 
         expect(quickReply.buttonText).to.equal("btnText");
         expect(quickReply.payload).to.equal("pld");
-        expect(quickReply.type).to.equal("contact");
     });
 
     it('adds quick reply to message correctly', () => {
@@ -74,34 +111,44 @@ describe("WhatsappTemplateMessage", () => {
 
         message.addQuickReply("btnText", undefined);
 
-        expect(message.toJSON().quickReply).to.deep.equal({
-            contact: {buttonText: 'btnText'}
-        });
+        expect(message.toJSON().quickReplies).to.deep.equal([
+            {
+                "buttonText": "btnText"
+            }
+        ]);
 
         message.addQuickReply("btnText", "pyld");
 
-        expect(message.toJSON().quickReply).to.deep.equal({
-            contact: {
-                buttonText: 'btnText',
-                payload: 'pyld'
+        expect(message.toJSON().quickReplies).to.deep.equal([
+            {
+                "buttonText": "btnText"
+            },
+            {
+                "buttonText": "btnText",
+                "payload": "pyld"
             }
-        });
+        ]);
+
+        message.addQuickReply("btnText3", "pyld");
+
+        expect(() => {
+            message.addQuickReply("btnText4", "pyld");
+        }).to.throw();
     });
 
     it("toJSON returns properties correctly", () => {
         const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
         message.callbackUrl = "http://www.google.com";
         message.callbackData = "abc|123";
-        message.addSubstitution("key1", "value1");
+        //message.addSubstitution("key1", "value1");
 
         expect(message.toJSON()).to.deep.equal({
             "callbackData": "abc|123",
             "callbackUrl": "http://www.google.com",
             "contentType": "TEMPLATE",
             "from": "12345",
-            "substitutions": {
-                "key1": "value1"
-            },
+            "quickReplies": [],
+            "substitutions": {},
             "templateId": "tmpl1234",
             "to": "+14443332222"
         });
