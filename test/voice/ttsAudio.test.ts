@@ -73,7 +73,7 @@ describe("TtsAudio", () => {
             "engine": "AZURE",
             "gender": "FEMALE",
             "language": "en-US",
-            "style": "STANDARD",
+            "style": "NEURAL",
             "text": "hello world",
             "textFormat": "TEXT",
             "type": "TTS"

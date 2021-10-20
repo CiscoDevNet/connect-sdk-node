@@ -20,19 +20,19 @@ export class TtsAudio {
 
     /**
      * @remark Whether to use standard or neural speech
-     * @default STANDARD
+     * @default NEURAL
      */
-    private _style: string | undefined = StyleType.STANDARD;
+    private _style: string | undefined = StyleType.NEURAL;
     /**
      * @remark Language of the text being synthesized
-     * @default EN_US
+     * @default en-US
      */
     private _language: string | undefined = "en-US";
     /**
      * @remark The desired voice for the rendered speech
-     * @default AriaUS
+     * @default AriaRUS
      */
-    private _voice: string | undefined = "AriaRUS";
+    private _voice: string | undefined = "AriaNeural";
     /**
      * @remark Gender of the synthesized voice
      * @default FEMALE
@@ -44,7 +44,7 @@ export class TtsAudio {
      */
     private _engine: string | undefined = "AZURE";
     /**
-     * @remark Format of text feild. If TEXT, text field contains plain text. If SSML, text field
+     * @remark Format of text field. If TEXT, text field contains plain text. If SSML, text field
      * contains valid SSML script.
      * @default TEXT
      */
@@ -141,6 +141,8 @@ export class TtsAudio {
                 delete payload[key];
             }
         }
+
+        console.log(payload);
 
         return payload;
     }
