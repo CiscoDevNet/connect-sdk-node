@@ -142,8 +142,6 @@ export class TtsAudio {
             }
         }
 
-        console.log(payload);
-
         return payload;
     }
 }
