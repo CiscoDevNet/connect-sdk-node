@@ -10,7 +10,7 @@ export class VideoToken {
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value
      * that has been used in the previous 1 hours will be rejected as a duplicate request.
      */
-    _idempotencyKey: string = "";
+    private readonly _idempotencyKey: string = "";
 
     constructor(sessionId: string) {
         this.sessionId = sessionId;
