@@ -27,7 +27,7 @@ describe("TtsAudio", () => {
         }).to.throw();
 
         expect(() => {
-            ttsAudio.style = StyleType.STANDARD
+            ttsAudio.style = StyleType.NEURAL
         }).to.not.throw();
 
         expect(() => {
@@ -49,7 +49,7 @@ describe("TtsAudio", () => {
 
     it('sets values properly', () => {
         const ttsAudio = new TtsAudio('hello world');
-        ttsAudio.style = StyleType.STANDARD
+        ttsAudio.style = StyleType.NEURAL
         ttsAudio.language = "EN_US";
         ttsAudio.voice = "Aria";
         ttsAudio.gender = GenderType.MALE;
@@ -57,7 +57,7 @@ describe("TtsAudio", () => {
         ttsAudio.textFormat = TextFormatType.SSML;
 
         expect(ttsAudio.type).to.equal(VoiceContentType.TTS);
-        expect(ttsAudio.style).to.equal(StyleType.STANDARD);
+        expect(ttsAudio.style).to.equal(StyleType.NEURAL);
         expect(ttsAudio.language).to.equal("EN_US");
         expect(ttsAudio.voice).to.equal("Aria");
         expect(ttsAudio.gender).to.equal(GenderType.MALE);

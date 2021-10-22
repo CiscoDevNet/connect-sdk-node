@@ -5,6 +5,7 @@ import {
 } from "../../../helpers/validators";
 import {WhatsappContentType} from "../whatsappContentType";
 import {SubstitutionTypes} from "./substitutionTypes";
+import {TemplateHeaderTypes} from "./templateHeaderTypes";
 
 /**
  * Quick reply class for creating a creating a quick reply for whatsapp template message
@@ -48,6 +49,34 @@ export class QuickReply {
         }
 
         return content;
+    }
+}
+
+export class MediaHeader {
+    private readonly _contentType: TemplateHeaderTypes;
+    private readonly _url: string;
+    private readonly _filename: string;
+
+    constructor(contentType: TemplateHeaderTypes, url: string, filename: string) {
+        if(url && !isValidHttpUrl(url)) {
+            throw Error("url must be a valid url");
+        }
+
+        this._contentType = contentType;
+        this._url = url;
+        this._filename = filename;
+    }
+
+    get contentType() {return this._contentType}
+    get url() {return this._url}
+    get filename() {return this._filename}
+
+    toJSON() {
+        return {
+            contentType: this._contentType,
+            url: this._url,
+            filename: this._filename
+        }
     }
 }
 
@@ -192,6 +221,11 @@ export class WhatsappTemplateMessage {
     private _quickReplies: Array<QuickReply> = [];
 
     /**
+     * @remark Specifies the MediaHeader for message
+     */
+    private _mediaHeader: MediaHeader | undefined;
+
+    /**
      * @remark A value that is used to prevent duplicate requests. API requests with an Idempotency-Key value that has been used in the previous 1 hours will be rejected as a duplicate request.
      */
     private readonly _idempotencyKey: string = "";
@@ -263,6 +297,12 @@ export class WhatsappTemplateMessage {
         this._quickReplies.push(new QuickReply(buttonText, payload).toJSON());
     }
 
+    get mediaHeader(): MediaHeader | undefined {return this._mediaHeader}
+
+    set mediaHeader(mediaHeader: MediaHeader | undefined) {
+        this._mediaHeader = mediaHeader;
+    }
+
     get idempotencyKey(): string {return this._idempotencyKey;}
 
     /**
@@ -316,7 +356,8 @@ export class WhatsappTemplateMessage {
             substitutions: this.substitutions,
             contentType: this.contentType,
             templateId: this.templateId,
-            quickReplies: this.quickReplies
+            quickReplies: this.quickReplies,
+            mediaHeader: this.mediaHeader?.toJSON()
         };
 
         for(const [key, value] of Object.entries(payload)) {

@@ -1,7 +1,8 @@
-import {WhatsappTemplateMessage, WhatsappContentType} from "../../src";
+import {WhatsappContentType, WhatsappTemplateMessage} from "../../src";
 import {expect} from "chai";
-import {QuickReply} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
-import {TemplateSubstitution} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
+import {QuickReply, TemplateSubstitution} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
+import {MediaHeader} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
+import {TemplateHeaderTypes} from "../../src/api/whatsapp/template/templateHeaderTypes";
 
 describe("WhatsappTemplateMessage", () => {
     it("sets constructor values properly", () => {
@@ -136,11 +137,45 @@ describe("WhatsappTemplateMessage", () => {
         }).to.throw();
     });
 
+    it('sets mediaHeader correctly', () => {
+        const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
+        const mediaHeader = new MediaHeader(TemplateHeaderTypes.IMAGE, "http://www.mysite.com/image.png", "image.png");
+
+        expect(mediaHeader.contentType).to.equal(TemplateHeaderTypes.IMAGE);
+        expect(mediaHeader.url).to.equal('http://www.mysite.com/image.png');
+        expect(mediaHeader.filename).to.equal('image.png');
+
+        message.mediaHeader = mediaHeader;
+
+        expect(() => {
+            new MediaHeader(TemplateHeaderTypes.IMAGE, "abc", "blah.png");
+        }).to.throw();
+
+        expect(mediaHeader.toJSON()).to.deep.equal({
+            contentType: TemplateHeaderTypes.IMAGE,
+            url: 'http://www.mysite.com/image.png',
+            filename: 'image.png'
+        });
+
+        expect(message.toJSON()).to.deep.equal({
+            "contentType": "TEMPLATE",
+            "from": "12345",
+            "mediaHeader": {
+                "contentType": "IMAGE",
+                "filename": "image.png",
+                "url": "http://www.mysite.com/image.png"
+            },
+            "quickReplies": [],
+            "substitutions": {},
+            "templateId": "tmpl1234",
+            "to": "+14443332222"
+        })
+    })
+
     it("toJSON returns properties correctly", () => {
         const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
         message.callbackUrl = "http://www.google.com";
         message.callbackData = "abc|123";
-        //message.addSubstitution("key1", "value1");
 
         expect(message.toJSON()).to.deep.equal({
             "callbackData": "abc|123",

@@ -129,6 +129,16 @@ describe("WhatsappClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
+            .reply(404);
+
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err.statusCode).to.equal(404);
+        }
+
+        nock(`${API_SANDBOX_URL}`)
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(500, {
                 code: '890'
             });
@@ -174,9 +184,7 @@ describe("WhatsappClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
-            .reply(404, {
-                statusCode: 404
-            });
+            .reply(404);
 
         try {
             response = await client.getStatus('1234');
