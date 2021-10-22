@@ -3,7 +3,7 @@ const {WhatsappClient,
     ClientConfiguration,
     TemplateSubstitution,
     MediaHeader,
-    TemplateHeaderTypes} = require('cpaas-sdk-node');
+    TemplateHeaderTypes} = require('connect-sdk-node');
 const {AUTH_TOKEN, WHATSAPP_FROM, TO_NUMBER, WA_TEMPLATE_ID, POST_CALLBACK_URL, API_URL} = require("../../privateConst");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);

@@ -1,4 +1,4 @@
-const {WhatsappClient, WhatsappLocMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappLocMessage, ClientConfiguration} = require('connect-sdk-node');
 const {AUTH_TOKEN, WHATSAPP_FROM, TO_NUMBER, API_URL} = require("../../privateConst");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);

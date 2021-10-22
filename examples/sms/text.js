@@ -1,4 +1,4 @@
-const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {SmsClient, SmsMessage, ClientConfiguration} = require('connect-sdk-node');
 const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER, POST_CALLBACK_URL, API_URL} = require("../../privateConst.js");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
