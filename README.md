@@ -25,9 +25,8 @@ const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
+const smsMessage = new SmsMessage().of_text(SMS_FROM_NUMBER, TO_NUMBER, "Hello $(name)!");
 
-smsMessage.content = "Hello $(name)!";
 smsMessage.correlationId = "corId123";
 smsMessage.callbackUrl = new URL(POST_CALLBACK_URL);
 smsMessage.callbackData = "id:123|title:testData";
