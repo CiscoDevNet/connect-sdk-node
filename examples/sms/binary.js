@@ -1,6 +1,5 @@
 const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
-const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER} = require("../../privateConst.js");
-const {API_SANDBOX_URL} = require("../../dist/config/constants");
+const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER, API_URL} = require("../../privateConst.js");
 
 const data = new Uint8Array(5);
 data[0] = 72;
@@ -9,7 +8,7 @@ data[2] = 108;
 data[3] = 108;
 data[4] = 111;
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
 const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);

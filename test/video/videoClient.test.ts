@@ -1,7 +1,9 @@
 import {ClientConfiguration, VideoClient, VideoSession, VideoToken} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
+import {API_VERSION} from "../../src/config/constants";
+
+const API_SANDBOX_URL = "https://api-sandbox.imiconnect.io";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),

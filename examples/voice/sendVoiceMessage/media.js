@@ -2,10 +2,9 @@ const {VoiceClient,
     VoiceMessage,
     MediaAudio, ClientConfiguration
 } = require('cpaas-sdk-node');
-const {AUTH_TOKEN, TO_NUMBER, VOICE_FROM_NUMBER, VOICE_MEDIA_ID} = require("../../../privateConst");
-const {API_SANDBOX_URL} = require("../../../dist/config/constants");
+const {AUTH_TOKEN, TO_NUMBER, VOICE_FROM_NUMBER, VOICE_MEDIA_ID, API_URL} = require("../../../privateConst");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const client = new VoiceClient(clientConfiguration);
 const message = new VoiceMessage(VOICE_FROM_NUMBER, TO_NUMBER);

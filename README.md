@@ -22,12 +22,15 @@ $ npm i --save cpaas-sdk-node
 ````javascript
 const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
+const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
 
 smsMessage.content = "Hello $(name)!";
+smsMessage.correlationId = "corId123";
+smsMessage.callbackUrl = new URL(CALLBACK_URL);
+smsMessage.callbackData = "id:123|title:testData";
 smsMessage.addSubstitution("name", "Tester");
 
 const request = smsClient.sendMessage(smsMessage);

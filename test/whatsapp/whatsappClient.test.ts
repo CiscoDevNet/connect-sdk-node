@@ -1,8 +1,10 @@
 import {WhatsappClient, WhatsappTextMessage, WhatsappContentType, ClientConfiguration} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
+import {API_VERSION} from "../../src/config/constants";
 import {WhatsappContact, WhatsappContactMessage} from "../../src";
+
+const API_SANDBOX_URL = "https://api-sandbox.imiconnect.io";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),

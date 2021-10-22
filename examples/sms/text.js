@@ -1,15 +1,14 @@
 const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
-const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER} = require("../../privateConst.js");
-const {API_SANDBOX_URL} = require("../../dist/config/constants");
+const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER, POST_CALLBACK_URL, API_URL} = require("../../privateConst.js");
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_SANDBOX_URL);
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
 const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
 
 smsMessage.content = "Hello $(name)!";
 smsMessage.correlationId = "corId123";
-smsMessage.callbackUrl = new URL("http://www.google.com");
+smsMessage.callbackUrl = new URL(POST_CALLBACK_URL);
 smsMessage.callbackData = "id:123|title:testData";
 smsMessage.addSubstitution("name", "Tester");
 
