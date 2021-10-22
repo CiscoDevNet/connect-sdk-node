@@ -4,9 +4,7 @@ const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER, SMS_TEMPLATE_ID, API_URL} = requi
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
-
-smsMessage.contentTemplateId = SMS_TEMPLATE_ID;
+const smsMessage = new SmsMessage().of_template(SMS_FROM_NUMBER, TO_NUMBER, SMS_TEMPLATE_ID);
 
 const request = smsClient.sendMessage(smsMessage);
 

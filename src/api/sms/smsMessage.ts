@@ -59,10 +59,44 @@ export class SmsMessage {
      */
     private readonly _idempotencyKey: string = "";
 
-    constructor(from: string, to: string) {
+    constructor() {
+        this._idempotencyKey = uuidv4();
+    }
+
+    of_binary(from: string, to: string, content: BinaryData) {
         this.from = from;
         this.to = to;
-        this._idempotencyKey = uuidv4();
+        this._contentType = SmsContentType.BINARY;
+        this.binaryContent = content;
+
+        return this;
+    }
+
+    of_template(from: string, to: string, templateId: string) {
+        this.from = from;
+        this.to = to;
+        this._contentType = SmsContentType.TEMPLATE;
+        this.contentTemplateId = templateId;
+
+        return this;
+    }
+
+    of_text(from: string, to: string, content: string) {
+        this.from = from;
+        this.to = to;
+        this._contentType = SmsContentType.TEXT;
+        this.content = content;
+
+        return this;
+    }
+
+    of_unicode(from: string, to: string, content: string) {
+        this.from = from;
+        this.to = to;
+        this._contentType = SmsContentType.UNICODE;
+        this.content = content;
+
+        return this;
     }
 
     get from(): string {return this._from;}
@@ -85,23 +119,15 @@ export class SmsMessage {
 
     get content(): string | undefined {return this._content;}
     set content(value: string | undefined) {
-        this._contentType = SmsContentType.TEXT;
-
-        if(hasUnicode(value)) {
-            this._contentType = SmsContentType.UNICODE;
-        }
-
         this._content = value;
     }
 
     get binaryContent(): BinaryData | undefined {return this._binaryContent}
     set binaryContent(value: BinaryData | undefined) {
-        this._contentType = SmsContentType.BINARY;
         this._binaryContent = value;
     }
 
     set contentTemplateId(value: string) {
-        this._contentType = SmsContentType.TEMPLATE;
         this._content = value;
     }
 

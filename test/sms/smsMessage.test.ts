@@ -3,7 +3,7 @@ import {expect} from "chai";
 
 describe("SmsMessage", () => {
     it("sets constructor values properly", () => {
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         expect(smsMessage.from).to.equal('12345');
         expect(smsMessage.to).to.equal('+14443332222');
@@ -11,10 +11,10 @@ describe("SmsMessage", () => {
     });
 
     it("throws validation errors correctly", () => {
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         expect(() => {
-            new SmsMessage('12345', '')
+            new SmsMessage().of_text('12345', '', 'hello');
         }).to.throw();
 
         expect(() => {
@@ -48,31 +48,31 @@ describe("SmsMessage", () => {
     });
 
     it('detects content type automatically', () => {
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        let smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello world');
 
-        smsMessage.content = "hello world";
         expect(smsMessage.contentType).to.equal(SmsContentType.TEXT);
 
-        smsMessage.binaryContent = new Uint8Array(1024);
+        smsMessage = new SmsMessage().of_binary('12345', '+14443332222', new Uint8Array(1024))
+
         expect(smsMessage.contentType).to.equal(SmsContentType.BINARY);
 
-        smsMessage.contentTemplateId = "tmpl12345";
+        smsMessage = new SmsMessage().of_template('12345', '+14443332222', 'tmpl12345');
+
         expect(smsMessage.contentType).to.equal(SmsContentType.TEMPLATE);
 
-        smsMessage.content = "Hello World 🗺️!";
+        smsMessage = new SmsMessage().of_unicode('12345', '+14443332222', 'Hello World 🗺️!');
+
         expect(smsMessage.contentType).to.equal(SmsContentType.UNICODE);
     });
 
     it('sets contentType correctly when template Id is specified', () => {
-        const message = new SmsMessage('12345', '+13333223333');
-
-        message.contentTemplateId = "abc";
+        const message = new SmsMessage().of_template('12345', '+13333223333', 'abc');
 
         expect(message.contentType).to.equal(SmsContentType.TEMPLATE);
     });
 
     it("addSubstitution adds substitutions correctly and errors correctly", () => {
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         expect(() => {
             smsMessage.addSubstitution("", "test")
@@ -86,7 +86,7 @@ describe("SmsMessage", () => {
     });
 
     it("sets remaining values correctly", () => {
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
         smsMessage.correlationId = "corr123";
         smsMessage.dltTemplateId = "dlt123";
         smsMessage.callbackData = "cbdata123";
@@ -98,8 +98,6 @@ describe("SmsMessage", () => {
     });
 
     it('converts byte array to base64 correctly', () => {
-       const message = new SmsMessage('12345', '+12223334444');
-
         const data = new Uint8Array(5);
         data[0] = 1;
         data[1] = 2;
@@ -107,21 +105,10 @@ describe("SmsMessage", () => {
         data[3] = 4;
         data[4] = 5;
 
-        message.binaryContent = data;
+        const message = new SmsMessage().of_binary('12345', '+12223334444', data);
 
         expect(message.toJSON()).to.deep.equal({
             "content": "0102030405",
-            "contentType": "BINARY",
-            "from": "12345",
-            "substitutions": {},
-            "to": "+12223334444"
-        });
-
-        // @ts-ignore
-        message.binaryContent = "100011 001101";
-
-        expect(message.toJSON()).to.deep.equal({
-            "content": "01000000010100000001010001",
             "contentType": "BINARY",
             "from": "12345",
             "substitutions": {},
