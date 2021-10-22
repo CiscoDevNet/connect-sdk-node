@@ -5,7 +5,7 @@ NodeJS SDK for CPaas Web Services
 ## Installation
 Using npm:
 ```shell
-$ npm i --save cpaas-sdk-node
+$ npm i --save connect-sdk-node
 ```
 
 ## Requirements
@@ -20,7 +20,7 @@ $ npm i --save cpaas-sdk-node
 ### Sending a SMS message
 
 ````javascript
-const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {SmsClient, SmsMessage, ClientConfiguration} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
@@ -50,7 +50,7 @@ request
 const {VoiceClient,
     VoiceMessage,
     TtsAudio, ClientConfiguration
-} = require('cpaas-sdk-node');
+} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
@@ -75,7 +75,7 @@ request
 ### Sending a WhatsApp text message
 
 ````javascript
-const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
