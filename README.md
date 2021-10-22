@@ -22,12 +22,15 @@ $ npm i --save cpaas-sdk-node
 ````javascript
 const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(FROM_NUMBER, TO_NUMBER);
+const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
 
 smsMessage.content = "Hello $(name)!";
+smsMessage.correlationId = "corId123";
+smsMessage.callbackUrl = new URL(POST_CALLBACK_URL);
+smsMessage.callbackData = "id:123|title:testData";
 smsMessage.addSubstitution("name", "Tester");
 
 const request = smsClient.sendMessage(smsMessage);
@@ -39,6 +42,7 @@ request
     .catch(err => {
         console.error(err);
     });
+
 ````
 
 ### Sending a TTS voice message
@@ -49,13 +53,12 @@ const {VoiceClient,
     TtsAudio, ClientConfiguration
 } = require('cpaas-sdk-node');
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const client = new VoiceClient(clientConfiguration);
-const message = new VoiceMessage(FROM_NUMBER);
+const message = new VoiceMessage(VOICE_FROM_NUMBER, TO_NUMBER);
 const audio = new TtsAudio("Hello World");
 
-message.dialedNumber = TO_NUMBER;
 message.audio = audio;
 
 const request = client.sendVoiceMessage(message);
@@ -75,11 +78,18 @@ request
 ````javascript
 const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('cpaas-sdk-node');
 
-const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, new URL(API_URL));
+const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const whatsAppClient = new WhatsappClient(clientConfiguration);
-const whatsAppMessage = new WhatsappTextMessage(FROM_NUMBER, TO_NUMBER, "Hello World!");
+const whatsAppMessage = new WhatsappTextMessage(WHATSAPP_FROM, TO_NUMBER, "Hello $(name)!");
+whatsAppMessage.callbackUrl = POST_CALLBACK_URL;
+whatsAppMessage.callbackData = "id:123|title:testData";
+whatsAppMessage.correlationId = "corlId123";
+
+whatsAppMessage.addSubstitution("name", "tester");
+
 const request = whatsAppClient.sendMessage(whatsAppMessage);
+
 
 request
     .then(res => {
@@ -88,6 +98,7 @@ request
     .catch(err => {
         console.error(err);
     });
+
 
 ````
 

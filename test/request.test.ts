@@ -1,7 +1,8 @@
 import {expect} from "chai";
 import request from '../src/request/index';
-import {API_SANDBOX_URL} from "../src/config/constants";
 import {ClientConfiguration} from "../src";
+
+const API_SANDBOX_URL = "https://api-sandbox.imiconnect.io";
 
 const chaiHttp = require('chai-http'),
     nock = require('nock'),

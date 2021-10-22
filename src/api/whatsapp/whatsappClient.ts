@@ -86,7 +86,7 @@ export class WhatsappClient {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
                     // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
                     const rejectCodes = [400, 403, 500];
 
                     if(res.statusCode === 202) {
@@ -135,8 +135,9 @@ export class WhatsappClient {
             request(options, this.clientConfiguration)
                 .then((res: any) => {
                     let payload: any;
+
                     // @ts-ignore
-                    const body: any = JSON.parse(res.body);
+                    const body: any = (res.body && res.body !== "") ? JSON.parse(res.body) : {};
 
                     if(res.statusCode === 200) {
                         if(body.contentType === WhatsappContentType.TEXT) {

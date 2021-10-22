@@ -1,5 +1,3 @@
-import {API_SANDBOX_URL} from "../config/constants";
-
 /**
  * Configuration class for CPAAS clients
  *

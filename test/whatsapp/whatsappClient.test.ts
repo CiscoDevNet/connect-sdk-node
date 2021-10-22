@@ -1,8 +1,10 @@
 import {WhatsappClient, WhatsappTextMessage, WhatsappContentType, ClientConfiguration} from "../../src";
 import {expect} from "chai";
 import nock from "nock";
-import {API_SANDBOX_URL, API_VERSION} from "../../src/config/constants";
+import {API_VERSION} from "../../src/config/constants";
 import {WhatsappContact, WhatsappContactMessage} from "../../src";
+
+const API_SANDBOX_URL = "https://api-sandbox.imiconnect.io";
 
 const chai = require('chai'),
     chaiAsPromised = require('chai-as-promised'),
@@ -129,6 +131,16 @@ describe("WhatsappClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/whatsapp/messages`)
+            .reply(404);
+
+        try {
+            response = await client.sendMessage(message);
+        } catch(err: any) {
+            expect(err.statusCode).to.equal(404);
+        }
+
+        nock(`${API_SANDBOX_URL}`)
+            .post(`/${API_VERSION}/whatsapp/messages`)
             .reply(500, {
                 code: '890'
             });
@@ -174,9 +186,7 @@ describe("WhatsappClient", () => {
 
         nock(`${API_SANDBOX_URL}`)
             .get(`/${API_VERSION}/whatsapp/messages/1234`)
-            .reply(404, {
-                statusCode: 404
-            });
+            .reply(404);
 
         try {
             response = await client.getStatus('1234');

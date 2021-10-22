@@ -10,3 +10,4 @@ export {WhatsappContactMessage} from './contacts/whatsappContactMessage';
 export {WhatsappTemplateMessage} from './template/whatsappTemplateMessage';
 export {WhatsappContentType} from './whatsappContentType';
 export {WhatsappClient} from './whatsappClient';
+export * from './template';
