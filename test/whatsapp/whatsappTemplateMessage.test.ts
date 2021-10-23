@@ -46,6 +46,11 @@ describe("WhatsappTemplateMessage", () => {
 
         message.addSubstitution(dateSub);
 
+        const dateSubB = new TemplateSubstitution("newDateB")
+            .of_datetime(new Date('2011-10-05'), 'dateFallBack2');
+
+        message.addSubstitution(dateSubB);
+
         const urlSub = new TemplateSubstitution("newUrl")
             .of_url("/someAction");
 
@@ -72,6 +77,11 @@ describe("WhatsappTemplateMessage", () => {
                 "contentType": "DATETIME",
                 "fallbackValue": "dateFallback",
                 "isoString": "2011-10-05T14:48:00.000Z"
+            },
+            "newDateB": {
+                "contentType": "DATETIME",
+                "fallbackValue": "dateFallBack2",
+                "isoString": "2011-10-05T00:00:00.000Z"
             },
             "newText": "hello world",
             "newUrl": {

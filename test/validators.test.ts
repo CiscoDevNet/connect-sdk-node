@@ -1,16 +1,11 @@
 import {expect} from "chai";
-import {isValidHttpUrl, isValidISO8601, isValidE164, isNumeric, isFloat, isBoolean, hasUnicode} from '../src/helpers/validators';
+import {isValidHttpUrl, isValidE164, isNumeric, isFloat, isBoolean, hasUnicode} from '../src/helpers/validators';
 
 describe("Validators", () => {
     it("isValidHttpUrl validates correctly", () => {
         expect(isValidHttpUrl('http://someurl')).to.be.false;
         expect(isValidHttpUrl('abc')).to.be.false;
         expect(isValidHttpUrl('https://www.google.com')).to.be.true;
-    });
-
-    it("isValidISO8601 validates correctly", () => {
-        expect(isValidISO8601('2021-08-01T14:24:33.00sdfs0Z')).to.be.false;
-        expect(isValidISO8601('2021-08-01T14:24:33.000Z')).to.be.true;
     });
 
     it("isValidE164 validates correctly", () => {
