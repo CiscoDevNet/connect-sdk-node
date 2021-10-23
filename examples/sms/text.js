@@ -7,7 +7,7 @@ const smsClient = new SmsClient(clientConfiguration);
 const smsMessage = new SmsMessage().of_text(SMS_FROM_NUMBER, TO_NUMBER, "Hello $(name)!");
 
 smsMessage.correlationId = "corId123";
-smsMessage.callbackUrl = new URL(POST_CALLBACK_URL);
+smsMessage.callbackUrl = POST_CALLBACK_URL;
 smsMessage.callbackData = "id:123|title:testData";
 smsMessage.addSubstitution("name", "Tester");
 
