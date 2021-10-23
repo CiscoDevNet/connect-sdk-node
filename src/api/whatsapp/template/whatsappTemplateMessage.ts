@@ -1,7 +1,7 @@
 import {uuidv4} from "../../../helpers/identifiers";
 import {
     isValidHttpUrl,
-    isValidE164
+    isValidE164, isValidISO8601
 } from "../../../helpers/validators";
 import {WhatsappContentType} from "../whatsappContentType";
 import {SubstitutionTypes} from "./substitutionTypes";
@@ -110,6 +110,11 @@ export class TemplateSubstitution {
 
     of_datetime(isoString: string, fallback: string) {
         this._contentType = SubstitutionTypes.DATETIME;
+
+        if(!isValidISO8601(isoString)) {
+            throw Error("value for 'isoString' must be a valid ISO8601 string");
+        }
+
         this._isoString = isoString;
         this._fallbackValue = fallback;
 
