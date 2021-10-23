@@ -5,7 +5,6 @@ import {
 } from "../../../helpers/validators";
 import {WhatsappContentType} from "../whatsappContentType";
 import {SubstitutionTypes} from "./substitutionTypes";
-import {TemplateHeaderTypes} from "./templateHeaderTypes";
 
 /**
  * Quick reply class for creating a creating a quick reply for whatsapp template message
@@ -53,11 +52,11 @@ export class QuickReply {
 }
 
 export class MediaHeader {
-    private readonly _contentType: TemplateHeaderTypes;
+    private readonly _contentType: string;
     private readonly _url: string;
     private readonly _filename: string;
 
-    constructor(contentType: TemplateHeaderTypes, url: string, filename: string) {
+    constructor(contentType: string, url: string, filename: string) {
         if(url && !isValidHttpUrl(url)) {
             throw Error("url must be a valid url");
         }
@@ -67,7 +66,7 @@ export class MediaHeader {
         this._filename = filename;
     }
 
-    get contentType() {return this._contentType}
+    get contentType(): string {return this._contentType}
     get url() {return this._url}
     get filename() {return this._filename}
 
@@ -92,7 +91,7 @@ export class TemplateSubstitution {
     private _fallbackValue: string | undefined;
     private _suffix: string | undefined;
     private _code: string | undefined;
-    private _amount1000: string | undefined;
+    private _amount1000: number | undefined;
     private _content: string | undefined;
 
     constructor(name: string) {
@@ -136,7 +135,7 @@ export class TemplateSubstitution {
      * @param fallback fallback text
      */
 
-    of_currency(code: string, amount1000: string, fallback: string) {
+    of_currency(code: string, amount1000: number, fallback: string) {
         this._contentType = SubstitutionTypes.CURRENCY;
         this._code = code;
         this._amount1000 = amount1000;
@@ -314,29 +313,36 @@ export class WhatsappTemplateMessage {
     addSubstitution(substitution: TemplateSubstitution) {
         const subJson = substitution.toJSON();
 
-        const clearedSub = {
-            [subJson.name]: {
-                contentType: subJson.contentType,
-                isoString: subJson.isoString,
-                fallbackValue: subJson.fallbackValue,
-                suffix: subJson.suffix,
-                code: subJson.code,
-                amount1000: subJson.amount1000,
-                content: subJson.content
+        if(subJson.contentType === SubstitutionTypes.TEXT) {
+            this._substitutions = {
+                ...this._substitutions,
+                [subJson.name]: subJson.content
             }
-        }
-
-        for(const [key, value] of Object.entries(clearedSub[subJson.name])) {
-            if(value === undefined) {
-                // @ts-ignore
-                delete clearedSub[subJson.name][key];
+        } else {
+            const clearedSub = {
+                [subJson.name]: {
+                    contentType: subJson.contentType,
+                    isoString: subJson.isoString,
+                    fallbackValue: subJson.fallbackValue,
+                    suffix: subJson.suffix,
+                    code: subJson.code,
+                    amount1000: subJson.amount1000,
+                    content: subJson.content
+                }
             }
-        }
 
-        // @ts-ignore
-        this._substitutions = {
-            ...this._substitutions,
-            [subJson.name]: clearedSub[subJson.name]
+            for(const [key, value] of Object.entries(clearedSub[subJson.name])) {
+                if(value === undefined) {
+                    // @ts-ignore
+                    delete clearedSub[subJson.name][key];
+                }
+            }
+
+            // @ts-ignore
+            this._substitutions = {
+                ...this._substitutions,
+                [subJson.name]: clearedSub[subJson.name]
+            }
         }
     }
 
