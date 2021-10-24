@@ -250,6 +250,22 @@ describe("WhatsappClient", () => {
         expect(response.content).to.equal('hello world');
     });
 
+    it('gets status of template message correctly', async () => {
+        const client = new WhatsappClient(clientConfig);
+
+        nock(`${API_SANDBOX_URL}`)
+            .get(`/${API_VERSION}/whatsapp/messages/1234`)
+            .reply(200, {
+                contentType: WhatsappContentType.TEMPLATE,
+                templateId: 'tmp1234'
+            });
+
+        const response = await client.getStatus('1234');
+
+        expect(response.contentType).to.equal(WhatsappContentType.TEMPLATE);
+        expect(response.templateId).to.equal('tmp1234');
+    });
+
     it('gets status of audio message correctly', async () => {
         const client = new WhatsappClient(clientConfig);
 

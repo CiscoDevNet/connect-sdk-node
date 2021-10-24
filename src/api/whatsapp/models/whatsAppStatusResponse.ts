@@ -10,6 +10,10 @@ export class WhatsAppStatusResponse {
      */
     requestId: string | undefined;
     /**
+     * @remark template id that was sent with message
+     */
+    templateId: string | undefined;
+    /**
      * @remark Content type of the message
      */
     contentType: string | undefined;
