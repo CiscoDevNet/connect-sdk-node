@@ -338,6 +338,21 @@ export class WhatsappClient {
                             }
                         }
 
+                        if(body.contentType === WhatsappContentType.TEMPLATE) {
+                            payload = {
+                                statusCode: res.statusCode,
+                                requestId: res.headers['request-id'],
+                                contentType: body.contentType,
+                                templateId: body.templateId,
+                                messageId: body.messageId,
+                                acceptedTime: body.acceptedTime,
+                                from: body.from,
+                                to: body.to,
+                                status: body.status,
+                                statusTime: body.statusTime
+                            }
+                        }
+
                         if(body.error) {
                             payload.error = body.error;
                         }
