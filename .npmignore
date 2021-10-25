@@ -1,3 +1,4 @@
+.git/
 .idea/
 .nyc_output/
 coverage/
@@ -8,6 +9,8 @@ openAPI/
 src/
 test/
 .gitignore
+.npmignore
 .nycrc
+docker-compose.yml
 privateConst.*
 tsconfig.json

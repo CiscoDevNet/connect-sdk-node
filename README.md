@@ -1,4 +1,4 @@
-# cpaas-sdk-node
+# connect-sdk-node
 
 NodeJS SDK for CPaas Web Services
 
