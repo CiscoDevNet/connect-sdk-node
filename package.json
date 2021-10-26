@@ -1,5 +1,5 @@
 {
-  "name": "cpaas-sdk-node",
+  "name": "connect-sdk-node",
   "version": "1.0.0",
   "description": "Node SDK for CPaaS Web Services",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://wwwin-github.cisco.com/cpaas-client-sdks/node-sdk.git"
+    "url": "git+https://github.com/CiscoDevNet/connect-sdk-node.git"
   },
   "keywords": [
     "test",

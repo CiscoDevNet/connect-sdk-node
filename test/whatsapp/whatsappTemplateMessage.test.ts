@@ -1,8 +1,6 @@
-import {WhatsappContentType, WhatsappTemplateMessage} from "../../src";
+import {WhatsappContentType, WhatsappTemplateMessage, MediaHeader, TemplateHeaderTypes, TemplateSubstitution} from "../../src";
 import {expect} from "chai";
-import {QuickReply, TemplateSubstitution} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
-import {MediaHeader} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
-import {TemplateHeaderTypes} from "../../src/api/whatsapp/template/templateHeaderTypes";
+import {QuickReply} from "../../src/api/whatsapp/template/whatsappTemplateMessage";
 
 describe("WhatsappTemplateMessage", () => {
     it("sets constructor values properly", () => {
@@ -38,10 +36,20 @@ describe("WhatsappTemplateMessage", () => {
     it("addSubstitution adds substitutions correctly and errors correctly", () => {
         const message = new WhatsappTemplateMessage('12345', '+14443332222', 'tmpl1234');
 
+        expect(() => {
+            new TemplateSubstitution("badDate")
+                .of_datetime('hello', 'dateFallback')
+        }).to.throw();
+
         const dateSub = new TemplateSubstitution("newDate")
-            .of_datetime('2015-10-04', 'dateFallback');
+            .of_datetime('2011-10-05T14:48:00.000Z', 'dateFallback');
 
         message.addSubstitution(dateSub);
+
+        const dateSubB = new TemplateSubstitution("newDateB")
+            .of_datetime(new Date('2011-10-05'), 'dateFallBack2');
+
+        message.addSubstitution(dateSubB);
 
         const urlSub = new TemplateSubstitution("newUrl")
             .of_url("/someAction");
@@ -49,7 +57,7 @@ describe("WhatsappTemplateMessage", () => {
         message.addSubstitution(urlSub);
 
         const currSub = new TemplateSubstitution("newCurr")
-            .of_currency('USD', '100', 'currFallback');
+            .of_currency('USD', 100, 'currFallback');
 
         message.addSubstitution(currSub);
 
@@ -60,7 +68,7 @@ describe("WhatsappTemplateMessage", () => {
 
         expect(message.substitutions).to.deep.equal({
             "newCurr": {
-                "amount1000": "100",
+                "amount1000": 100,
                 "code": "USD",
                 "contentType": "CURRENCY",
                 "fallbackValue": "currFallback"
@@ -68,12 +76,14 @@ describe("WhatsappTemplateMessage", () => {
             "newDate": {
                 "contentType": "DATETIME",
                 "fallbackValue": "dateFallback",
-                "isoString": "2015-10-04"
+                "isoString": "2011-10-05T14:48:00.000Z"
             },
-            "newText": {
-                "content": "hello world",
-                "contentType": "TEXT"
+            "newDateB": {
+                "contentType": "DATETIME",
+                "fallbackValue": "dateFallBack2",
+                "isoString": "2011-10-05T00:00:00.000Z"
             },
+            "newText": "hello world",
             "newUrl": {
                 "contentType": "URL",
                 "suffix": "/someAction"
@@ -82,7 +92,7 @@ describe("WhatsappTemplateMessage", () => {
 
         expect(() => {
             const currSubErr = new TemplateSubstitution("")
-                .of_currency('USD', '100', 'currFallback');
+                .of_currency('USD', 100, 'currFallback');
         }).to.throw();
     });
 

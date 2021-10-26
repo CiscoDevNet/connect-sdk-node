@@ -1,11 +1,11 @@
-# cpaas-sdk-node
+# connect-sdk-node
 
 NodeJS SDK for CPaas Web Services
 
 ## Installation
 Using npm:
 ```shell
-$ npm i --save cpaas-sdk-node
+$ npm i --save connect-sdk-node
 ```
 
 ## Requirements
@@ -20,14 +20,13 @@ $ npm i --save cpaas-sdk-node
 ### Sending a SMS message
 
 ````javascript
-const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {SmsClient, SmsMessage, ClientConfiguration} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
+const smsMessage = new SmsMessage().of_text(SMS_FROM_NUMBER, TO_NUMBER, "Hello $(name)!");
 
-smsMessage.content = "Hello $(name)!";
 smsMessage.correlationId = "corId123";
 smsMessage.callbackUrl = new URL(POST_CALLBACK_URL);
 smsMessage.callbackData = "id:123|title:testData";
@@ -51,7 +50,7 @@ request
 const {VoiceClient,
     VoiceMessage,
     TtsAudio, ClientConfiguration
-} = require('cpaas-sdk-node');
+} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
@@ -76,7 +75,7 @@ request
 ### Sending a WhatsApp text message
 
 ````javascript
-const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {WhatsappClient, WhatsappTextMessage, ClientConfiguration} = require('connect-sdk-node');
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 

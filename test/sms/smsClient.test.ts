@@ -17,7 +17,7 @@ describe("SmsClient", () => {
 
     it("throws error if idempotencyKey is blank", () => {
         const smsClient = new SmsClient(clientConfig);
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         stub(smsMessage, 'idempotencyKey').get(() => '');
 
@@ -30,7 +30,7 @@ describe("SmsClient", () => {
 
     it("throws error if 'to' is blank", () => {
         const smsClient = new SmsClient(clientConfig);
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         stub(smsMessage, 'to').get(() => '');
 
@@ -43,7 +43,7 @@ describe("SmsClient", () => {
 
     it("throws error if 'from' is blank", () => {
         const smsClient = new SmsClient(clientConfig);
-        const smsMessage = new SmsMessage('12345', '+14443332222');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'hello');
 
         stub(smsMessage, 'from').get(() => '');
 
@@ -56,9 +56,7 @@ describe("SmsClient", () => {
 
     it("throws error if 'content' is blank", () => {
         const smsClient = new SmsClient(clientConfig);
-        const smsMessage = new SmsMessage('12345', '+14443332222');
-
-        stub(smsMessage, 'content').get(() => '');
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', '');
 
         expect(() => {
             smsClient.sendMessage(smsMessage)
@@ -69,8 +67,7 @@ describe("SmsClient", () => {
 
     it("returns proper values on sendMessage", async () => {
         const smsClient = new SmsClient(clientConfig);
-        const smsMessage = new SmsMessage('12345', '+14443332222');
-        smsMessage.content = "Hello World";
+        const smsMessage = new SmsMessage().of_text('12345', '+14443332222', 'Hello World');
 
         nock(`${API_SANDBOX_URL}`)
             .post(`/${API_VERSION}/sms/messages`)

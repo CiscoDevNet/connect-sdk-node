@@ -1,7 +1,7 @@
 const {VoiceClient,
     VoiceMessage,
     TtsAudio, ClientConfiguration
-} = require('cpaas-sdk-node');
+} = require('connect-sdk-node');
 const {AUTH_TOKEN, VOICE_FROM_NUMBER, TO_NUMBER, API_URL} = require("../../../privateConst");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);

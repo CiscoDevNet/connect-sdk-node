@@ -1,5 +1,4 @@
 import {WhatsappContactPhone} from "./whatsappContactPhone";
-import {isValidISO8601} from "../../../helpers/validators";
 import {WhatsappContactAddr} from "./whatsappContactAddr";
 import {WhatsappContactEmail} from "./whatsappContactEmail";
 import {WhatsappContactUrl} from "./whatsappContactUrl";

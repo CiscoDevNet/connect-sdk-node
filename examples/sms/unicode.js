@@ -1,12 +1,10 @@
-const {SmsClient, SmsMessage, ClientConfiguration} = require('cpaas-sdk-node');
+const {SmsClient, SmsMessage, ClientConfiguration} = require('connect-sdk-node');
 const {AUTH_TOKEN, SMS_FROM_NUMBER, TO_NUMBER, API_URL} = require("../../privateConst");
 
 const clientConfiguration = new ClientConfiguration(AUTH_TOKEN, API_URL);
 
 const smsClient = new SmsClient(clientConfiguration);
-const smsMessage = new SmsMessage(SMS_FROM_NUMBER, TO_NUMBER);
-
-smsMessage.content = "Hello World 🗺️!";
+const smsMessage = new SmsMessage().of_unicode(SMS_FROM_NUMBER, TO_NUMBER, "Hello World 🗺️!");
 
 const request = smsClient.sendMessage(smsMessage);
 
